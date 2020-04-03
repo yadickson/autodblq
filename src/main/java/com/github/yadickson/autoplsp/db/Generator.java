@@ -350,7 +350,8 @@ public abstract class Generator {
 
             TableInd field = new TableInd(
                     getString(index.getName()),
-                    getString(index.getColumns())
+                    getString(index.getColumns()),
+                    getString(index.getIsunique())
             );
 
             table.getIndFields().add(field);

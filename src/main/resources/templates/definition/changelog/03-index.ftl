@@ -32,7 +32,7 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            unique="false"
+            unique="${ind.isUnique?c}"
         >
 
 <#list ind.columns?split(",") as icolumn>

@@ -31,15 +31,18 @@ public final class TableInd implements Serializable {
 
     private final String columns;
 
+    private final Boolean isUnique;
+
     /**
      * Class constructor.
      *
      * @param name The name
      * @param columns The columns
      */
-    public TableInd(final String name, final String columns) {
+    public TableInd(final String name, final String columns, final String isUnique) {
         this.name = name;
         this.columns = columns;
+        this.isUnique = "Y".equalsIgnoreCase(isUnique);
     }
 
     /**
@@ -54,5 +57,12 @@ public final class TableInd implements Serializable {
      */
     public String getColumns() {
         return columns;
+    }
+
+    /**
+     * @return the isUnique
+     */
+    public Boolean getIsUnique() {
+        return isUnique;
     }
 }

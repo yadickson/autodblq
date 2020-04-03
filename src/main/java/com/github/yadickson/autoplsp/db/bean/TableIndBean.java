@@ -31,6 +31,8 @@ public final class TableIndBean implements Serializable {
 
     private String columns;
 
+    private String isunique;
+
     /**
      * @return the name
      */
@@ -57,6 +59,20 @@ public final class TableIndBean implements Serializable {
      */
     public void setColumns(String columns) {
         this.columns = columns;
+    }
+
+    /**
+     * @return the isunique
+     */
+    public String getIsunique() {
+        return isunique;
+    }
+
+    /**
+     * @param isunique the isunique to set
+     */
+    public void setIsunique(String isunique) {
+        this.isunique = isunique;
     }
 
 }
