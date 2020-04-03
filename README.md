@@ -109,6 +109,10 @@ Maven plugin to generate xml liquibase files from database
             <param>...</param>
             <param>...</param>
         </tables>
+        <schemas>
+            <param>...</param>
+            <param>...</param>
+        </schemas>
     </configuration>
     <dependencies>
         <dependency>
