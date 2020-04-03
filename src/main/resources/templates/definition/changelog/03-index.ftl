@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- @GENERATOR.NAME@ -->
+<!-- @GENERATOR.VERSION@ -->
+
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
@@ -17,14 +20,14 @@
     </changeSet>
 
 <#list tables as table >
-<#if table.idxFields?? >
-<#list table.idxFields as idx >
+<#if table.indFields?? >
+<#list table.indFields as ind >
 <#assign step++ >
     <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
 
         <createIndex
-            indexName="${idx.name}"
+            indexName="${ind.name}"
 <#if table.schema?? >
             schemaName="${table.schema}"
 </#if>
@@ -32,7 +35,9 @@
             unique="false"
         >
 
-            <column name="${idx.column}"/>
+<#list ind.columns?split(",") as icolumn>
+            <column name="${icolumn}"/>
+</#list>
 
         </createIndex>
 
@@ -42,7 +47,7 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                indexName="${idx.name}"
+                indexName="${ind.name}"
             />
         </rollback>
 

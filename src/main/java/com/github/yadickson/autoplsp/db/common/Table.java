@@ -29,17 +29,21 @@ public final class Table implements Serializable {
 
     static final long serialVersionUID = 1;
 
-    private String name;
+    private final String name;
 
-    private String schema;
+    private final String schema;
 
-    private String remarks;
+    private final String remarks;
 
-    private List<TableField> fields = new ArrayList<TableField>();
+    private final List<TableField> fields = new ArrayList<TableField>();
 
-    private List<TablePk> pkFields = new ArrayList<TablePk>();
+    private final List<TablePk> pkFields = new ArrayList<TablePk>();
 
-    private List<TableFk> fkFields = new ArrayList<TableFk>();
+    private final List<TableFk> fkFields = new ArrayList<TableFk>();
+
+    private final List<TableUnq> unqFields = new ArrayList<TableUnq>();
+
+    private final List<TableInd> indFields = new ArrayList<TableInd>();
 
     /**
      * Class constructor.
@@ -66,24 +70,10 @@ public final class Table implements Serializable {
     }
 
     /**
-     * @param name the name to set
-     */
-    public void setName(String name) {
-        this.name = name;
-    }
-
-    /**
      * @return the schema
      */
     public String getSchema() {
         return schema;
-    }
-
-    /**
-     * @param schema the schema to set
-     */
-    public void setSchema(String schema) {
-        this.schema = schema;
     }
 
     /**
@@ -94,24 +84,10 @@ public final class Table implements Serializable {
     }
 
     /**
-     * @param remarks the remarks to set
-     */
-    public void setRemarks(String remarks) {
-        this.remarks = remarks;
-    }
-
-    /**
      * @return the fields
      */
     public List<TableField> getFields() {
         return fields;
-    }
-
-    /**
-     * @param fields the fields to set
-     */
-    public void setFields(List<TableField> fields) {
-        this.fields = fields;
     }
 
     /**
@@ -122,13 +98,6 @@ public final class Table implements Serializable {
     }
 
     /**
-     * @param fields the fields to set
-     */
-    public void setPkFields(List<TablePk> fields) {
-        this.pkFields = fields;
-    }
-
-    /**
      * @return the fields
      */
     public List<TableFk> getFkFields() {
@@ -136,10 +105,17 @@ public final class Table implements Serializable {
     }
 
     /**
-     * @param fields the fields to set
+     * @return the fields
      */
-    public void setFkFields(List<TableFk> fields) {
-        this.fkFields = fields;
+    public List<TableUnq> getUnqFields() {
+        return unqFields;
+    }
+
+    /**
+     * @return the fields
+     */
+    public List<TableInd> getIndFields() {
+        return indFields;
     }
 
 }

@@ -14,7 +14,7 @@
  * You should have received a copy of the GNU General Public License
  * along with this program.  If not, see <http://www.gnu.org/licenses/>.
  */
-package com.github.yadickson.autoplsp.db.common;
+package com.github.yadickson.autoplsp.db.bean;
 
 import java.io.Serializable;
 
@@ -23,24 +23,13 @@ import java.io.Serializable;
  *
  * @author Yadickson Soto
  */
-public final class TablePk implements Serializable {
+public final class TableIndBean implements Serializable {
 
     static final long serialVersionUID = 1;
 
-    private final String name;
+    private String name;
 
-    private final String columns;
-
-    /**
-     * Class constructor.
-     *
-     * @param name The name
-     * @param columns The columns
-     */
-    public TablePk(final String name, final String columns) {
-        this.name = name;
-        this.columns = columns;
-    }
+    private String columns;
 
     /**
      * @return the name
@@ -50,10 +39,24 @@ public final class TablePk implements Serializable {
     }
 
     /**
+     * @param name the name to set
+     */
+    public void setName(String name) {
+        this.name = name;
+    }
+
+    /**
      * @return the columns
      */
     public String getColumns() {
         return columns;
+    }
+
+    /**
+     * @param columns the columns to set
+     */
+    public void setColumns(String columns) {
+        this.columns = columns;
     }
 
 }

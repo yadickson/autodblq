@@ -23,36 +23,23 @@ import java.io.Serializable;
  *
  * @author Yadickson Soto
  */
-public final class TableFk implements Serializable {
+public final class TableInd implements Serializable {
 
     static final long serialVersionUID = 1;
 
     private final String name;
 
-    private final String column;
-
-    private final String tschema;
-
-    private final String tname;
-
-    private final String tcolumn;
+    private final String columns;
 
     /**
      * Class constructor.
      *
      * @param name The name
-     * @param column The column
-     * @param tschema The ref table schema
-     * @param tname The ref table name
-     * @param tcolumn The ref table column
+     * @param columns The columns
      */
-    public TableFk(final String name, final String column, final String tschema, final String tname, final String tcolumn) {
+    public TableInd(final String name, final String columns) {
         this.name = name;
-        this.column = column;
-        this.tschema = tschema;
-        this.tname = tname;
-        this.tcolumn = tcolumn;
-
+        this.columns = columns;
     }
 
     /**
@@ -63,31 +50,9 @@ public final class TableFk implements Serializable {
     }
 
     /**
-     * @return the column
+     * @return the columns
      */
-    public String getColumn() {
-        return column;
+    public String getColumns() {
+        return columns;
     }
-
-    /**
-     * @return the tschema
-     */
-    public String getTschema() {
-        return tschema;
-    }
-
-    /**
-     * @return the tname
-     */
-    public String getTname() {
-        return tname;
-    }
-
-    /**
-     * @return the tcolumn
-     */
-    public String getTcolumn() {
-        return tcolumn;
-    }
-
 }

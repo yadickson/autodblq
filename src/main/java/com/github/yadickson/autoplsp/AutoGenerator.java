@@ -66,25 +66,25 @@ public class AutoGenerator extends AbstractMojo {
      * Database url connection string.
      */
     @Parameter(
-            property = "autodblq.connectionString",
+            property = "autodblq.url",
             required = true)
-    private String connectionString;
+    private String url;
 
     /**
      * Database username.
      */
     @Parameter(
-            property = "autodblq.user",
+            property = "autodblq.username",
             required = true)
-    private String user;
+    private String username;
 
     /**
      * Database password.
      */
     @Parameter(
-            property = "autodblq.pass",
+            property = "autodblq.password",
             required = true)
-    private String pass;
+    private String password;
 
     /**
      * Output source directory.
@@ -103,6 +103,16 @@ public class AutoGenerator extends AbstractMojo {
             readonly = true,
             required = false)
     private String folderNameGenerator;
+
+    /**
+     * Author definition folder name.
+     */
+    @Parameter(
+            property = "autodblq.definitionFolder",
+            defaultValue = "definition",
+            readonly = true,
+            required = false)
+    private String definitionFolder;
 
     /**
      * Author definition file name.
@@ -172,11 +182,12 @@ public class AutoGenerator extends AbstractMojo {
     public void execute() throws MojoExecutionException {
 
         getLog().info("[AutoGenerator] Driver: " + driver);
-        getLog().info("[AutoGenerator] ConnectionString: " + connectionString);
-        getLog().info("[AutoGenerator] User: " + user);
+        getLog().info("[AutoGenerator] ConnectionString: " + url);
+        getLog().info("[AutoGenerator] User: " + username);
         getLog().info("[AutoGenerator] Pass: ****");
         getLog().info("[AutoGenerator] FolderNameGenerator: " + folderNameGenerator);
         getLog().info("[AutoGenerator] OutputDirectory: " + outputDirectory.getPath());
+        getLog().info("[AutoGenerator] DefinitionFolder: " + definitionFolder);
         getLog().info("[AutoGenerator] Version: " + version);
         getLog().info("[AutoGenerator] Author: " + author);
         getLog().info("[AutoGenerator] LiquibaseVersion: " + lqversion);
@@ -228,7 +239,7 @@ public class AutoGenerator extends AbstractMojo {
             return;
         }
 
-        DriverConnection connManager = new DriverConnection(driver, connectionString, user, pass);
+        DriverConnection connManager = new DriverConnection(driver, url, username, password);
 
         try {
 
@@ -258,11 +269,14 @@ public class AutoGenerator extends AbstractMojo {
                 generator.fillColumns(connection, table);
                 generator.fillPkConstraints(connection, table);
                 generator.fillFkConstraints(connection, table);
+                generator.fillUnqConstraints(connection, table);
+                generator.fillIndConstraints(connection, table);
             }
 
             DefinitionGenerator definition;
             definition = new DefinitionGenerator(
                     outputDirectory.getPath(),
+                    definitionFolder,
                     tables,
                     generator.getName(),
                     connManager.getVersion(),

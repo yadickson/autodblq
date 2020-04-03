@@ -17,7 +17,9 @@ import org.apache.commons.dbutils.handlers.BeanListHandler;
 import com.github.yadickson.autoplsp.db.bean.TableBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
+import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 
 /**
@@ -109,4 +111,47 @@ public class FindTableImpl implements FindTable {
 
         return list;
     }
+
+    @Override
+    public List<TableUnqBean> getUniqueConstraints(Connection connection, String sql) throws BusinessException {
+
+        List<TableUnqBean> list = new ArrayList<TableUnqBean>();
+
+        if (connection == null) {
+            return list;
+        }
+
+        QueryRunner run = new QueryRunner();
+        ResultSetHandler<List<TableUnqBean>> h = new BeanListHandler<TableUnqBean>(TableUnqBean.class);
+
+        try {
+            list = run.query(connection, sql, h);
+        } catch (SQLException ex) {
+            throw new BusinessException("[FindTableImpl] Error find uniques", ex);
+        }
+
+        return list;
+    }
+
+    @Override
+    public List<TableIndBean> getIndexConstraints(Connection connection, String sql) throws BusinessException {
+
+        List<TableIndBean> list = new ArrayList<TableIndBean>();
+
+        if (connection == null) {
+            return list;
+        }
+
+        QueryRunner run = new QueryRunner();
+        ResultSetHandler<List<TableIndBean>> h = new BeanListHandler<TableIndBean>(TableIndBean.class);
+
+        try {
+            list = run.query(connection, sql, h);
+        } catch (SQLException ex) {
+            throw new BusinessException("[FindTableImpl] Error find indexs", ex);
+        }
+
+        return list;
+    }
+
 }

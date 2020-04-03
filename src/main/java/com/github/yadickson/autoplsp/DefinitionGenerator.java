@@ -33,6 +33,7 @@ import java.util.Map;
  */
 public final class DefinitionGenerator extends TemplateGenerator {
 
+    private final String definitionPath;
     private final List<Table> tables;
     private final String driverName;
     private final String driverVersion;
@@ -56,6 +57,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * Class constructor
      *
      * @param outputDir Output resource directory
+     * @param definitionPath definition path
      * @param tables table list
      * @param driverName The driver name.
      * @param driverVersion The driver version.
@@ -65,6 +67,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
      */
     public DefinitionGenerator(
             final String outputDir,
+            final String definitionPath,
             final List<Table> tables,
             final String driverName,
             final String driverVersion,
@@ -73,6 +76,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
             final String lqVersion
     ) {
         super(outputDir, null);
+        this.definitionPath = definitionPath;
         this.tables = tables;
         this.driverName = driverName;
         this.driverVersion = driverVersion;
@@ -152,7 +156,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
      */
     @Override
     protected String getOutputPath(String path) throws BusinessException {
-        return super.getOutputPath("definition" + File.separatorChar + path);
+        return super.getOutputPath(definitionPath + File.separatorChar + path);
     }
 
 }

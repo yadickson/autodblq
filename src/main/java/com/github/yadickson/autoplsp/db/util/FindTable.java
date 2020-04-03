@@ -11,7 +11,9 @@ import java.util.List;
 import com.github.yadickson.autoplsp.db.bean.TableBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
+import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 
 /**
@@ -27,5 +29,9 @@ public interface FindTable {
     List<TablePkBean> getPkConstraints(Connection connection, String sql) throws BusinessException;
 
     List<TableFkBean> getFkConstraints(Connection connection, String sql) throws BusinessException;
+
+    List<TableUnqBean> getUniqueConstraints(Connection connection, String sql) throws BusinessException;
+
+    List<TableIndBean> getIndexConstraints(Connection connection, String sql) throws BusinessException;
 
 }

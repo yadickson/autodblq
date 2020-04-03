@@ -24,11 +24,15 @@ import java.util.Map;
 import com.github.yadickson.autoplsp.db.bean.TableBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
+import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.db.common.TableField;
 import com.github.yadickson.autoplsp.db.common.TableFk;
+import com.github.yadickson.autoplsp.db.common.TableInd;
 import com.github.yadickson.autoplsp.db.common.TablePk;
+import com.github.yadickson.autoplsp.db.common.TableUnq;
 import com.github.yadickson.autoplsp.db.util.FindTableImpl;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
@@ -107,7 +111,7 @@ public abstract class Generator {
      * @return sql to find foreign key
      */
     public abstract String getIndexConstraintQuery(final Table table);
-    
+
     public String getString(final String string) {
         return string != null ? string.trim() : null;
     }
@@ -285,4 +289,75 @@ public abstract class Generator {
 
     }
 
+    /**
+     * Fill all unique constraints.
+     *
+     * @param connection Database connection.
+     * @param table table to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillUnqConstraints(
+            final Connection connection,
+            final Table table
+    ) throws BusinessException, SQLException {
+
+        String sql = getUniqueConstraintQuery(table);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<TableUnqBean> uniques = new FindTableImpl().getUniqueConstraints(connection, sql);
+
+        for (TableUnqBean unq : uniques) {
+
+            TableUnq field = new TableUnq(
+                    getString(unq.getName()),
+                    getString(unq.getColumns())
+            );
+
+            table.getUnqFields().add(field);
+
+            LoggerManager.getInstance().info("[FindUnqTables]  - FK " + field.getName());
+            LoggerManager.getInstance().info("[FindUnqTables]          Columns: " + field.getColumns());
+        }
+
+    }
+
+    /**
+     * Fill all index constraints.
+     *
+     * @param connection Database connection.
+     * @param table table to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillIndConstraints(
+            final Connection connection,
+            final Table table
+    ) throws BusinessException, SQLException {
+
+        String sql = getIndexConstraintQuery(table);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<TableIndBean> indexs = new FindTableImpl().getIndexConstraints(connection, sql);
+
+        for (TableIndBean index : indexs) {
+
+            TableInd field = new TableInd(
+                    getString(index.getName()),
+                    getString(index.getColumns())
+            );
+
+            table.getIndFields().add(field);
+
+            LoggerManager.getInstance().info("[FindIndTables]  - FK " + field.getName());
+            LoggerManager.getInstance().info("[FindIndTables]          Columns: " + field.getColumns());
+        }
+
+    }
 }

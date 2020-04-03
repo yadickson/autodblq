@@ -19,6 +19,12 @@ Maven plugin to generate xml liquibase files from database
 ## DB2
 
 - TABLES
+- AUTO INCREMENT (always increment and start by 1)
+- DEFAULT VALUES (only string and numeric)
+- INDEX CONSTRAINS
+- UNIQUE CONSTRAINS
+- PRIMARY KEY CONSTRAINS
+- FOREIGN KEY CONSTRAINS (missing onDelete and onUpdate actions yet)
 
 ## POM properties
 
@@ -92,9 +98,9 @@ Maven plugin to generate xml liquibase files from database
             </goals>
             <configuration>
                 <driver>...</driver>
-                <connectionString>...</connectionString>
-                <user>...</user>
-                <pass>...</pass>
+                <url>...</url>
+                <username>...</username>
+                <password>...</password>
                 <tables>
                     <param>...</param>
                     <param>...</param>
@@ -132,7 +138,7 @@ org.postgresql.Driver
 net.sourceforge.jtds.jdbc.Driver
 ```
 
-### connectionString (required)
+### url (required)
 
 Database connection string, examples:
 
@@ -152,11 +158,11 @@ jdbc:postgresql://${host}:${port}/${db}
 jdbc:jtds:sqlserver://${host}:${port}/${db}
 ```
 
-### user (required)
+### username (required)
 
 Database username
 
-### pass (required)
+### password (required)
 
 Database password
 
@@ -170,7 +176,7 @@ Schemas to include, example MN.*
 
 # Command line support
 
-> mvn clean package -Dautodblq.driver=... -Dautodblq.connectionString=... -Dautodblq.user=... -Dautodblq.pass=...
+> mvn clean package -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
 
 ## POM Basic Configuration (include all procedure and function)
 
@@ -186,9 +192,9 @@ Schemas to include, example MN.*
             </goals>
             <configuration>
                 <driver>...</driver>
-                <connectionString>...</connectionString>
-                <user>...</user>
-                <pass>...</pass>
+                <url>...</url>
+                <username>...</username>
+                <password>...</password>
             </configuration>
         </execution>
     </executions>
@@ -216,9 +222,9 @@ Schemas to include, example MN.*
             </goals>
             <configuration>
                 <driver>...</driver>
-                <connectionString>...</connectionString>
-                <user>...</user>
-                <pass>...</pass>
+                <url>...</url>
+                <username>...</username>
+                <password>...</password>
                 <tables>
                     <param>T_TABLE1</param>
                     <param>T_TABLE2</param>
@@ -250,9 +256,9 @@ Schemas to include, example MN.*
             </goals>
             <configuration>
                 <driver>...</driver>
-                <connectionString>...</connectionString>
-                <user>...</user>
-                <pass>...</pass>
+                <url>...</url>
+                <username>...</username>
+                <password>...</password>
                 <schemas>
                     <param>SCHEMA1</param>
                     <param>SCHEMA2</param>

@@ -81,18 +81,22 @@ public class DB2Generator extends Generator {
     public String getUniqueConstraintQuery(final Table table) {
         return "select\n"
                 + "    indname as name,\n"
-                + "    replace(trim(replace(colnames,'+',' ')), ' ', ',') as columns, \n"
-                + "    decode(uniquerule, 'U', 'Y', 'N') isunique,\n"
-                + "    indextype AS type\n"
+                + "    replace(trim(replace(colnames,'+',' ')), ' ', ',') as columns\n"
                 + "from syscat.indexes \n"
-                + "where uniquerule != 'P'\n"
+                + "where uniquerule = 'U'\n"
                 + "AND tabname = '" + table.getName() + "'\n"
                 + "AND tabschema = '" + table.getSchema() + "'";
     }
-    
+
     @Override
     public String getIndexConstraintQuery(final Table table) {
-        return null;
+        return "select\n"
+                + "    indname as name,\n"
+                + "    replace(trim(replace(replace(colnames,'-',' '),'+',' ')), ' ', ',') as columns\n"
+                + "from syscat.indexes \n"
+                + "where uniquerule = 'D'\n"
+                + "AND tabname = '" + table.getName() + "'\n"
+                + "AND tabschema = '" + table.getSchema() + "'";
     }
 
 }

@@ -1,5 +1,8 @@
 <?xml version="1.0" encoding="UTF-8"?>
 
+<!-- @GENERATOR.NAME@ -->
+<!-- @GENERATOR.VERSION@ -->
+
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
     xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
@@ -24,7 +27,7 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
 
         <addForeignKeyConstraint
-            constraintName="${fk.name}" 
+            constraintName="${fk.name}"
 <#if table.schema?? >
             baseTableSchemaName="${table.schema}"
 </#if>
@@ -36,11 +39,11 @@
             referencedTableName="${fk.tname}" 
             referencedColumnNames="${fk.tcolumn}"
             onDelete="NO ACTION" 
-            onUpdate="NO ACTION"/>
+            onUpdate="NO ACTION"
         />
 
         <rollback>
-            <dropForeignKeyConstraint 
+            <dropForeignKeyConstraint
 <#if table.schema?? >
                 baseTableSchemaName="${table.schema}"
 </#if>
