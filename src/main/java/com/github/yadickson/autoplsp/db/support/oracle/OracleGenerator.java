@@ -60,4 +60,14 @@ public class OracleGenerator extends Generator {
         return null;
     }
 
+    @Override
+    public String getUniqueConstraintQuery(final Table table) {
+        return null;
+    }
+
+    @Override
+    public String getIndexConstraintQuery(final Table table) {
+        return null;
+    }
+
 }

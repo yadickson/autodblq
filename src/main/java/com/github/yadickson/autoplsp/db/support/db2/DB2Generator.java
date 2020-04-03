@@ -68,13 +68,31 @@ public class DB2Generator extends Generator {
     public String getForeignKeyConstraintQuery(final Table table) {
         return "select \n"
                 + "    ref.constname name,\n"
-                + "    REF.FK_COLNAMES columns,\n"
+                + "    REF.FK_COLNAMES column,\n"
                 + "    ref.reftabschema tschema,\n"
                 + "    ref.reftabname tname,\n"
-                + "    REF.PK_COLNAMES tcolumns\n"
+                + "    REF.PK_COLNAMES tcolumn\n"
                 + "from syscat.references REF\n"
                 + "WHERE ref.tabname = '" + table.getName() + "'\n"
                 + "   AND ref.tabschema = '" + table.getSchema() + "' ";
+    }
+
+    @Override
+    public String getUniqueConstraintQuery(final Table table) {
+        return "select\n"
+                + "    indname as name,\n"
+                + "    replace(trim(replace(colnames,'+',' ')), ' ', ',') as columns, \n"
+                + "    decode(uniquerule, 'U', 'Y', 'N') isunique,\n"
+                + "    indextype AS type\n"
+                + "from syscat.indexes \n"
+                + "where uniquerule != 'P'\n"
+                + "AND tabname = '" + table.getName() + "'\n"
+                + "AND tabschema = '" + table.getSchema() + "'";
+    }
+    
+    @Override
+    public String getIndexConstraintQuery(final Table table) {
+        return null;
     }
 
 }

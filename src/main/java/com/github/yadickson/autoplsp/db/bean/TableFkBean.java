@@ -29,13 +29,13 @@ public final class TableFkBean implements Serializable {
 
     private String name;
 
-    private String columns;
+    private String column;
 
     private String tschema;
 
     private String tname;
 
-    private String tcolumns;
+    private String tcolumn;
 
     /**
      * @return the name
@@ -52,17 +52,17 @@ public final class TableFkBean implements Serializable {
     }
 
     /**
-     * @return the columns
+     * @return the column
      */
-    public String getColumns() {
-        return columns;
+    public String getColumn() {
+        return column;
     }
 
     /**
-     * @param columns the columns to set
+     * @param column the column to set
      */
-    public void setColumns(String columns) {
-        this.columns = columns;
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     /**
@@ -94,17 +94,17 @@ public final class TableFkBean implements Serializable {
     }
 
     /**
-     * @return the tcolumns
+     * @return the tcolumn
      */
-    public String getTcolumns() {
-        return tcolumns;
+    public String getTcolumn() {
+        return tcolumn;
     }
 
     /**
-     * @param tcolumns the tcolumns to set
+     * @param tcolumn the tcolumn to set
      */
-    public void setTcolumns(String tcolumns) {
-        this.tcolumns = tcolumns;
+    public void setTcolumn(String tcolumn) {
+        this.tcolumn = tcolumn;
     }
 
 }

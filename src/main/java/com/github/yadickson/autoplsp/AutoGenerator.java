@@ -58,7 +58,7 @@ public class AutoGenerator extends AbstractMojo {
      * Database driver.
      */
     @Parameter(
-            property = "autoplsp.driver",
+            property = "autodblq.driver",
             required = true)
     private String driver;
 
@@ -66,7 +66,7 @@ public class AutoGenerator extends AbstractMojo {
      * Database url connection string.
      */
     @Parameter(
-            property = "autoplsp.connectionString",
+            property = "autodblq.connectionString",
             required = true)
     private String connectionString;
 
@@ -74,7 +74,7 @@ public class AutoGenerator extends AbstractMojo {
      * Database username.
      */
     @Parameter(
-            property = "autoplsp.user",
+            property = "autodblq.user",
             required = true)
     private String user;
 
@@ -82,7 +82,7 @@ public class AutoGenerator extends AbstractMojo {
      * Database password.
      */
     @Parameter(
-            property = "autoplsp.pass",
+            property = "autodblq.pass",
             required = true)
     private String pass;
 
@@ -99,25 +99,46 @@ public class AutoGenerator extends AbstractMojo {
      * Output folder name directory.
      */
     @Parameter(
-            defaultValue = "autosp-generator",
+            defaultValue = "autodblq-generator",
             readonly = true,
             required = false)
     private String folderNameGenerator;
 
     /**
-     * SQL readme definition file name.
+     * Author definition file name.
      */
     @Parameter(
-            defaultValue = "SQL.md",
+            property = "autodblq.author",
+            defaultValue = "author",
             readonly = true,
             required = false)
-    private String outputDefinitionFileName;
+    private String author;
+
+    /**
+     * Version definition file name.
+     */
+    @Parameter(
+            property = "autodblq.version",
+            defaultValue = "1.0.0",
+            readonly = true,
+            required = false)
+    private String version;
+
+    /**
+     * Liquibase version definition file name.
+     */
+    @Parameter(
+            property = "autodblq.lqversion",
+            defaultValue = "3.6",
+            readonly = true,
+            required = false)
+    private String lqversion;
 
     /**
      * Encode.
      */
     @Parameter(
-            property = "autoplsp.encode",
+            property = "autodblq.encode",
             defaultValue = "UTF-8",
             readonly = true,
             required = false)
@@ -156,7 +177,9 @@ public class AutoGenerator extends AbstractMojo {
         getLog().info("[AutoGenerator] Pass: ****");
         getLog().info("[AutoGenerator] FolderNameGenerator: " + folderNameGenerator);
         getLog().info("[AutoGenerator] OutputDirectory: " + outputDirectory.getPath());
-        getLog().info("[AutoGenerator] OutputDefinitionFileName: " + outputDefinitionFileName);
+        getLog().info("[AutoGenerator] Version: " + version);
+        getLog().info("[AutoGenerator] Author: " + author);
+        getLog().info("[AutoGenerator] LiquibaseVersion: " + lqversion);
         getLog().info("[AutoGenerator] Encode: " + encode);
 
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
@@ -240,10 +263,12 @@ public class AutoGenerator extends AbstractMojo {
             DefinitionGenerator definition;
             definition = new DefinitionGenerator(
                     outputDirectory.getPath(),
-                    outputDefinitionFileName,
                     tables,
                     generator.getName(),
-                    connManager.getVersion()
+                    connManager.getVersion(),
+                    version,
+                    author,
+                    lqversion
             );
 
             definition.process();

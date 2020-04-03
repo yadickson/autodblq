@@ -29,29 +29,29 @@ public final class TableFk implements Serializable {
 
     private String name;
 
-    private String columns;
+    private String column;
 
     private String tschema;
 
     private String tname;
 
-    private String tcolumns;
+    private String tcolumn;
 
     /**
      * Class constructor.
      *
      * @param name The name
-     * @param columns The columns
+     * @param column The column
      * @param tschema The ref table schema
      * @param tname The ref table name
-     * @param tcolumns The ref table columns
+     * @param tcolumn The ref table column
      */
-    public TableFk(final String name, final String columns, final String tschema, final String tname, final String tcolumns) {
+    public TableFk(final String name, final String column, final String tschema, final String tname, final String tcolumn) {
         this.name = name;
-        this.columns = columns;
+        this.column = column;
         this.tschema = tschema;
         this.tname = tname;
-        this.tcolumns = tcolumns;
+        this.tcolumn = tcolumn;
 
     }
 
@@ -70,17 +70,17 @@ public final class TableFk implements Serializable {
     }
 
     /**
-     * @return the columns
+     * @return the column
      */
-    public String getColumns() {
-        return columns;
+    public String getColumn() {
+        return column;
     }
 
     /**
-     * @param columns the columns to set
+     * @param column the column to set
      */
-    public void setColumns(String columns) {
-        this.columns = columns;
+    public void setColumn(String column) {
+        this.column = column;
     }
 
     /**
@@ -112,17 +112,17 @@ public final class TableFk implements Serializable {
     }
 
     /**
-     * @return the tcolumns
+     * @return the tcolumn
      */
-    public String getTcolumns() {
-        return tcolumns;
+    public String getTcolumn() {
+        return tcolumn;
     }
 
     /**
-     * @param tcolumns the tcolumns to set
+     * @param tcolumn the tcolumn to set
      */
-    public void setTcolumns(String tcolumns) {
-        this.tcolumns = tcolumns;
+    public void setTcolumn(String tcolumn) {
+        this.tcolumn = tcolumn;
     }
 
 }

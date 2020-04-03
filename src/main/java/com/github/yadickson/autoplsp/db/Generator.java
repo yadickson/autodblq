@@ -92,6 +92,22 @@ public abstract class Generator {
      */
     public abstract String getForeignKeyConstraintQuery(final Table table);
 
+    /**
+     * Method getter sql UniqueConstraint by table.
+     *
+     * @param table table
+     * @return sql to find foreign key
+     */
+    public abstract String getUniqueConstraintQuery(final Table table);
+
+    /**
+     * Method getter sql IndexConstraint by table.
+     *
+     * @param table table
+     * @return sql to find foreign key
+     */
+    public abstract String getIndexConstraintQuery(final Table table);
+    
     public String getString(final String string) {
         return string != null ? string.trim() : null;
     }
@@ -252,19 +268,19 @@ public abstract class Generator {
 
             TableFk field = new TableFk(
                     getString(fk.getName()),
-                    getString(fk.getColumns()),
+                    getString(fk.getColumn()),
                     getString(fk.getTschema()),
                     getString(fk.getTname()),
-                    getString(fk.getTcolumns())
+                    getString(fk.getTcolumn())
             );
 
             table.getFkFields().add(field);
 
             LoggerManager.getInstance().info("[FindFkTables]  - FK " + field.getName());
-            LoggerManager.getInstance().info("[FindFkTables]          Columns: " + field.getColumns());
+            LoggerManager.getInstance().info("[FindFkTables]          Columns: " + field.getColumn());
             LoggerManager.getInstance().info("[FindFkTables]          Ref Table Schema: " + field.getTschema());
             LoggerManager.getInstance().info("[FindFkTables]          Ref Table Name: " + field.getTname());
-            LoggerManager.getInstance().info("[FindFkTables]          Ref Table Columns: " + field.getTcolumns());
+            LoggerManager.getInstance().info("[FindFkTables]          Ref Table Columns: " + field.getTcolumn());
         }
 
     }
