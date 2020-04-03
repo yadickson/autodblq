@@ -207,40 +207,6 @@ Schemas to include, example MN.*
 $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
 ```
 
-## POM Basic Configuration (include all procedure and function)
-
-```xml
-<plugin>
-    <groupId>com.github.yadickson</groupId>
-    <artifactId>autodblq</artifactId>
-    <version>...</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>generator</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <driver>...</driver>
-        <url>...</url>
-        <username>...</username>
-        <password>...</password>
-        <tables>
-            <param>...</param>
-            <param>...</param>
-        </tables>
-    </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>...driver..</groupId>
-            <artifactId>..driver..</artifactId>
-            <version>..version..</version>
-        </dependency>
-    </dependencies>
-</plugin>
-```
-
 ## POM Basic Configuration (include tables)
 
 ```xml
@@ -294,10 +260,10 @@ $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.use
         <url>...</url>
         <username>...</username>
         <password>...</password>
-        <tables>
+        <schemas>
             <param>...</param>
             <param>...</param>
-        </tables>
+        </schemas>
     </configuration>
     <dependencies>
         <dependency>
