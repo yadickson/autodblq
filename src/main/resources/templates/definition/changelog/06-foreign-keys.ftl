@@ -15,16 +15,16 @@
 
     <!-- Add foreing keys -->
 
-    <changeSet id="${step?string["00"]}" author="${author}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
 <#list tables as table >
 <#if table.fkFields?? >
 <#list table.fkFields as fk >
 <#assign step++ >
-    <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addForeignKeyConstraint
             constraintName="${fk.name}"
@@ -32,12 +32,12 @@
             baseTableSchemaName="${table.schema}"
 </#if>
             baseTableName="${table.name}"
-            baseColumnNames="${fk.column}"
+            baseColumnNames="${fk.columns}"
 <#if fk.tschema?? >
             referencedTableSchemaName="${fk.tschema}"
 </#if>
             referencedTableName="${fk.tname}" 
-            referencedColumnNames="${fk.tcolumn}"
+            referencedColumnNames="${fk.tcolumns}"
             onDelete="NO ACTION" 
             onUpdate="NO ACTION"
         />

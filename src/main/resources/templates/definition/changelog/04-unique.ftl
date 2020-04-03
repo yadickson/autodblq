@@ -15,16 +15,16 @@
 
     <!-- Add unique -->
 
-    <changeSet id="${step?string["00"]}" author="${author}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
 <#list tables as table >
 <#if table.unqFields?? >
 <#list table.unqFields as unq >
 <#assign step++ >
-    <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addUniqueConstraint
             constraintName="${unq.name}"

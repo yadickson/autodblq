@@ -96,18 +96,20 @@ Maven plugin to generate xml liquibase files from database
             <goals>
                 <goal>generator</goal>
             </goals>
-            <configuration>
-                <driver>...</driver>
-                <url>...</url>
-                <username>...</username>
-                <password>...</password>
-                <tables>
-                    <param>...</param>
-                    <param>...</param>
-                </tables>
-            </configuration>
         </execution>
     </executions>
+    <configuration>
+        <driver>...</driver>
+        <url>...</url>
+        <username>...</username>
+        <password>...</password>
+        <author>...</author>
+        <version>...</version>
+        <tables>
+            <param>...</param>
+            <param>...</param>
+        </tables>
+    </configuration>
     <dependencies>
         <dependency>
             <groupId>...driver..</groupId>
@@ -176,7 +178,30 @@ Schemas to include, example MN.*
 
 # Command line support
 
-> mvn clean package -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
+```xml
+<plugin>
+    <groupId>com.github.yadickson</groupId>
+    <artifactId>autodblq</artifactId>
+    <version>...</version>
+    <configuration>
+        <tables>
+            <param>...</param>
+            <param>...</param>
+        </tables>
+    </configuration>
+    <dependencies>
+        <dependency>
+            <groupId>...driver..</groupId>
+            <artifactId>..driver..</artifactId>
+            <version>..version..</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
+
+```
+$ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
+```
 
 ## POM Basic Configuration (include all procedure and function)
 
@@ -190,14 +215,18 @@ Schemas to include, example MN.*
             <goals>
                 <goal>generator</goal>
             </goals>
-            <configuration>
-                <driver>...</driver>
-                <url>...</url>
-                <username>...</username>
-                <password>...</password>
-            </configuration>
         </execution>
     </executions>
+    <configuration>
+        <driver>...</driver>
+        <url>...</url>
+        <username>...</username>
+        <password>...</password>
+        <tables>
+            <param>...</param>
+            <param>...</param>
+        </tables>
+    </configuration>
     <dependencies>
         <dependency>
             <groupId>...driver..</groupId>
@@ -220,18 +249,18 @@ Schemas to include, example MN.*
             <goals>
                 <goal>generator</goal>
             </goals>
-            <configuration>
-                <driver>...</driver>
-                <url>...</url>
-                <username>...</username>
-                <password>...</password>
-                <tables>
-                    <param>T_TABLE1</param>
-                    <param>T_TABLE2</param>
-                </tables>
-            </configuration>
         </execution>
     </executions>
+    <configuration>
+        <driver>...</driver>
+        <url>...</url>
+        <username>...</username>
+        <password>...</password>
+        <tables>
+            <param>...</param>
+            <param>...</param>
+        </tables>
+    </configuration>
     <dependencies>
         <dependency>
             <groupId>...driver..</groupId>
@@ -254,18 +283,18 @@ Schemas to include, example MN.*
             <goals>
                 <goal>generator</goal>
             </goals>
-            <configuration>
-                <driver>...</driver>
-                <url>...</url>
-                <username>...</username>
-                <password>...</password>
-                <schemas>
-                    <param>SCHEMA1</param>
-                    <param>SCHEMA2</param>
-                </schemas>
-            </configuration>
         </execution>
     </executions>
+    <configuration>
+        <driver>...</driver>
+        <url>...</url>
+        <username>...</username>
+        <password>...</password>
+        <tables>
+            <param>...</param>
+            <param>...</param>
+        </tables>
+    </configuration>
     <dependencies>
         <dependency>
             <groupId>...driver..</groupId>

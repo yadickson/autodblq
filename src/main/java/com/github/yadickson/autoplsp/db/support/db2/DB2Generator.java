@@ -56,25 +56,31 @@ public class DB2Generator extends Generator {
 
     @Override
     public String getPrimaryKeyConstraintQuery(final Table table) {
-        return "SELECT K.CONSTNAME name, listagg(K.COLNAME, ',') columns\n"
-                + "  FROM syscat.keycoluse K\n"
-                + "  INNER JOIN syscat.tabconst c on c.tabschema = k.tabschema AND c.CONSTNAME = k.CONSTNAME AND c.TYPE = 'P'\n"
-                + " WHERE k.tabname = '" + table.getName() + "'\n"
-                + "   AND k.tabschema = '" + table.getSchema() + "'\n"
-                + " group BY K.CONSTNAME";
+        return "SELECT t.name, listagg(t.COLNAME, ',') columns\n"
+                + "from\n"
+                + "(\n"
+                + "SELECT DISTINCT K.CONSTNAME name, TRIM(K.COLNAME) COLNAME\n"
+                + "                  FROM syscat.keycoluse K\n"
+                + "                  INNER JOIN syscat.tabconst c on c.tabschema = k.tabschema AND c.CONSTNAME = k.CONSTNAME AND c.TYPE = 'P'\n"
+                + "                 WHERE k.tabname = '" + table.getName() + "'\n"
+                + "                   AND k.tabschema = '" + table.getSchema() + "'\n"
+                + ") t\n"
+                + "group BY t.name\n"
+                + "order BY t.name asc";
     }
 
     @Override
     public String getForeignKeyConstraintQuery(final Table table) {
         return "select \n"
                 + "    ref.constname name,\n"
-                + "    REF.FK_COLNAMES column,\n"
+                + "    TRIM(REF.FK_COLNAMES) columns,\n"
                 + "    ref.reftabschema tschema,\n"
                 + "    ref.reftabname tname,\n"
-                + "    REF.PK_COLNAMES tcolumn\n"
+                + "    TRIM(REF.PK_COLNAMES) tcolumns\n"
                 + "from syscat.references REF\n"
                 + "WHERE ref.tabname = '" + table.getName() + "'\n"
-                + "   AND ref.tabschema = '" + table.getSchema() + "' ";
+                + "   AND ref.tabschema = '" + table.getSchema() + "'\n"
+                + "order BY name asc";
     }
 
     @Override
@@ -91,7 +97,8 @@ public class DB2Generator extends Generator {
                 + "from syscat.indexes \n"
                 + "where uniquerule != 'P'\n"
                 + "AND tabname = '" + table.getName() + "'\n"
-                + "AND tabschema = '" + table.getSchema() + "'";
+                + "AND tabschema = '" + table.getSchema() + "'\n"
+                + "order BY name asc";
     }
 
 }

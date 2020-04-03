@@ -15,8 +15,8 @@
 
     <!-- Add auto increment -->
 
-    <changeSet id="${step?string["00"]}" author="${author}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
 <#list tables as table >
@@ -24,8 +24,8 @@
 <#list table.fields as column >
 <#if column.identity?? && column.identity >
 <#assign step++ >
-    <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addAutoIncrement
 <#if table.schema?? >

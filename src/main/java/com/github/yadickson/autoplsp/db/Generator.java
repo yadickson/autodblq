@@ -116,6 +116,10 @@ public abstract class Generator {
         return string != null ? string.trim() : null;
     }
 
+    public String getStringJoin(final String string) {
+        return string != null ? string.replaceAll("\\s+", ",") : null;
+    }
+
     /**
      * Find all table definitions from database.
      *
@@ -236,7 +240,7 @@ public abstract class Generator {
 
             TablePk field = new TablePk(
                     getString(pk.getName()),
-                    getString(pk.getColumns())
+                    getStringJoin(getString(pk.getColumns()))
             );
 
             table.getPkFields().add(field);
@@ -272,19 +276,19 @@ public abstract class Generator {
 
             TableFk field = new TableFk(
                     getString(fk.getName()),
-                    getString(fk.getColumn()),
+                    getStringJoin(getString(fk.getColumns())),
                     getString(fk.getTschema()),
                     getString(fk.getTname()),
-                    getString(fk.getTcolumn())
+                    getStringJoin(getString(fk.getTcolumns()))
             );
 
             table.getFkFields().add(field);
 
             LoggerManager.getInstance().info("[FindFkTables]  - FK " + field.getName());
-            LoggerManager.getInstance().info("[FindFkTables]          Columns: " + field.getColumn());
+            LoggerManager.getInstance().info("[FindFkTables]          Columns: " + field.getColumns());
             LoggerManager.getInstance().info("[FindFkTables]          Ref Table Schema: " + field.getTschema());
             LoggerManager.getInstance().info("[FindFkTables]          Ref Table Name: " + field.getTname());
-            LoggerManager.getInstance().info("[FindFkTables]          Ref Table Columns: " + field.getTcolumn());
+            LoggerManager.getInstance().info("[FindFkTables]          Ref Table Columns: " + field.getTcolumns());
         }
 
     }

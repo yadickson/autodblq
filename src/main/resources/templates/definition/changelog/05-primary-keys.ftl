@@ -15,16 +15,16 @@
 
     <!-- Add primary keys -->
 
-    <changeSet id="${step?string["00"]}" author="${author}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
 <#list tables as table >
 <#if table.pkFields?? >
 <#list table.pkFields as pk >
 <#assign step++ >
-    <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addPrimaryKey
             constraintName="${pk.name}" 

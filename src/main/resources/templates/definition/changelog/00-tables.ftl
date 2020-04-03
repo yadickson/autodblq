@@ -15,14 +15,14 @@
 
     <!-- Table definitions -->
 
-    <changeSet id="${step?string["00"]}" author="${author}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
 <#list tables as table >
 <#assign step++ >
-    <changeSet id="${step?string["00"]}" author="${author}" dbms="${driverName}" runOnChange="false">
-        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["00"]}"/>
+    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+        <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <createTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
 <#if table.fields?? >
