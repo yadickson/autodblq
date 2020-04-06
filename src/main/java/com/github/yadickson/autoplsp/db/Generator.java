@@ -27,13 +27,21 @@ import com.github.yadickson.autoplsp.db.bean.TableFkBean;
 import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
 import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
+import com.github.yadickson.autoplsp.db.bean.ViewBean;
+import com.github.yadickson.autoplsp.db.bean.ContentBean;
+import com.github.yadickson.autoplsp.db.bean.FunctionBean;
+import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.db.common.TableField;
 import com.github.yadickson.autoplsp.db.common.TableFk;
 import com.github.yadickson.autoplsp.db.common.TableInd;
 import com.github.yadickson.autoplsp.db.common.TablePk;
 import com.github.yadickson.autoplsp.db.common.TableUnq;
+import com.github.yadickson.autoplsp.db.common.View;
+import com.github.yadickson.autoplsp.db.util.FindFunctionImpl;
+import com.github.yadickson.autoplsp.db.util.FindProcedureImpl;
 import com.github.yadickson.autoplsp.db.util.FindTableImpl;
+import com.github.yadickson.autoplsp.db.util.FindViewImpl;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
 import java.util.HashMap;
@@ -111,6 +119,51 @@ public abstract class Generator {
      * @return sql to find foreign key
      */
     public abstract String getIndexConstraintQuery(final Table table);
+
+    /**
+     * Method getter sql views.
+     *
+     * @return sql to find views
+     */
+    public abstract String getViewsQuery();
+
+    /**
+     * Method getter text view query.
+     *
+     * @param view view
+     * @return sql to find text view
+     */
+    public abstract String getTextViewQuery(final View view);
+
+    /**
+     * Method getter sql functions.
+     *
+     * @return sql to find functions
+     */
+    public abstract String getFunctionsQuery();
+
+    /**
+     * Method getter text function query.
+     *
+     * @param function function
+     * @return sql to find text function
+     */
+    public abstract String getTextFunctionQuery(final Function function);
+
+    /**
+     * Method getter sql procedures.
+     *
+     * @return sql to find procedures
+     */
+    public abstract String getProceduresQuery();
+
+    /**
+     * Method getter text procedure query.
+     *
+     * @param procedure procedure
+     * @return sql to find text procedure
+     */
+    public abstract String getTextProcedureQuery(final Function procedure);
 
     public String getString(final String string) {
         return string != null ? string.trim() : null;
@@ -362,6 +415,222 @@ public abstract class Generator {
 
             LoggerManager.getInstance().info("[FindIndTables]  - FK " + field.getName());
             LoggerManager.getInstance().info("[FindIndTables]          Columns: " + field.getColumns());
+        }
+
+    }
+
+    /**
+     * Find all view definitions from database.
+     *
+     * @param connection Database connection.
+     * @return view definitions list.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final List<View> findViews(
+            final Connection connection
+    ) throws BusinessException, SQLException {
+
+        String sql = getViewsQuery();
+
+        List<View> list = new ArrayList<View>();
+
+        if (sql == null) {
+            return list;
+        }
+
+        LoggerManager.getInstance().info("[FindViews] Find all views");
+
+        List<ViewBean> views = new FindViewImpl().getViews(connection, sql);
+        Map<String, View> mapViews = new HashMap<String, View>();
+
+        for (ViewBean v : views) {
+
+            String tname = getString(v.getName());
+            String tschema = getString(v.getSchema());
+
+            String key = tschema + "-" + tname;
+
+            if (!mapViews.containsKey(key)) {
+                LoggerManager.getInstance().info("[FindViews] Found (" + tschema + "." + tname + ")");
+                View view = new View(tschema, tname);
+                mapViews.put(key, view);
+                list.add(view);
+            }
+        }
+
+        LoggerManager.getInstance().info("[FindViews] Found " + list.size() + " views");
+        return list;
+    }
+
+    /**
+     * Fill text view.
+     *
+     * @param connection Database connection.
+     * @param view view to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillTextView(
+            final Connection connection,
+            final View view
+    ) throws BusinessException, SQLException {
+
+        String sql = getTextViewQuery(view);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<ContentBean> text = new FindViewImpl().getText(connection, sql);
+
+        for (ContentBean value : text) {
+            view.setText(value.getText());
+            LoggerManager.getInstance().info("[FindTextView]  - " + view.getFullName());
+        }
+
+    }
+
+    /**
+     * Find all view definitions from database.
+     *
+     * @param connection Database connection.
+     * @return view definitions list.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final List<Function> findFunctions(
+            final Connection connection
+    ) throws BusinessException, SQLException {
+
+        String sql = getFunctionsQuery();
+
+        List<Function> list = new ArrayList<Function>();
+
+        if (sql == null) {
+            return list;
+        }
+
+        LoggerManager.getInstance().info("[FindFunctions] Find all functions");
+
+        List<FunctionBean> functions = new FindFunctionImpl().getFunctions(connection, sql);
+        Map<String, Function> mapFunctions = new HashMap<String, Function>();
+
+        for (FunctionBean f : functions) {
+
+            String tname = getString(f.getName());
+            String tschema = getString(f.getSchema());
+
+            String key = tschema + "-" + tname;
+
+            if (!mapFunctions.containsKey(key)) {
+                LoggerManager.getInstance().info("[FindFunctions] Found (" + tschema + "." + tname + ")");
+                Function func = new Function(tschema, tname, "Y");
+                mapFunctions.put(key, func);
+                list.add(func);
+            }
+        }
+
+        LoggerManager.getInstance().info("[FindFunctions] Found " + list.size() + " functions");
+        return list;
+    }
+
+    /**
+     * Fill text function.
+     *
+     * @param connection Database connection.
+     * @param function function to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillTextFunction(
+            final Connection connection,
+            final Function function
+    ) throws BusinessException, SQLException {
+
+        String sql = getTextFunctionQuery(function);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<ContentBean> text = new FindFunctionImpl().getText(connection, sql);
+
+        for (ContentBean value : text) {
+            function.setText(value.getText());
+            LoggerManager.getInstance().info("[FindTextFunction]  - " + function.getFullName());
+        }
+
+    }
+
+    /**
+     * Find all procedure definitions from database.
+     *
+     * @param connection Database connection.
+     * @return procedure definitions list.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final List<Function> findProcedures(
+            final Connection connection
+    ) throws BusinessException, SQLException {
+
+        String sql = getProceduresQuery();
+
+        List<Function> list = new ArrayList<Function>();
+
+        if (sql == null) {
+            return list;
+        }
+
+        LoggerManager.getInstance().info("[FindProcedures] Find all procedures");
+
+        List<FunctionBean> procedures = new FindProcedureImpl().getProcedures(connection, sql);
+        Map<String, Function> mapProcedures = new HashMap<String, Function>();
+
+        for (FunctionBean p : procedures) {
+
+            String tname = getString(p.getName());
+            String tschema = getString(p.getSchema());
+
+            String key = tschema + "-" + tname;
+
+            if (!mapProcedures.containsKey(key)) {
+                LoggerManager.getInstance().info("[FindProcedures] Found (" + tschema + "." + tname + ")");
+                Function proc = new Function(tschema, tname, "N");
+                mapProcedures.put(key, proc);
+                list.add(proc);
+            }
+        }
+
+        LoggerManager.getInstance().info("[FindProcedures] Found " + list.size() + " procedures");
+        return list;
+    }
+
+    /**
+     * Fill text procedure.
+     *
+     * @param connection Database connection.
+     * @param procedure procedure to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillTextProcedure(
+            final Connection connection,
+            final Function procedure
+    ) throws BusinessException, SQLException {
+
+        String sql = getTextProcedureQuery(procedure);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<ContentBean> text = new FindProcedureImpl().getText(connection, sql);
+
+        for (ContentBean value : text) {
+            procedure.setText(value.getText());
+            LoggerManager.getInstance().info("[FindProcedureText]  - " + procedure.getFullName());
         }
 
     }

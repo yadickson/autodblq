@@ -13,47 +13,36 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 <#assign step = 1>
 
-    <!-- Add index -->
+    <!-- View definitions -->
 
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
-<#list tables as table >
-<#if table.indFields?? >
-<#list table.indFields as ind >
+<#if views?? >
+<#list views as view >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <createIndex
-            indexName="${ind.name}"
-<#if table.schema?? >
-            schemaName="${table.schema}"
+        <createView
+            viewName="${view.name}"
+<#if view.schema?? >
+            schemaName="${view.schema}"
 </#if>
-            tableName="${table.name}"
-            unique="${ind.isUnique?c}"
-        >
-
-<#list ind.columns?split(",") as icolumn>
-            <column name="${icolumn}"/>
-</#list>
-
-        </createIndex>
+            encoding="UTF-8"
+            replaceIfExists="true"
+            fullDefinition="true"
+            path="../view/${view.name}.sql"
+            relativeToChangelogFile="true"
+        />
 
         <rollback>
-            <dropIndex
-<#if table.schema?? >
-                schemaName="${table.schema}"
-</#if>
-                tableName="${table.name}"
-                indexName="${ind.name}"
-            />
+            <dropView viewName="${view.name}"<#if view.schema?? > schemaName="${view.schema}"</#if>/>
         </rollback>
 
     </changeSet>
 
 </#list>
 </#if>
-</#list>
 </databaseChangeLog>

@@ -13,32 +13,43 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 <#assign step = 1>
 
-    <!-- Table definitions -->
+    <!-- Add primary keys -->
 
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
+<#if tables?? >
 <#list tables as table >
+<#if table.pkFields?? >
+<#list table.pkFields as pk >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <createTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
-<#if table.fields?? >
-<#list table.fields as column >
-            <column name="${column.name}" type="${column.type}<#if column.isString >(${column.length})</#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
-                <constraints nullable="<#if column.nullable?? >${column.nullable?c}<#else>false</#if>"/>
-            </column>
-</#list>
+        <addPrimaryKey
+            constraintName="${pk.name}" 
+<#if table.schema?? >
+            schemaName="${table.schema}"
 </#if>
-        </createTable>
+            tableName="${table.name}"
+            columnNames="${pk.columns}"
+        />
 
         <rollback>
-            <dropTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if>/>
+            <dropPrimaryKey
+<#if table.schema?? >
+                schemaName="${table.schema}"
+</#if>
+                tableName="${table.name}"
+                constraintName="${pk.name}"
+            />
         </rollback>
 
     </changeSet>
 
 </#list>
+</#if>
+</#list>
+</#if>
 </databaseChangeLog>

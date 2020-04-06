@@ -17,7 +17,9 @@
 package com.github.yadickson.autoplsp.db.support.db2;
 
 import com.github.yadickson.autoplsp.db.Generator;
+import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
+import com.github.yadickson.autoplsp.db.common.View;
 
 /**
  * Oracle Store procedure and function generator class.
@@ -99,6 +101,56 @@ public class DB2Generator extends Generator {
                 + "AND tabname = '" + table.getName() + "'\n"
                 + "AND tabschema = '" + table.getSchema() + "'\n"
                 + "order BY name asc";
+    }
+
+    /**
+     * Method getter sql views.
+     *
+     * @return sql to find views
+     */
+    @Override
+    public String getViewsQuery() {
+        return "SELECT viewschema schema, VIEWNAME name FROM SYSCAT.VIEWS ORDER BY SCHEMA ASC, name asc";
+    }
+
+    /**
+     * Method getter text view query.
+     *
+     * @param view view definition
+     * @return sql to find text view
+     */
+    @Override
+    public String getTextViewQuery(final View view) {
+        return "SELECT text\n"
+                + " FROM SYSCAT.VIEWS\n"
+                + "WHERE VIEWNAME = '" + view.getName() + "'\n"
+                + "AND viewschema = '" + view.getSchema() + "'";
+    }
+
+    @Override
+    public String getFunctionsQuery() {
+        return "select FUNCSCHEMA schema, FUNCNAME name from SYSCAT.FUNCTIONS";
+    }
+
+    @Override
+    public String getTextFunctionQuery(final Function function) {
+        return "SELECT BODY TEXT\n"
+                + " FROM SYSCAT.FUNCTIONS\n"
+                + "WHERE FUNCNAME = '" + function.getName() + "'\n"
+                + "AND FUNCSCHEMA = '" + function.getSchema() + "'";
+    }
+
+    @Override
+    public String getProceduresQuery() {
+        return "select PROCSCHEMA schema, PROCNAME name from SYSCAT.PROCEDURES";
+    }
+
+    @Override
+    public String getTextProcedureQuery(final Function procedure) {
+        return "SELECT TEXT\n"
+                + " FROM SYSCAT.PROCEDURES\n"
+                + "WHERE PROCNAME = '" + procedure.getName() + "'\n"
+                + "AND PROCSCHEMA = '" + procedure.getSchema() + "'";
     }
 
 }

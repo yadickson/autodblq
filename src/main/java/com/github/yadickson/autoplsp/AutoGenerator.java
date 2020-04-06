@@ -27,7 +27,9 @@ import java.util.ArrayList;
 import java.util.List;
 import org.apache.commons.lang.StringUtils;
 import com.github.yadickson.autoplsp.db.Generator;
+import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
+import com.github.yadickson.autoplsp.db.common.View;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
 import java.sql.Connection;
 import java.util.Locale;
@@ -145,6 +147,16 @@ public class AutoGenerator extends AbstractMojo {
     private String lqversion;
 
     /**
+     * Liquibase version definition file name.
+     */
+    @Parameter(
+            property = "autodblq.lqpro",
+            defaultValue = "false",
+            readonly = true,
+            required = false)
+    private String lqpro;
+
+    /**
      * Encode.
      */
     @Parameter(
@@ -164,6 +176,24 @@ public class AutoGenerator extends AbstractMojo {
     private String[] mTables;
 
     /**
+     * List views to build.
+     */
+    @Parameter(
+            alias = "views",
+            readonly = true,
+            required = false)
+    private String[] mViews;
+
+    /**
+     * List functions and procedures to build.
+     */
+    @Parameter(
+            alias = "functions",
+            readonly = true,
+            required = false)
+    private String[] mFunctions;
+
+    /**
      * List schemas to build.
      */
     @Parameter(
@@ -171,6 +201,51 @@ public class AutoGenerator extends AbstractMojo {
             readonly = true,
             required = false)
     private String[] mSchemas;
+
+    /**
+     * List sort functions and procedures to build.
+     */
+    @Parameter(
+            alias = "sortFunctions",
+            readonly = true,
+            required = false)
+    private String[] mSortFunctions;
+
+    /**
+     * List functions and procedures to build after views.
+     */
+    @Parameter(
+            alias = "sortViews",
+            readonly = true,
+            required = false)
+    private String[] mSortViews;
+
+    /**
+     * List to exclude tables to build.
+     */
+    @Parameter(
+            alias = "excludeTables",
+            readonly = true,
+            required = false)
+    private String[] mExcludeTables;
+
+    /**
+     * List to exclude views to build.
+     */
+    @Parameter(
+            alias = "excludeViews",
+            readonly = true,
+            required = false)
+    private String[] mExcludeViews;
+
+    /**
+     * List to exclude functions to build.
+     */
+    @Parameter(
+            alias = "excludeFunctions",
+            readonly = true,
+            required = false)
+    private String[] mExcludeFunctions;
 
     /**
      * Maven execute method.
@@ -191,6 +266,8 @@ public class AutoGenerator extends AbstractMojo {
         getLog().info("[AutoGenerator] Version: " + version);
         getLog().info("[AutoGenerator] Author: " + author);
         getLog().info("[AutoGenerator] LiquibaseVersion: " + lqversion);
+        getLog().info("[AutoGenerator] LiquibaseProduction: " + lqpro);
+
         getLog().info("[AutoGenerator] Encode: " + encode);
 
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
@@ -200,15 +277,85 @@ public class AutoGenerator extends AbstractMojo {
         project.addCompileSourceRoot(outputDirectory.getPath());
 
         List<String> fillTables = new ArrayList<String>();
+        List<String> fillViews = new ArrayList<String>();
+        List<String> fillFunctions = new ArrayList<String>();
+        List<String> fillSortFunctions = new ArrayList<String>();
+        List<String> fillSortViews = new ArrayList<String>();
         List<String> fillSchemas = new ArrayList<String>();
+        List<String> fillExcludeTables = new ArrayList<String>();
+        List<String> fillExcludeViews = new ArrayList<String>();
+        List<String> fillExcludeFunctions = new ArrayList<String>();
 
         String regexTable = "";
+        String regexView = "";
+        String regexFunction = "";
+        String regexSortFunction = "";
+        String regexSortViews = "";
         String regexSchema = "";
+        String regexExcludeTable = "";
+        String regexExcludeView = "";
+        String regexExcludeFunction = "";
 
         if (mTables != null) {
             for (String table : mTables) {
                 if (table != null) {
                     fillTables.add("(" + table.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mViews != null) {
+            for (String view : mViews) {
+                if (view != null) {
+                    fillViews.add("(" + view.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mFunctions != null) {
+            for (String func : mFunctions) {
+                if (func != null) {
+                    fillFunctions.add("(" + func.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mExcludeTables != null) {
+            for (String table : mExcludeTables) {
+                if (table != null) {
+                    fillExcludeTables.add("(" + table.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mExcludeViews != null) {
+            for (String view : mExcludeViews) {
+                if (view != null) {
+                    fillExcludeViews.add("(" + view.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mExcludeFunctions != null) {
+            for (String func : mExcludeFunctions) {
+                if (func != null) {
+                    fillExcludeFunctions.add("(" + func.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mSortFunctions != null) {
+            for (String sort : mSortFunctions) {
+                if (sort != null) {
+                    fillSortFunctions.add("(" + sort.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        if (mSortViews != null) {
+            for (String sort : mSortViews) {
+                if (sort != null) {
+                    fillSortViews.add("(" + sort.toUpperCase(Locale.ENGLISH) + ")");
                 }
             }
         }
@@ -225,6 +372,34 @@ public class AutoGenerator extends AbstractMojo {
             regexTable = StringUtils.join(fillTables, "|");
         }
 
+        if (!fillViews.isEmpty()) {
+            regexView = StringUtils.join(fillViews, "|");
+        }
+
+        if (!fillFunctions.isEmpty()) {
+            regexFunction = StringUtils.join(fillFunctions, "|");
+        }
+
+        if (!fillExcludeTables.isEmpty()) {
+            regexExcludeTable = StringUtils.join(fillExcludeTables, "|");
+        }
+
+        if (!fillExcludeViews.isEmpty()) {
+            regexExcludeView = StringUtils.join(fillExcludeViews, "|");
+        }
+
+        if (!fillExcludeFunctions.isEmpty()) {
+            regexExcludeFunction = StringUtils.join(fillExcludeFunctions, "|");
+        }
+
+        if (!fillSortFunctions.isEmpty()) {
+            regexSortFunction = StringUtils.join(fillSortFunctions, "|");
+        }
+
+        if (!fillSortViews.isEmpty()) {
+            regexSortViews = StringUtils.join(fillSortViews, "|");
+        }
+
         if (!fillSchemas.isEmpty()) {
             regexSchema = StringUtils.join(fillSchemas, "|");
         }
@@ -232,7 +407,14 @@ public class AutoGenerator extends AbstractMojo {
         LoggerManager.getInstance().configure(getLog());
 
         LoggerManager.getInstance().info("[AutoGenerator] RegexTable: " + regexTable);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexView: " + regexView);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexFunction: " + regexFunction);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexSortFunction: " + regexSortFunction);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexSortView: " + regexSortViews);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSchema: " + regexSchema);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeTable: " + regexExcludeTable);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeView: " + regexExcludeView);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeFunction: " + regexExcludeFunction);
 
         if (fillTables.isEmpty() && fillSchemas.isEmpty()) {
             LoggerManager.getInstance().info("[AutoGenerator] Select tables or schemas ");
@@ -246,20 +428,27 @@ public class AutoGenerator extends AbstractMojo {
             Generator generator = GeneratorFactory.getGenarator(driver);
             Connection connection = connManager.getConnection();
 
-            List<Table> found = generator.findTables(connection);
+            List<Table> tablesFound = generator.findTables(connection);
             List<Table> tables = new ArrayList<Table>();
 
             Pattern patternT = Pattern.compile(regexTable, Pattern.CASE_INSENSITIVE);
+            Pattern patternV = Pattern.compile(regexView, Pattern.CASE_INSENSITIVE);
+            Pattern patternF = Pattern.compile(regexFunction, Pattern.CASE_INSENSITIVE);
+            Pattern patternSortV = Pattern.compile(regexSortViews, Pattern.CASE_INSENSITIVE);
+            Pattern patternSortF = Pattern.compile(regexSortFunction, Pattern.CASE_INSENSITIVE);
             Pattern patternS = Pattern.compile(regexSchema, Pattern.CASE_INSENSITIVE);
+            Pattern patternExcludeT = Pattern.compile(regexExcludeTable, Pattern.CASE_INSENSITIVE);
+            Pattern patternExcludeV = Pattern.compile(regexExcludeView, Pattern.CASE_INSENSITIVE);
+            Pattern patternExcludeF = Pattern.compile(regexExcludeFunction, Pattern.CASE_INSENSITIVE);
 
-            for (Table table : found) {
+            for (Table table : tablesFound) {
 
                 String name = table.getName();
                 String schema = table.getSchema();
 
                 boolean match = patternT.matcher(name).matches() || patternS.matcher(schema).matches();
 
-                if (match) {
+                if (match && !patternExcludeT.matcher(name).matches()) {
                     tables.add(table);
                 }
             }
@@ -273,16 +462,78 @@ public class AutoGenerator extends AbstractMojo {
                 generator.fillIndConstraints(connection, table);
             }
 
+            List<View> viewsFound = generator.findViews(connection);
+            List<View> sortViews = new ArrayList<View>();
+            List<View> viewList = new ArrayList<View>();
+
+            for (View view : viewsFound) {
+
+                String name = view.getName();
+                String schema = view.getSchema();
+
+                boolean match = patternV.matcher(name).matches() || patternS.matcher(schema).matches();
+
+                if (match && !patternExcludeV.matcher(name).matches()) {
+                    LoggerManager.getInstance().info("[AutoGenerator] Process view name: " + view.getFullName());
+                    generator.fillTextView(connection, view);
+
+                    if (patternSortV.matcher(name).matches()) {
+                        sortViews.add(view);
+                    } else {
+                        viewList.add(view);
+                    }
+                }
+            }
+
+            sortViews.addAll(viewList);
+
+            List<Function> functionsFound = generator.findFunctions(connection);
+            List<Function> proceduresFound = generator.findProcedures(connection);
+
+            List<Function> sortFunctions = new ArrayList<Function>();
+            List<Function> functionsList = new ArrayList<Function>();
+
+            functionsFound.addAll(proceduresFound);
+
+            for (Function func : functionsFound) {
+
+                String name = func.getName();
+                String schema = func.getSchema();
+
+                boolean match = patternF.matcher(name).matches() || patternS.matcher(schema).matches();
+
+                if (match && !patternExcludeF.matcher(name).matches()) {
+                    LoggerManager.getInstance().info("[AutoGenerator] Process function name: " + func.getFullName());
+
+                    if (func.getIsFunction()) {
+                        generator.fillTextFunction(connection, func);
+                    } else {
+                        generator.fillTextProcedure(connection, func);
+                    }
+
+                    if (patternSortF.matcher(name).matches()) {
+                        sortFunctions.add(func);
+                    } else {
+                        functionsList.add(func);
+                    }
+                }
+            }
+
+            sortFunctions.addAll(functionsList);
+
             DefinitionGenerator definition;
             definition = new DefinitionGenerator(
                     outputDirectory.getPath(),
                     definitionFolder,
                     tables,
+                    sortViews,
+                    sortFunctions,
                     generator.getName(),
                     connManager.getVersion(),
                     version,
                     author,
-                    lqversion
+                    lqversion,
+                    "true".equalsIgnoreCase(lqpro)
             );
 
             definition.process();
@@ -308,6 +559,51 @@ public class AutoGenerator extends AbstractMojo {
     }
 
     /**
+     * Setter the exclude tables from configuracion
+     *
+     * @param tables the tables to include from configuracion
+     */
+    public void setExcludeTables(String[] tables) {
+        mExcludeTables = tables == null ? null : tables.clone();
+    }
+
+    /**
+     * Setter the views from configuracion
+     *
+     * @param views the views to include from configuracion
+     */
+    public void setViews(String[] views) {
+        mViews = views == null ? null : views.clone();
+    }
+
+    /**
+     * Setter the views from configuracion
+     *
+     * @param views the views to include from configuracion
+     */
+    public void setExcludeViews(String[] views) {
+        mExcludeViews = views == null ? null : views.clone();
+    }
+
+    /**
+     * Setter the functions from configuracion
+     *
+     * @param functions the functions to include from configuracion
+     */
+    public void setFunctions(String[] functions) {
+        mFunctions = functions == null ? null : functions.clone();
+    }
+
+    /**
+     * Setter the exclude functions from configuracion
+     *
+     * @param functions the functions to include from configuracion
+     */
+    public void setExcludeFunctions(String[] functions) {
+        mExcludeFunctions = functions == null ? null : functions.clone();
+    }
+
+    /**
      * Setter the schemas from configuracion
      *
      * @param schemas the schemas to include from configuracion
@@ -315,4 +611,23 @@ public class AutoGenerator extends AbstractMojo {
     public void setSchemas(String[] schemas) {
         mSchemas = schemas == null ? null : schemas.clone();
     }
+
+    /**
+     * Setter the sort views from configuracion
+     *
+     * @param sort the views to include from configuracion
+     */
+    public void setSortViews(String[] sort) {
+        mSortViews = sort == null ? null : sort.clone();
+    }
+
+    /**
+     * Setter the sort function and procedures from configuracion
+     *
+     * @param sort the function and procedures to include from configuracion
+     */
+    public void setSortFunctions(String[] sort) {
+        mSortFunctions = sort == null ? null : sort.clone();
+    }
+
 }

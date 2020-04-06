@@ -25,6 +25,9 @@ Maven plugin to generate xml liquibase files from database
 - UNIQUE CONSTRAINS
 - PRIMARY KEY CONSTRAINS
 - FOREIGN KEY CONSTRAINS (missing onDelete and onUpdate actions yet)
+- VIEWS
+- FUNCTIONS
+- PROCEDURES
 
 ## POM properties
 
@@ -105,10 +108,40 @@ Maven plugin to generate xml liquibase files from database
         <password>...</password>
         <author>...</author>
         <version>...</version>
+        <lqversion>...</lqversion>
+        <lqpro>...</lqpro>
         <tables>
             <param>...</param>
             <param>...</param>
         </tables>
+        <views>
+            <param>...</param>
+            <param>...</param>
+        </views>
+        <functions>
+            <param>...</param>
+            <param>...</param>
+        </functions>
+        <sortViews>
+            <param>...</param>
+            <param>...</param>
+        </sortViews>
+        <sortFunctions>
+            <param>...</param>
+            <param>...</param>
+        </sortFunctions>
+        <excludeTables>
+            <param>...</param>
+            <param>...</param>
+        </excludeTables>
+        <excludeViews>
+            <param>...</param>
+            <param>...</param>
+        </excludeViews>
+        <excludeFunctions>
+            <param>...</param>
+            <param>...</param>
+        </excludeFunctions>
         <schemas>
             <param>...</param>
             <param>...</param>
@@ -172,9 +205,25 @@ Database username
 
 Database password
 
+### lqversion (optional)
+
+Liquibase version, default 3.6
+
+### lqpro (optional)
+
+Liquibase pro license, default false
+
 ### tables (optional)
 
 Tables to include, example XY.*
+
+### views (optional)
+
+Views to include, example VXY.*
+
+### functions (optional)
+
+Functions to include, example FXY.*
 
 ### schemas (optional)
 

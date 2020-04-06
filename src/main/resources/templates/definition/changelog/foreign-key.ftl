@@ -13,49 +13,50 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 <#assign step = 1>
 
-    <!-- Add default values -->
+    <!-- Add foreing keys -->
 
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
+<#if tables?? >
 <#list tables as table >
-<#if table.fields?? >
-<#list table.fields as column >
-<#if column.defaultValue?? >
-<#if column.isNumeric || column.isString >
+<#if table.fkFields?? >
+<#list table.fkFields as fk >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <addDefaultValue
+        <addForeignKeyConstraint
+            constraintName="${fk.name}"
 <#if table.schema?? >
-            schemaName="${table.schema}"
+            baseTableSchemaName="${table.schema}"
 </#if>
-            tableName="${table.name}"
-            columnName="${column.name}"
-<#if column.isNumeric >
-            defaultValueNumeric="${column.defaultValue}"
-<#else>
-            defaultValue="${column.defaultValue}"
+            baseTableName="${table.name}"
+            baseColumnNames="${fk.columns}"
+<#if fk.tschema?? >
+            referencedTableSchemaName="${fk.tschema}"
 </#if>
+            referencedTableName="${fk.tname}" 
+            referencedColumnNames="${fk.tcolumns}"
+            onDelete="NO ACTION" 
+            onUpdate="NO ACTION"
         />
 
         <rollback>
-            <dropDefaultValue
+            <dropForeignKeyConstraint
 <#if table.schema?? >
-                schemaName="${table.schema}"
+                baseTableSchemaName="${table.schema}"
 </#if>
-                tableName="${table.name}"
-                columnName="${column.name}"
+                baseTableName="${table.name}"
+                constraintName="${fk.name}"
             />
         </rollback>
 
     </changeSet>
 
-</#if>
-</#if>
 </#list>
 </#if>
 </#list>
+</#if>
 </databaseChangeLog>

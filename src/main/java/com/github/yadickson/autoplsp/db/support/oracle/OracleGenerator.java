@@ -17,7 +17,9 @@
 package com.github.yadickson.autoplsp.db.support.oracle;
 
 import com.github.yadickson.autoplsp.db.Generator;
+import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
+import com.github.yadickson.autoplsp.db.common.View;
 
 /**
  * Oracle Store procedure and function generator class.
@@ -67,6 +69,36 @@ public class OracleGenerator extends Generator {
 
     @Override
     public String getIndexConstraintQuery(final Table table) {
+        return null;
+    }
+
+    @Override
+    public String getViewsQuery() {
+        return null;
+    }
+
+    @Override
+    public String getTextViewQuery(final View view) {
+        return null;
+    }
+
+    @Override
+    public String getFunctionsQuery() {
+        return null;
+    }
+
+    @Override
+    public String getTextFunctionQuery(final Function function) {
+        return null;
+    }
+
+    @Override
+    public String getProceduresQuery() {
+        return null;
+    }
+
+    @Override
+    public String getTextProcedureQuery(final Function procedure) {
         return null;
     }
 

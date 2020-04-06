@@ -13,37 +13,49 @@
     http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 <#assign step = 1>
 
-    <!-- Add auto increment -->
+    <!-- Add index -->
 
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
+<#if tables?? >
 <#list tables as table >
-<#if table.fields?? >
-<#list table.fields as column >
-<#if column.identity?? && column.identity >
+<#if table.indFields?? >
+<#list table.indFields as ind >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <addAutoIncrement
+        <createIndex
+            indexName="${ind.name}"
 <#if table.schema?? >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${column.name}"
-            incrementBy="1"
-            startWith="1"
-        />
+            unique="${ind.isUnique?c}"
+        >
+
+<#list ind.columns?split(",") as icolumn>
+            <column name="${icolumn}"/>
+</#list>
+
+        </createIndex>
 
         <rollback>
+            <dropIndex
+<#if table.schema?? >
+                schemaName="${table.schema}"
+</#if>
+                tableName="${table.name}"
+                indexName="${ind.name}"
+            />
         </rollback>
 
     </changeSet>
 
-</#if>
 </#list>
 </#if>
 </#list>
+</#if>
 </databaseChangeLog>

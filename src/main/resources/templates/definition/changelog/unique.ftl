@@ -19,6 +19,7 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
+<#if tables?? >
 <#list tables as table >
 <#if table.unqFields?? >
 <#list table.unqFields as unq >
@@ -50,4 +51,5 @@
 </#list>
 </#if>
 </#list>
+</#if>
 </databaseChangeLog>
