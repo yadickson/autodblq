@@ -31,7 +31,7 @@
 <#list tables as table >
 <#if table.defFields?? >
 <#list table.defFields as def >
-<#if typeUtil.isNumeric(def.type) || typeUtil.isString(def.type) >
+<#if typeUtil.isNumeric(def.type) || typeUtil.isString(def.type) || (typeUtil.isDate(def.type) && def.value != 'DEFAULT') >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -42,7 +42,7 @@
 </#if>
             tableName="${table.name}"
             columnName="${def.column}"
-            defaultValue<#if typeUtil.isNumeric(def.type) >Numeric</#if>="${def.value}"
+            defaultValue<#if typeUtil.isNumeric(def.type) >Numeric<#elseif typeUtil.isDate(def.type) >Computed</#if>="${def.value}"
         />
 
         <rollback>

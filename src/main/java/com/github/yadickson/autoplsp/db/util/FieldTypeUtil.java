@@ -30,4 +30,8 @@ public final class FieldTypeUtil {
         return string.contains("INT") || string.contains("FLOAT") || string.contains("REAL");
     }
 
+    public Boolean isDate(final String string) {
+        return string.contains("DATE") || string.contains("TIMESTAMP");
+    }
+
 }
