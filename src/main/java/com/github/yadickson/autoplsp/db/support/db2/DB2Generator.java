@@ -44,7 +44,7 @@ public class DB2Generator extends Generator {
      */
     @Override
     public String getTablesQuery() {
-        return "SELECT tabschema schema, tabname name, remarks FROM syscat.tables WHERE TYPE = 'T' ORDER BY SCHEMA ASC, name asc";
+        return "SELECT tabschema schema, tabname name, remarks FROM syscat.tables WHERE TYPE != 'V' ORDER BY SCHEMA ASC, name asc";
     }
 
     @Override
