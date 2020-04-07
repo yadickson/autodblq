@@ -49,7 +49,7 @@ public class DB2Generator extends Generator {
 
     @Override
     public String getColumnQuery(final Table table) {
-        return "SELECT t.colno POSITION, t.colname name, t.typename type, t.length, t.NULLS nullable, t.scale, t.default defaultval, t.IDENTITY, t.remarks\n"
+        return "SELECT t.colno POSITION, t.colname name, t.typename type, t.length, t.NULLS nullable, t.scale, t.remarks\n"
                 + "  FROM syscat.columns t\n"
                 + " WHERE t.tabname = '" + table.getName() + "'\n"
                 + "   AND t.tabschema = '" + table.getSchema() + "'\n"
@@ -101,6 +101,38 @@ public class DB2Generator extends Generator {
                 + "AND tabname = '" + table.getName() + "'\n"
                 + "AND tabschema = '" + table.getSchema() + "'\n"
                 + "order BY name asc";
+    }
+
+    /**
+     * Method getter sql default Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    @Override
+    public String getDefaultColumnQuery(final Table table) {
+        return "SELECT t.colname column, t.typename type, t.default value\n"
+                + "  FROM syscat.columns t\n"
+                + " WHERE t.tabname = '" + table.getName() + "'\n"
+                + "   AND t.tabschema = '" + table.getSchema() + "'\n"
+                + "   AND t.default IS NOT NULL" + "\n"
+                + " ORDER BY t.colno";
+    }
+
+    /**
+     * Method getter sql auto increment Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    @Override
+    public String getIncrementColumnQuery(final Table table) {
+        return "SELECT t.colname column, t.typename type\n"
+                + "  FROM syscat.columns t\n"
+                + " WHERE t.tabname = '" + table.getName() + "'\n"
+                + "   AND t.tabschema = '" + table.getSchema() + "'\n"
+                + "   AND t.IDENTITY = 'Y'" + "\n"
+                + " ORDER BY t.colno";
     }
 
     /**

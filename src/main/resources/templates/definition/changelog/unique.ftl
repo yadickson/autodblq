@@ -23,6 +23,14 @@
 <#list tables as table >
 <#if table.unqFields?? >
 <#list table.unqFields as unq >
+    <!-- ${table.fullName} : ${unq.name} -->
+</#list>
+</#if>
+</#list>
+
+<#list tables as table >
+<#if table.unqFields?? >
+<#list table.unqFields as unq >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>

@@ -72,6 +72,28 @@ public class OracleGenerator extends Generator {
         return null;
     }
 
+    /**
+     * Method getter sql default Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    @Override
+    public String getDefaultColumnQuery(final Table table) {
+        return null;
+    }
+
+    /**
+     * Method getter sql auto increment Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    @Override
+    public String getIncrementColumnQuery(final Table table) {
+        return null;
+    }
+
     @Override
     public String getViewsQuery() {
         return null;

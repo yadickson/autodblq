@@ -21,6 +21,10 @@
 
 <#if tables?? >
 <#list tables as table >
+    <!-- ${table.fullName} -->
+</#list>
+
+<#list tables as table >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -28,7 +32,7 @@
         <createTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
 <#if table.fields?? >
 <#list table.fields as column >
-            <column name="${column.name}" type="${column.type}<#if column.isString >(${column.length})</#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
+            <column name="${column.name}" type="${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
                 <constraints nullable="<#if column.nullable?? >${column.nullable?c}<#else>false</#if>"/>
             </column>
 </#list>

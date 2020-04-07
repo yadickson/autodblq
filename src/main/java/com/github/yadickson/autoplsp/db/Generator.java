@@ -30,10 +30,14 @@ import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
 import com.github.yadickson.autoplsp.db.bean.ViewBean;
 import com.github.yadickson.autoplsp.db.bean.ContentBean;
 import com.github.yadickson.autoplsp.db.bean.FunctionBean;
+import com.github.yadickson.autoplsp.db.bean.TableDefBean;
+import com.github.yadickson.autoplsp.db.bean.TableIncBean;
 import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
+import com.github.yadickson.autoplsp.db.common.TableDef;
 import com.github.yadickson.autoplsp.db.common.TableField;
 import com.github.yadickson.autoplsp.db.common.TableFk;
+import com.github.yadickson.autoplsp.db.common.TableInc;
 import com.github.yadickson.autoplsp.db.common.TableInd;
 import com.github.yadickson.autoplsp.db.common.TablePk;
 import com.github.yadickson.autoplsp.db.common.TableUnq;
@@ -119,6 +123,22 @@ public abstract class Generator {
      * @return sql to find foreign key
      */
     public abstract String getIndexConstraintQuery(final Table table);
+
+    /**
+     * Method getter sql default Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    public abstract String getDefaultColumnQuery(final Table table);
+
+    /**
+     * Method getter sql auto increment Column by table.
+     *
+     * @param table table
+     * @return sql to find column
+     */
+    public abstract String getIncrementColumnQuery(final Table table);
 
     /**
      * Method getter sql views.
@@ -248,8 +268,6 @@ public abstract class Generator {
                     getString(t.getLength()),
                     getString(t.getScale()),
                     getString(t.getNullable()),
-                    getString(t.getDefaultval()),
-                    getString(t.getIdentity()),
                     getString(t.getRemarks())
             );
 
@@ -261,9 +279,6 @@ public abstract class Generator {
             LoggerManager.getInstance().info("[FindColumnTable]          Length: " + field.getLength());
             LoggerManager.getInstance().info("[FindColumnTable]          Scale: " + field.getScale());
             LoggerManager.getInstance().info("[FindColumnTable]          Nullable: " + field.getNullable());
-            LoggerManager.getInstance().info("[FindColumnTable]          DefaultValue: " + field.getDefaultValue());
-            LoggerManager.getInstance().info("[FindColumnTable]          Identity: " + field.getIdentity());
-            LoggerManager.getInstance().info("[FindColumnTable]          Identity: " + field.getIsString());
         }
 
     }
@@ -415,6 +430,80 @@ public abstract class Generator {
 
             LoggerManager.getInstance().info("[FindIndTables]  - FK " + field.getName());
             LoggerManager.getInstance().info("[FindIndTables]          Columns: " + field.getColumns());
+        }
+
+    }
+
+    /**
+     * Fill all default constraints.
+     *
+     * @param connection Database connection.
+     * @param table table to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillDefConstraints(
+            final Connection connection,
+            final Table table
+    ) throws BusinessException, SQLException {
+
+        String sql = getDefaultColumnQuery(table);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<TableDefBean> defaults = new FindTableImpl().getDefConstraints(connection, sql);
+
+        for (TableDefBean def : defaults) {
+
+            TableDef field = new TableDef(
+                    getString(def.getColumn()),
+                    getString(def.getType()),
+                    getString(def.getValue())
+            );
+
+            table.getDefFields().add(field);
+
+            LoggerManager.getInstance().info("[FindDefTables]  - Column " + field.getColumn());
+            LoggerManager.getInstance().info("[FindDefTables]          Type: " + field.getType());
+            LoggerManager.getInstance().info("[FindDefTables]          Value: " + field.getValue());
+        }
+
+    }
+
+    /**
+     * Fill all increment constraints.
+     *
+     * @param connection Database connection.
+     * @param table table to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillIncConstraints(
+            final Connection connection,
+            final Table table
+    ) throws BusinessException, SQLException {
+
+        String sql = getIncrementColumnQuery(table);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<TableIncBean> increments = new FindTableImpl().getIncrementConstraints(connection, sql);
+
+        for (TableIncBean inc : increments) {
+
+            TableInc field = new TableInc(
+                    getString(inc.getColumn()),
+                    getString(inc.getType())
+            );
+
+            table.getIncFields().add(field);
+
+            LoggerManager.getInstance().info("[FindIncTables]  - Column " + field.getColumn());
+            LoggerManager.getInstance().info("[FindIncTables]          Type: " + field.getType());
         }
 
     }

@@ -23,6 +23,14 @@
 <#list tables as table >
 <#if table.fkFields?? >
 <#list table.fkFields as fk >
+    <!-- ${table.fullName} : ${fk.name} -->
+</#list>
+</#if>
+</#list>
+
+<#list tables as table >
+<#if table.fkFields?? >
+<#list table.fkFields as fk >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>

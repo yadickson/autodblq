@@ -28,15 +28,7 @@ public final class TableField implements Serializable {
 
     private final String scale;
 
-    private final String defaultValue;
-
-    private final Boolean identity;
-
     private final String remarks;
-
-    private final Boolean isString;
-
-    private final Boolean isNumeric;
 
     /**
      * Class constructor.
@@ -58,8 +50,6 @@ public final class TableField implements Serializable {
             final String length,
             final String scale,
             final String nullable,
-            final String defaultValue,
-            final String identity,
             final String remarks
     ) {
         this.name = name;
@@ -68,19 +58,7 @@ public final class TableField implements Serializable {
         this.length = length;
         this.scale = scale;
         this.nullable = "Y".equalsIgnoreCase(nullable);
-        this.defaultValue = defaultValue;
-        this.identity = "Y".equalsIgnoreCase(identity);
         this.remarks = remarks;
-        this.isString = processString(type);
-        this.isNumeric = processNumeric(type);
-    }
-
-    public Boolean processString(final String string) {
-        return string.contains("CHAR");
-    }
-
-    public Boolean processNumeric(final String string) {
-        return string.contains("INT") || string.contains("FLOAT") || string.contains("REAL");
     }
 
     /**
@@ -126,38 +104,10 @@ public final class TableField implements Serializable {
     }
 
     /**
-     * @return the defaultValue
-     */
-    public String getDefaultValue() {
-        return defaultValue;
-    }
-
-    /**
-     * @return the identity
-     */
-    public Boolean getIdentity() {
-        return identity;
-    }
-
-    /**
      * @return the remarks
      */
     public String getRemarks() {
         return remarks;
-    }
-
-    /**
-     * @return the isString
-     */
-    public Boolean getIsString() {
-        return isString;
-    }
-
-    /**
-     * @return the isNumeric
-     */
-    public Boolean getIsNumeric() {
-        return isNumeric;
     }
 
 }

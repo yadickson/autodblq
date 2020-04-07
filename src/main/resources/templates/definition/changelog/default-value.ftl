@@ -21,10 +21,17 @@
 
 <#if tables?? >
 <#list tables as table >
-<#if table.fields?? >
-<#list table.fields as column >
-<#if column.defaultValue?? >
-<#if column.isNumeric || column.isString >
+<#if table.defFields?? >
+<#list table.defFields as def >
+    <!-- ${table.fullName} : ${def.column} - ${def.type} - ${def.value} -->
+</#list>
+</#if>
+</#list>
+
+<#list tables as table >
+<#if table.defFields?? >
+<#list table.defFields as def >
+<#if typeUtil.isNumeric(def.type) || typeUtil.isString(def.type) >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -34,12 +41,8 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${column.name}"
-<#if column.isNumeric >
-            defaultValueNumeric="${column.defaultValue}"
-<#else>
-            defaultValue="${column.defaultValue}"
-</#if>
+            columnName="${def.column}"
+            defaultValue<#if typeUtil.isNumeric(def.type) >Numeric</#if>="${def.value}"
         />
 
         <rollback>
@@ -48,13 +51,12 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                columnName="${column.name}"
+                columnName="${def.column}"
             />
         </rollback>
 
     </changeSet>
 
-</#if>
 </#if>
 </#list>
 </#if>

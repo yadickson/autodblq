@@ -276,133 +276,15 @@ public class AutoGenerator extends AbstractMojo {
 
         project.addCompileSourceRoot(outputDirectory.getPath());
 
-        List<String> fillTables = new ArrayList<String>();
-        List<String> fillViews = new ArrayList<String>();
-        List<String> fillFunctions = new ArrayList<String>();
-        List<String> fillSortFunctions = new ArrayList<String>();
-        List<String> fillSortViews = new ArrayList<String>();
-        List<String> fillSchemas = new ArrayList<String>();
-        List<String> fillExcludeTables = new ArrayList<String>();
-        List<String> fillExcludeViews = new ArrayList<String>();
-        List<String> fillExcludeFunctions = new ArrayList<String>();
-
-        String regexTable = "";
-        String regexView = "";
-        String regexFunction = "";
-        String regexSortFunction = "";
-        String regexSortViews = "";
-        String regexSchema = "";
-        String regexExcludeTable = "";
-        String regexExcludeView = "";
-        String regexExcludeFunction = "";
-
-        if (mTables != null) {
-            for (String table : mTables) {
-                if (table != null) {
-                    fillTables.add("(" + table.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mViews != null) {
-            for (String view : mViews) {
-                if (view != null) {
-                    fillViews.add("(" + view.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mFunctions != null) {
-            for (String func : mFunctions) {
-                if (func != null) {
-                    fillFunctions.add("(" + func.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mExcludeTables != null) {
-            for (String table : mExcludeTables) {
-                if (table != null) {
-                    fillExcludeTables.add("(" + table.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mExcludeViews != null) {
-            for (String view : mExcludeViews) {
-                if (view != null) {
-                    fillExcludeViews.add("(" + view.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mExcludeFunctions != null) {
-            for (String func : mExcludeFunctions) {
-                if (func != null) {
-                    fillExcludeFunctions.add("(" + func.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mSortFunctions != null) {
-            for (String sort : mSortFunctions) {
-                if (sort != null) {
-                    fillSortFunctions.add("(" + sort.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mSortViews != null) {
-            for (String sort : mSortViews) {
-                if (sort != null) {
-                    fillSortViews.add("(" + sort.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (mSchemas != null) {
-            for (String schema : mSchemas) {
-                if (schema != null) {
-                    fillSchemas.add("(" + schema.toUpperCase(Locale.ENGLISH) + ")");
-                }
-            }
-        }
-
-        if (!fillTables.isEmpty()) {
-            regexTable = StringUtils.join(fillTables, "|");
-        }
-
-        if (!fillViews.isEmpty()) {
-            regexView = StringUtils.join(fillViews, "|");
-        }
-
-        if (!fillFunctions.isEmpty()) {
-            regexFunction = StringUtils.join(fillFunctions, "|");
-        }
-
-        if (!fillExcludeTables.isEmpty()) {
-            regexExcludeTable = StringUtils.join(fillExcludeTables, "|");
-        }
-
-        if (!fillExcludeViews.isEmpty()) {
-            regexExcludeView = StringUtils.join(fillExcludeViews, "|");
-        }
-
-        if (!fillExcludeFunctions.isEmpty()) {
-            regexExcludeFunction = StringUtils.join(fillExcludeFunctions, "|");
-        }
-
-        if (!fillSortFunctions.isEmpty()) {
-            regexSortFunction = StringUtils.join(fillSortFunctions, "|");
-        }
-
-        if (!fillSortViews.isEmpty()) {
-            regexSortViews = StringUtils.join(fillSortViews, "|");
-        }
-
-        if (!fillSchemas.isEmpty()) {
-            regexSchema = StringUtils.join(fillSchemas, "|");
-        }
+        String regexTable = getRegex(mTables);
+        String regexView = getRegex(mViews);
+        String regexFunction = getRegex(mFunctions);
+        String regexSortFunction = getRegex(mSortFunctions);
+        String regexSortViews = getRegex(mSortViews);
+        String regexSchema = getRegex(mSchemas);
+        String regexExcludeTable = getRegex(mExcludeTables);
+        String regexExcludeView = getRegex(mExcludeViews);
+        String regexExcludeFunction = getRegex(mExcludeFunctions);
 
         LoggerManager.getInstance().configure(getLog());
 
@@ -416,7 +298,7 @@ public class AutoGenerator extends AbstractMojo {
         LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeView: " + regexExcludeView);
         LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeFunction: " + regexExcludeFunction);
 
-        if (fillTables.isEmpty() && fillSchemas.isEmpty()) {
+        if (regexTable.isEmpty() && regexSchema.isEmpty()) {
             LoggerManager.getInstance().info("[AutoGenerator] Select tables or schemas ");
             return;
         }
@@ -460,6 +342,8 @@ public class AutoGenerator extends AbstractMojo {
                 generator.fillFkConstraints(connection, table);
                 generator.fillUnqConstraints(connection, table);
                 generator.fillIndConstraints(connection, table);
+                generator.fillDefConstraints(connection, table);
+                generator.fillIncConstraints(connection, table);
             }
 
             List<View> viewsFound = generator.findViews(connection);
@@ -547,6 +431,27 @@ public class AutoGenerator extends AbstractMojo {
         } finally {
             connManager.closeConnection();
         }
+    }
+
+    public String getRegex(final String[] array) {
+
+        List<String> list = new ArrayList<String>();
+
+        if (array != null) {
+            for (String element : array) {
+                if (element != null) {
+                    list.add("(" + element.toUpperCase(Locale.ENGLISH) + ")");
+                }
+            }
+        }
+
+        String result = "";
+
+        if (!list.isEmpty()) {
+            result = StringUtils.join(list, "|");
+        }
+
+        return result;
     }
 
     /**

@@ -19,6 +19,7 @@ package com.github.yadickson.autoplsp;
 import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.db.common.View;
+import com.github.yadickson.autoplsp.db.util.FieldTypeUtil;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
 import java.io.File;
@@ -64,6 +65,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private static final String LQ_PRO = "lqpro";
     private static final String CHANGELOG_PATH = "changelogpath";
     private static final String FILES = "files";
+    private static final String TYPE_UTIL = "typeUtil";
 
     /**
      * Class constructor
@@ -125,6 +127,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
         input.put(DRIVER_NAME, driverName);
         input.put(DRIVER_VERSION, driverVersion);
         input.put(CHANGELOG_PATH, CHANGELOG);
+        input.put(TYPE_UTIL, new FieldTypeUtil());
 
         int file = 0;
 
@@ -168,8 +171,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
 
         input.put(FUNCTIONS, functions);
         input.put(FILE, ++file);
-        name = String.format("%02d-function-procedure.xml", file);
-        createTemplate(input, "/definition/changelog/function-procedure.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+        name = String.format("%02d-functions.xml", file);
+        createTemplate(input, "/definition/changelog/function.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
         files.add(name);
 
         input.put(FILE, ++file);

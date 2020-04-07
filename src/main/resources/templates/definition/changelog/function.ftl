@@ -28,6 +28,10 @@
 
 <#if functions?? >
 <#list functions as func >
+    <!-- ${func.fullName} -->
+</#list>
+
+<#list functions as func >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>

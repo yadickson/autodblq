@@ -21,9 +21,16 @@
 
 <#if tables?? >
 <#list tables as table >
-<#if table.fields?? >
-<#list table.fields as column >
-<#if column.identity?? && column.identity >
+<#if table.incFields?? >
+<#list table.incFields as inc >
+    <!-- ${table.fullName} : ${inc.column} - ${inc.type} -->
+</#list>
+</#if>
+</#list>
+
+<#list tables as table >
+<#if table.incFields?? >
+<#list table.incFields as inc >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -33,7 +40,7 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${column.name}"
+            columnName="${inc.column}"
             incrementBy="1"
             startWith="1"
         />
@@ -43,7 +50,6 @@
 
     </changeSet>
 
-</#if>
 </#list>
 </#if>
 </#list>

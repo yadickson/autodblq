@@ -23,6 +23,14 @@
 <#list tables as table >
 <#if table.indFields?? >
 <#list table.indFields as ind >
+    <!-- ${table.fullName} : ${ind.name} -->
+</#list>
+</#if>
+</#list>
+
+<#list tables as table >
+<#if table.indFields?? >
+<#list table.indFields as ind >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>

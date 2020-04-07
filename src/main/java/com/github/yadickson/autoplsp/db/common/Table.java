@@ -37,6 +37,10 @@ public final class Table implements Serializable {
 
     private final List<TableField> fields = new ArrayList<TableField>();
 
+    private final List<TableInc> incFields = new ArrayList<TableInc>();
+
+    private final List<TableDef> defFields = new ArrayList<TableDef>();
+
     private final List<TablePk> pkFields = new ArrayList<TablePk>();
 
     private final List<TableFk> fkFields = new ArrayList<TableFk>();
@@ -116,6 +120,20 @@ public final class Table implements Serializable {
      */
     public List<TableInd> getIndFields() {
         return indFields;
+    }
+
+    /**
+     * @return the autoIncFields
+     */
+    public List<TableInc> getIncFields() {
+        return incFields;
+    }
+
+    /**
+     * @return the defFields
+     */
+    public List<TableDef> getDefFields() {
+        return defFields;
     }
 
 }

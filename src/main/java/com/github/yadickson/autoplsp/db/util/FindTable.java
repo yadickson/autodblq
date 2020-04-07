@@ -9,8 +9,10 @@ import java.sql.Connection;
 import java.util.List;
 
 import com.github.yadickson.autoplsp.db.bean.TableBean;
+import com.github.yadickson.autoplsp.db.bean.TableDefBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIncBean;
 import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
 import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
@@ -33,5 +35,9 @@ public interface FindTable {
     List<TableUnqBean> getUniqueConstraints(Connection connection, String sql) throws BusinessException;
 
     List<TableIndBean> getIndexConstraints(Connection connection, String sql) throws BusinessException;
+
+    List<TableDefBean> getDefConstraints(Connection connection, String sql) throws BusinessException;
+
+    List<TableIncBean> getIncrementConstraints(Connection connection, String sql) throws BusinessException;
 
 }

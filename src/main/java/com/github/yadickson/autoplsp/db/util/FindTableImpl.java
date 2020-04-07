@@ -6,17 +6,14 @@
 package com.github.yadickson.autoplsp.db.util;
 
 import java.sql.Connection;
-import java.sql.SQLException;
-import java.util.ArrayList;
 import java.util.List;
 
-import org.apache.commons.dbutils.QueryRunner;
-import org.apache.commons.dbutils.ResultSetHandler;
-import org.apache.commons.dbutils.handlers.BeanListHandler;
 
 import com.github.yadickson.autoplsp.db.bean.TableBean;
+import com.github.yadickson.autoplsp.db.bean.TableDefBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIncBean;
 import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
 import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
@@ -30,128 +27,42 @@ public class FindTableImpl implements FindTable {
 
     @Override
     public List<TableBean> getTables(Connection connection, String sql) throws BusinessException {
-
-        List<TableBean> list = new ArrayList<TableBean>();
-
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TableBean>> h = new BeanListHandler<TableBean>(TableBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find attributes", ex);
-        }
-
-        return list;
+        return new FindImpl<TableBean>().getList(connection, sql, TableBean.class);
     }
 
     @Override
     public List<TableFieldBean> getColumns(Connection connection, String sql) throws BusinessException {
-
-        List<TableFieldBean> list = new ArrayList<TableFieldBean>();
-
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TableFieldBean>> h = new BeanListHandler<TableFieldBean>(TableFieldBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find attributes", ex);
-        }
-
-        return list;
+        return new FindImpl<TableFieldBean>().getList(connection, sql, TableFieldBean.class);
     }
 
     @Override
     public List<TablePkBean> getPkConstraints(Connection connection, String sql) throws BusinessException {
-
-        List<TablePkBean> list = new ArrayList<TablePkBean>();
-
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TablePkBean>> h = new BeanListHandler<TablePkBean>(TablePkBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find pks", ex);
-        }
-
-        return list;
+        return new FindImpl<TablePkBean>().getList(connection, sql, TablePkBean.class);
     }
 
     @Override
     public List<TableFkBean> getFkConstraints(Connection connection, String sql) throws BusinessException {
-
-        List<TableFkBean> list = new ArrayList<TableFkBean>();
-
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TableFkBean>> h = new BeanListHandler<TableFkBean>(TableFkBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find fks", ex);
-        }
-
-        return list;
+        return new FindImpl<TableFkBean>().getList(connection, sql, TableFkBean.class);
     }
 
     @Override
     public List<TableUnqBean> getUniqueConstraints(Connection connection, String sql) throws BusinessException {
-
-        List<TableUnqBean> list = new ArrayList<TableUnqBean>();
-
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TableUnqBean>> h = new BeanListHandler<TableUnqBean>(TableUnqBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find uniques", ex);
-        }
-
-        return list;
+        return new FindImpl<TableUnqBean>().getList(connection, sql, TableUnqBean.class);
     }
 
     @Override
     public List<TableIndBean> getIndexConstraints(Connection connection, String sql) throws BusinessException {
+        return new FindImpl<TableIndBean>().getList(connection, sql, TableIndBean.class);
+    }
 
-        List<TableIndBean> list = new ArrayList<TableIndBean>();
+    @Override
+    public List<TableDefBean> getDefConstraints(Connection connection, String sql) throws BusinessException {
+        return new FindImpl<TableDefBean>().getList(connection, sql, TableDefBean.class);
+    }
 
-        if (connection == null) {
-            return list;
-        }
-
-        QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<TableIndBean>> h = new BeanListHandler<TableIndBean>(TableIndBean.class);
-
-        try {
-            list = run.query(connection, sql, h);
-        } catch (SQLException ex) {
-            throw new BusinessException("[FindTableImpl] Error find indexs", ex);
-        }
-
-        return list;
+    @Override
+    public List<TableIncBean> getIncrementConstraints(Connection connection, String sql) throws BusinessException {
+        return new FindImpl<TableIncBean>().getList(connection, sql, TableIncBean.class);
     }
 
 }
