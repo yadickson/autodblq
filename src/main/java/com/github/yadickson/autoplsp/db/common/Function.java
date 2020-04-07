@@ -40,6 +40,7 @@ public final class Function implements Serializable {
      *
      * @param schema The schema
      * @param name The name
+     * @param isFunction Function flag true, else procedure
      */
     public Function(final String schema, final String name, final String isFunction) {
         this.schema = schema;

@@ -39,8 +39,6 @@ public final class TableField implements Serializable {
      * @param length length.
      * @param scale precision.
      * @param nullable null flag.
-     * @param defaultValue default value.
-     * @param identity char used.
      * @param remarks the remarks
      */
     public TableField(
