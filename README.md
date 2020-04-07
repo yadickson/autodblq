@@ -28,24 +28,12 @@ Maven plugin to generate xml liquibase files from database
 - VIEWS
 - FUNCTIONS
 - PROCEDURES
+- SEQUENCES (not yet)
+- RESET SEQUENCES (not yet)
+- INSERT DATA TABLES (not yet)
+- TRIGGERS (not yet)
 
-## POM properties
-
-```xml
-<properties>
-    <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-</properties>
-```
-
-## POM dependencies
-
-```xml        
-<dependency>
-    <groupId>commons-io</groupId>
-    <artifactId>commons-io</artifactId>
-    <version>2.5</version>
-</dependency>
-```
+## Dependencies
 
 ## DB2
 
@@ -147,13 +135,6 @@ Maven plugin to generate xml liquibase files from database
             <param>...</param>
         </schemas>
     </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>...driver..</groupId>
-            <artifactId>..driver..</artifactId>
-            <version>..version..</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 
@@ -242,13 +223,6 @@ Schemas to include, example MN.*
             <param>...</param>
         </tables>
     </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>...driver..</groupId>
-            <artifactId>..driver..</artifactId>
-            <version>..version..</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 
@@ -280,13 +254,6 @@ $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.use
             <param>...</param>
         </tables>
     </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>...driver..</groupId>
-            <artifactId>..driver..</artifactId>
-            <version>..version..</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 
@@ -314,13 +281,6 @@ $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.use
             <param>...</param>
         </schemas>
     </configuration>
-    <dependencies>
-        <dependency>
-            <groupId>...driver..</groupId>
-            <artifactId>..driver..</artifactId>
-            <version>..version..</version>
-        </dependency>
-    </dependencies>
 </plugin>
 ```
 

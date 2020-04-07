@@ -38,6 +38,7 @@ public final class TableInd implements Serializable {
      *
      * @param name The name
      * @param columns The columns
+     * @param isUnique Is unique flag
      */
     public TableInd(final String name, final String columns, final String isUnique) {
         this.name = name;

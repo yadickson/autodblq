@@ -34,7 +34,7 @@
 <#if view.schema?? >
             schemaName="${view.schema}"
 </#if>
-            encoding="UTF-8"
+            encoding="${encode}"
             replaceIfExists="true"
             fullDefinition="true"
             path="../view/${view.name}.sql"

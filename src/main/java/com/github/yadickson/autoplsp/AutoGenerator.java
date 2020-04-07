@@ -267,7 +267,6 @@ public class AutoGenerator extends AbstractMojo {
         getLog().info("[AutoGenerator] Author: " + author);
         getLog().info("[AutoGenerator] LiquibaseVersion: " + lqversion);
         getLog().info("[AutoGenerator] LiquibaseProduction: " + lqpro);
-
         getLog().info("[AutoGenerator] Encode: " + encode);
 
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
@@ -298,11 +297,6 @@ public class AutoGenerator extends AbstractMojo {
         LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeView: " + regexExcludeView);
         LoggerManager.getInstance().info("[AutoGenerator] RegexExcludeFunction: " + regexExcludeFunction);
 
-        if (regexTable.isEmpty() && regexSchema.isEmpty()) {
-            LoggerManager.getInstance().info("[AutoGenerator] Select tables or schemas ");
-            return;
-        }
-
         DriverConnection connManager = new DriverConnection(driver, url, username, password);
 
         try {
@@ -310,8 +304,9 @@ public class AutoGenerator extends AbstractMojo {
             Generator generator = GeneratorFactory.getGenarator(driver);
             Connection connection = connManager.getConnection();
 
-            List<Table> tablesFound = generator.findTables(connection);
             List<Table> tables = new ArrayList<Table>();
+            List<View> views = new ArrayList<View>();
+            List<Function> functions = new ArrayList<Function>();
 
             Pattern patternT = Pattern.compile(regexTable, Pattern.CASE_INSENSITIVE);
             Pattern patternV = Pattern.compile(regexView, Pattern.CASE_INSENSITIVE);
@@ -323,101 +318,107 @@ public class AutoGenerator extends AbstractMojo {
             Pattern patternExcludeV = Pattern.compile(regexExcludeView, Pattern.CASE_INSENSITIVE);
             Pattern patternExcludeF = Pattern.compile(regexExcludeFunction, Pattern.CASE_INSENSITIVE);
 
-            for (Table table : tablesFound) {
+            if (!regexTable.isEmpty() || !regexSchema.isEmpty()) {
+                List<Table> tablesFound = generator.findTables(connection);
 
-                String name = table.getName();
-                String schema = table.getSchema();
+                for (Table table : tablesFound) {
 
-                boolean match = patternT.matcher(name).matches() || patternS.matcher(schema).matches();
+                    String name = table.getName();
+                    String schema = table.getSchema();
 
-                if (match && !patternExcludeT.matcher(name).matches()) {
-                    tables.add(table);
+                    boolean match = patternT.matcher(name).matches() || patternS.matcher(schema).matches();
+
+                    if (match && !patternExcludeT.matcher(name).matches()) {
+                        tables.add(table);
+                    }
+                }
+
+                for (Table table : tables) {
+                    LoggerManager.getInstance().info("[AutoGenerator] Process table name: " + table.getFullName());
+                    generator.fillColumns(connection, table);
+                    generator.fillPkConstraints(connection, table);
+                    generator.fillFkConstraints(connection, table);
+                    generator.fillUnqConstraints(connection, table);
+                    generator.fillIndConstraints(connection, table);
+                    generator.fillDefConstraints(connection, table);
+                    generator.fillIncConstraints(connection, table);
                 }
             }
 
-            for (Table table : tables) {
-                LoggerManager.getInstance().info("[AutoGenerator] Process table name: " + table.getFullName());
-                generator.fillColumns(connection, table);
-                generator.fillPkConstraints(connection, table);
-                generator.fillFkConstraints(connection, table);
-                generator.fillUnqConstraints(connection, table);
-                generator.fillIndConstraints(connection, table);
-                generator.fillDefConstraints(connection, table);
-                generator.fillIncConstraints(connection, table);
-            }
+            if (!regexView.isEmpty() || !regexSchema.isEmpty()) {
+                List<View> viewsFound = generator.findViews(connection);
+                List<View> viewList = new ArrayList<View>();
 
-            List<View> viewsFound = generator.findViews(connection);
-            List<View> sortViews = new ArrayList<View>();
-            List<View> viewList = new ArrayList<View>();
+                for (View view : viewsFound) {
 
-            for (View view : viewsFound) {
+                    String name = view.getName();
+                    String schema = view.getSchema();
 
-                String name = view.getName();
-                String schema = view.getSchema();
+                    boolean match = patternV.matcher(name).matches() || patternS.matcher(schema).matches();
 
-                boolean match = patternV.matcher(name).matches() || patternS.matcher(schema).matches();
+                    if (match && !patternExcludeV.matcher(name).matches()) {
+                        LoggerManager.getInstance().info("[AutoGenerator] Process view name: " + view.getFullName());
+                        generator.fillTextView(connection, view);
 
-                if (match && !patternExcludeV.matcher(name).matches()) {
-                    LoggerManager.getInstance().info("[AutoGenerator] Process view name: " + view.getFullName());
-                    generator.fillTextView(connection, view);
-
-                    if (patternSortV.matcher(name).matches()) {
-                        sortViews.add(view);
-                    } else {
-                        viewList.add(view);
+                        if (patternSortV.matcher(name).matches()) {
+                            views.add(view);
+                        } else {
+                            viewList.add(view);
+                        }
                     }
                 }
+
+                views.addAll(viewList);
             }
 
-            sortViews.addAll(viewList);
+            if (!regexFunction.isEmpty() || !regexSchema.isEmpty()) {
+                List<Function> functionsFound = generator.findFunctions(connection);
+                List<Function> proceduresFound = generator.findProcedures(connection);
+                List<Function> functionsList = new ArrayList<Function>();
 
-            List<Function> functionsFound = generator.findFunctions(connection);
-            List<Function> proceduresFound = generator.findProcedures(connection);
+                functionsFound.addAll(proceduresFound);
 
-            List<Function> sortFunctions = new ArrayList<Function>();
-            List<Function> functionsList = new ArrayList<Function>();
+                for (Function func : functionsFound) {
 
-            functionsFound.addAll(proceduresFound);
+                    String name = func.getName();
+                    String schema = func.getSchema();
 
-            for (Function func : functionsFound) {
+                    boolean match = patternF.matcher(name).matches() || patternS.matcher(schema).matches();
 
-                String name = func.getName();
-                String schema = func.getSchema();
+                    if (match && !patternExcludeF.matcher(name).matches()) {
+                        LoggerManager.getInstance().info("[AutoGenerator] Process function name: " + func.getFullName());
 
-                boolean match = patternF.matcher(name).matches() || patternS.matcher(schema).matches();
+                        if (func.getIsFunction()) {
+                            generator.fillTextFunction(connection, func);
+                        } else {
+                            generator.fillTextProcedure(connection, func);
+                        }
 
-                if (match && !patternExcludeF.matcher(name).matches()) {
-                    LoggerManager.getInstance().info("[AutoGenerator] Process function name: " + func.getFullName());
-
-                    if (func.getIsFunction()) {
-                        generator.fillTextFunction(connection, func);
-                    } else {
-                        generator.fillTextProcedure(connection, func);
-                    }
-
-                    if (patternSortF.matcher(name).matches()) {
-                        sortFunctions.add(func);
-                    } else {
-                        functionsList.add(func);
+                        if (patternSortF.matcher(name).matches()) {
+                            functions.add(func);
+                        } else {
+                            functionsList.add(func);
+                        }
                     }
                 }
-            }
 
-            sortFunctions.addAll(functionsList);
+                functions.addAll(functionsList);
+            }
 
             DefinitionGenerator definition;
             definition = new DefinitionGenerator(
                     outputDirectory.getPath(),
                     definitionFolder,
                     tables,
-                    sortViews,
-                    sortFunctions,
+                    views,
+                    functions,
                     generator.getName(),
                     connManager.getVersion(),
                     version,
                     author,
                     lqversion,
-                    "true".equalsIgnoreCase(lqpro)
+                    "true".equalsIgnoreCase(lqpro),
+                    encode
             );
 
             definition.process();

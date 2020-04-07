@@ -49,13 +49,13 @@
 <#if func.schema?? >
             schemaName="${func.schema}"
 </#if>
-            encoding="UTF-8"
+            encoding="${encode}"
             replaceIfExists="true"
             relativeToChangelogFile="true"
         />
 <#else>
         <sqlFile
-            encoding="UTF-8"
+            encoding="${encode}"
             path="../<#if func.isFunction >function<#else>procedure</#if>/${func.name}.sql"
             relativeToChangelogFile="true"
             splitStatements="false"

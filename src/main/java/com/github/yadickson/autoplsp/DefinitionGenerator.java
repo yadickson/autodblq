@@ -47,6 +47,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private final String author;
     private final String lqVersion;
     private final Boolean lqPro;
+    private final String encode;
+
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
     private final String FUNCTION = "function";
@@ -66,6 +68,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private static final String CHANGELOG_PATH = "changelogpath";
     private static final String FILES = "files";
     private static final String TYPE_UTIL = "typeUtil";
+    private static final String ENCODE = "encode";
 
     /**
      * Class constructor
@@ -80,7 +83,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * @param version files version
      * @param author author
      * @param lqVersion liquibase version
-     * @param lqPro
+     * @param lqPro liquibase pro support
+     * @param encode encode
      */
     public DefinitionGenerator(
             final String outputDir,
@@ -93,7 +97,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
             final String version,
             final String author,
             final String lqVersion,
-            final Boolean lqPro
+            final Boolean lqPro,
+            final String encode
     ) {
         super(outputDir, null);
         this.definitionPath = definitionPath;
@@ -106,6 +111,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
         this.author = author;
         this.lqVersion = lqVersion;
         this.lqPro = lqPro;
+        this.encode = encode;
     }
 
     /**
@@ -128,57 +134,65 @@ public final class DefinitionGenerator extends TemplateGenerator {
         input.put(DRIVER_VERSION, driverVersion);
         input.put(CHANGELOG_PATH, CHANGELOG);
         input.put(TYPE_UTIL, new FieldTypeUtil());
+        input.put(ENCODE, encode);
 
         int file = 0;
 
         List<String> files = new ArrayList<String>();
         String name;
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-tables.xml", file);
-        createTemplate(input, "/definition/changelog/table.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+        if (!tables.isEmpty()) {
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-default-values.xml", file);
-        createTemplate(input, "/definition/changelog/default-value.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-tables.xml", file);
+            createTemplate(input, "/definition/changelog/table.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-auto-increment.xml", file);
-        createTemplate(input, "/definition/changelog/auto-increment.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-default-values.xml", file);
+            createTemplate(input, "/definition/changelog/default-value.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-index.xml", file);
-        createTemplate(input, "/definition/changelog/index.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-auto-increment.xml", file);
+            createTemplate(input, "/definition/changelog/auto-increment.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-unique.xml", file);
-        createTemplate(input, "/definition/changelog/unique.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-index.xml", file);
+            createTemplate(input, "/definition/changelog/index.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-primary-keys.xml", file);
-        createTemplate(input, "/definition/changelog/primary-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-unique.xml", file);
+            createTemplate(input, "/definition/changelog/unique.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-foreign-keys.xml", file);
-        createTemplate(input, "/definition/changelog/foreign-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-primary-keys.xml", file);
+            createTemplate(input, "/definition/changelog/primary-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
 
-        input.put(FUNCTIONS, functions);
-        input.put(FILE, ++file);
-        name = String.format("%02d-functions.xml", file);
-        createTemplate(input, "/definition/changelog/function.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+            input.put(FILE, ++file);
+            name = String.format("%02d-foreign-keys.xml", file);
+            createTemplate(input, "/definition/changelog/foreign-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
+        }
 
-        input.put(FILE, ++file);
-        name = String.format("%02d-views.xml", file);
-        createTemplate(input, "/definition/changelog/view.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
-        files.add(name);
+        if (!functions.isEmpty()) {
+            input.put(FUNCTIONS, functions);
+            input.put(FILE, ++file);
+            name = String.format("%02d-functions.xml", file);
+            createTemplate(input, "/definition/changelog/function.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
+        }
+
+        if (!views.isEmpty()) {
+            input.put(FILE, ++file);
+            name = String.format("%02d-views.xml", file);
+            createTemplate(input, "/definition/changelog/view.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
+        }
 
         input.put(FILES, files);
         createTemplate(input, "/definition/masterchangelog.ftl", getFileNamePath(version + File.separator + "", "version-changelog.xml"));
