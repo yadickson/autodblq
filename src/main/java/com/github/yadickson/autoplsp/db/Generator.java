@@ -178,6 +178,25 @@ public abstract class Generator {
     public abstract String getProceduresQuery();
 
     /**
+     * Method getter sql data tables count.
+     *
+     * @param table table
+     * @return sql to find data table count
+     */
+    public abstract String getDataTableRegistersQuery(final Table table);
+
+    /**
+     * Method getter sql data tables.
+     *
+     * @param table table
+     * @param quotchar char para string
+     * @param separator separator
+     * @param blocks blocks to read
+     * @return sql to find data table contents
+     */
+    public abstract String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer blocks);
+
+    /**
      * Method getter text procedure query.
      *
      * @param procedure procedure
@@ -723,4 +742,36 @@ public abstract class Generator {
         }
 
     }
+
+    /**
+     * Fill all data table.
+     *
+     * @param connection Database connection.
+     * @param table table to fill.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final void fillDataTable(
+            final Connection connection,
+            final Table table
+    ) throws BusinessException, SQLException {
+
+        String sql = getDataTableQuery(table, "#", ",", 100);
+        LoggerManager.getInstance().info("[fillDataTable]  - " + sql);
+
+        if (sql == null) {
+            return;
+        }
+
+        List<ContentBean> texts = new FindTableImpl().getDataTable(connection, sql);
+
+        for (ContentBean text : texts) {
+            LoggerManager.getInstance().info("[fillDataTable]  - " + text.getText());
+            // table.getDataFields().add(text.getText());
+        }
+
+        LoggerManager.getInstance().info("[fillDataTable]  - registers " + texts.size());
+
+    }
+
 }

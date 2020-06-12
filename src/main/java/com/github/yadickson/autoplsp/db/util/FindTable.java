@@ -5,6 +5,7 @@
  */
 package com.github.yadickson.autoplsp.db.util;
 
+import com.github.yadickson.autoplsp.db.bean.ContentBean;
 import java.sql.Connection;
 import java.util.List;
 
@@ -40,4 +41,5 @@ public interface FindTable {
 
     List<TableIncBean> getIncrementConstraints(Connection connection, String sql) throws BusinessException;
 
+    List<ContentBean> getDataTable(Connection connection, String sql) throws BusinessException;
 }

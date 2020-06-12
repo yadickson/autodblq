@@ -48,6 +48,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private final String lqVersion;
     private final Boolean lqPro;
     private final String encode;
+    private final String csvQuotchar;
+    private final String csvSeparator;
 
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
@@ -69,6 +71,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private static final String FILES = "files";
     private static final String TYPE_UTIL = "typeUtil";
     private static final String ENCODE = "encode";
+    private static final String QUOTCHAR = "quotchar";
+    private static final String SEPARATOR = "separator";
 
     /**
      * Class constructor
@@ -85,6 +89,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * @param lqVersion liquibase version
      * @param lqPro liquibase pro support
      * @param encode encode
+     * @param csvQuotchar csv quotchar
+     * @param csvSeparator csv separator
      */
     public DefinitionGenerator(
             final String outputDir,
@@ -98,7 +104,9 @@ public final class DefinitionGenerator extends TemplateGenerator {
             final String author,
             final String lqVersion,
             final Boolean lqPro,
-            final String encode
+            final String encode,
+            final String csvQuotchar,
+            final String csvSeparator
     ) {
         super(outputDir, null);
         this.definitionPath = definitionPath;
@@ -112,6 +120,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
         this.lqVersion = lqVersion;
         this.lqPro = lqPro;
         this.encode = encode;
+        this.csvQuotchar = csvQuotchar;
+        this.csvSeparator = csvSeparator;
     }
 
     /**
@@ -135,6 +145,8 @@ public final class DefinitionGenerator extends TemplateGenerator {
         input.put(CHANGELOG_PATH, CHANGELOG);
         input.put(TYPE_UTIL, new FieldTypeUtil());
         input.put(ENCODE, encode);
+        input.put(QUOTCHAR, csvQuotchar);
+        input.put(SEPARATOR, csvSeparator);
 
         int file = 0;
 
@@ -176,6 +188,11 @@ public final class DefinitionGenerator extends TemplateGenerator {
             input.put(FILE, ++file);
             name = String.format("%02d-foreign-keys.xml", file);
             createTemplate(input, "/definition/changelog/foreign-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
+            files.add(name);
+
+            input.put(FILE, ++file);
+            name = String.format("%02d-load-data.xml", file);
+            createTemplate(input, "/definition/changelog/load-data.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
             files.add(name);
         }
 

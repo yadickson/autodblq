@@ -167,6 +167,26 @@ public class AutoGenerator extends AbstractMojo {
     private String encode;
 
     /**
+     * csvQuotchar.
+     */
+    @Parameter(
+            property = "autodblq.csvQuotchar",
+            defaultValue = "'",
+            readonly = true,
+            required = false)
+    private String csvQuotchar;
+
+    /**
+     * csvSeparator.
+     */
+    @Parameter(
+            property = "autodblq.csvSeparator",
+            defaultValue = ",",
+            readonly = true,
+            required = false)
+    private String csvSeparator;
+
+    /**
      * List tables to build.
      */
     @Parameter(
@@ -192,6 +212,15 @@ public class AutoGenerator extends AbstractMojo {
             readonly = true,
             required = false)
     private String[] mFunctions;
+
+    /**
+     * List data tables to read.
+     */
+    @Parameter(
+            alias = "dataTables",
+            readonly = true,
+            required = false)
+    private String[] mDataTables;
 
     /**
      * List schemas to build.
@@ -268,6 +297,9 @@ public class AutoGenerator extends AbstractMojo {
         getLog().info("[AutoGenerator] LiquibaseVersion: " + lqversion);
         getLog().info("[AutoGenerator] LiquibaseProduction: " + lqpro);
         getLog().info("[AutoGenerator] Encode: " + encode);
+        getLog().info("[AutoGenerator] CSV Quotchar: " + csvQuotchar);
+        getLog().info("[AutoGenerator] CSV Separator: " + csvSeparator);
+        
 
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
             throw new MojoExecutionException("Fail make " + outputDirectory + " directory.");
@@ -278,6 +310,7 @@ public class AutoGenerator extends AbstractMojo {
         String regexTable = getRegex(mTables);
         String regexView = getRegex(mViews);
         String regexFunction = getRegex(mFunctions);
+        String regexDataTable = getRegex(mDataTables);
         String regexSortFunction = getRegex(mSortFunctions);
         String regexSortViews = getRegex(mSortViews);
         String regexSchema = getRegex(mSchemas);
@@ -290,6 +323,7 @@ public class AutoGenerator extends AbstractMojo {
         LoggerManager.getInstance().info("[AutoGenerator] RegexTable: " + regexTable);
         LoggerManager.getInstance().info("[AutoGenerator] RegexView: " + regexView);
         LoggerManager.getInstance().info("[AutoGenerator] RegexFunction: " + regexFunction);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexDataTable: " + regexDataTable);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSortFunction: " + regexSortFunction);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSortView: " + regexSortViews);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSchema: " + regexSchema);
@@ -311,6 +345,7 @@ public class AutoGenerator extends AbstractMojo {
             Pattern patternT = Pattern.compile(regexTable, Pattern.CASE_INSENSITIVE);
             Pattern patternV = Pattern.compile(regexView, Pattern.CASE_INSENSITIVE);
             Pattern patternF = Pattern.compile(regexFunction, Pattern.CASE_INSENSITIVE);
+            Pattern patternDT = Pattern.compile(regexDataTable, Pattern.CASE_INSENSITIVE);
             Pattern patternSortV = Pattern.compile(regexSortViews, Pattern.CASE_INSENSITIVE);
             Pattern patternSortF = Pattern.compile(regexSortFunction, Pattern.CASE_INSENSITIVE);
             Pattern patternS = Pattern.compile(regexSchema, Pattern.CASE_INSENSITIVE);
@@ -342,6 +377,7 @@ public class AutoGenerator extends AbstractMojo {
                     generator.fillIndConstraints(connection, table);
                     generator.fillDefConstraints(connection, table);
                     generator.fillIncConstraints(connection, table);
+                    table.setGenerateData(patternDT.matcher(table.getName()).matches());
                 }
             }
 
@@ -418,7 +454,9 @@ public class AutoGenerator extends AbstractMojo {
                     author,
                     lqversion,
                     "true".equalsIgnoreCase(lqpro),
-                    encode
+                    encode,
+                    csvQuotchar,
+                    csvSeparator
             );
 
             definition.process();
@@ -498,6 +536,15 @@ public class AutoGenerator extends AbstractMojo {
      */
     public void setFunctions(String[] functions) {
         mFunctions = functions == null ? null : functions.clone();
+    }
+
+    /**
+     * Setter the data tables from configuracion
+     *
+     * @param tables the data tables to include from configuracion
+     */
+    public void setDataTables(String[] tables) {
+        mDataTables = tables == null ? null : tables.clone();
     }
 
     /**

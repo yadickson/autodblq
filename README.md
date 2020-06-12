@@ -32,6 +32,7 @@ Maven plugin to generate xml liquibase files from database
 - RESET SEQUENCES (not yet)
 - INSERT DATA TABLES (not yet)
 - TRIGGERS (not yet)
+- Data tables
 
 ## Dependencies
 
@@ -110,6 +111,10 @@ Maven plugin to generate xml liquibase files from database
             <param>...</param>
             <param>...</param>
         </functions>
+        <dataTables>
+            <param>...</param>
+            <param>...</param>
+        </dataTables>
         <sortViews>
             <param>...</param>
             <param>...</param>

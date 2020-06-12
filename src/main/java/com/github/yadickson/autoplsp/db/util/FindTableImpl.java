@@ -5,6 +5,7 @@
  */
 package com.github.yadickson.autoplsp.db.util;
 
+import com.github.yadickson.autoplsp.db.bean.ContentBean;
 import java.sql.Connection;
 import java.util.List;
 
@@ -65,4 +66,8 @@ public class FindTableImpl implements FindTable {
         return new FindImpl<TableIncBean>().getList(connection, sql, TableIncBean.class);
     }
 
+    @Override
+    public List<ContentBean> getDataTable(Connection connection, String sql) throws BusinessException {
+        return new FindImpl<ContentBean>().getList(connection, sql, ContentBean.class);
+    }
 }

@@ -19,7 +19,12 @@ package com.github.yadickson.autoplsp.db.support.db2;
 import com.github.yadickson.autoplsp.db.Generator;
 import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
+import com.github.yadickson.autoplsp.db.common.TableField;
 import com.github.yadickson.autoplsp.db.common.View;
+import com.github.yadickson.autoplsp.db.util.FieldTypeUtil;
+import java.util.ArrayList;
+import java.util.List;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Oracle Store procedure and function generator class.
@@ -183,6 +188,59 @@ public class DB2Generator extends Generator {
                 + " FROM SYSCAT.PROCEDURES\n"
                 + "WHERE PROCNAME = '" + procedure.getName() + "'\n"
                 + "AND PROCSCHEMA = '" + procedure.getSchema() + "'";
+    }
+
+    /**
+     * Method getter sql data tables count.
+     *
+     * @param table table
+     * @return sql to find data table count
+     */
+    @Override
+    public String getDataTableRegistersQuery(final Table table) {
+        return "SELECT COUNT(1) AS COUNT FROM " + table.getFullName();
+    }
+
+    /**
+     * Method getter sql data tables.
+     *
+     * @param table table
+     * @param quotchar char para string
+     * @param separator separator
+     * @param blocks blocks to read
+     * @return sql to find data table contents
+     */
+    @Override
+    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer blocks) {
+        String sql = "SELECT ";
+        List<String> list = new ArrayList<String>();
+        FieldTypeUtil util = new FieldTypeUtil();
+
+        for (TableField field : table.getFields()) {
+            Boolean isString = util.isString(field.getType());
+            Boolean isDate = util.isDate(field.getType());
+            
+            String str = "";
+
+            if (isString) {
+                str += "'" + quotchar + "'||";
+            }
+
+            str += "NVL(" + field.getName() + ", ' ')";
+
+            if (isString) {
+                str += "||'" + quotchar + "'";
+            }
+
+            list.add(str);
+
+        }
+
+        sql += StringUtils.join(list, "||'" + separator + "'||");
+        sql += " AS TEXT"
+                + " FROM " + table.getFullName();
+
+        return sql;
     }
 
 }

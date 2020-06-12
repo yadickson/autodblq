@@ -124,4 +124,30 @@ public class PostgreSqlGenerator extends Generator {
         return null;
     }
 
+    /**
+     * Method getter sql data tables count.
+     *
+     * @param table table
+     * @return sql to find data table count
+     */
+    @Override
+    public String getDataTableRegistersQuery(final Table table){
+        return null;
+    }
+            
+
+    /**
+     * Method getter sql data tables.
+     *
+     * @param table table
+     * @param quotchar char para string
+     * @param separator separator
+     * @param blocks blocks to read
+     * @return sql to find data table contents
+     */
+    @Override
+    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer blocks) {
+        return null;
+    }
+
 }

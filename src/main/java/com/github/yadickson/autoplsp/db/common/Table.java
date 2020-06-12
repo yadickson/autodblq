@@ -49,6 +49,8 @@ public final class Table implements Serializable {
 
     private final List<TableInd> indFields = new ArrayList<TableInd>();
 
+    private Boolean generateData = false;
+
     /**
      * Class constructor.
      *
@@ -63,7 +65,11 @@ public final class Table implements Serializable {
     }
 
     public String getFullName() {
-        return schema + "." + name;
+         if (schema != null ) {
+            return schema + "." + name;
+        } else {
+            return name;
+        }
     }
 
     /**
@@ -134,6 +140,20 @@ public final class Table implements Serializable {
      */
     public List<TableDef> getDefFields() {
         return defFields;
+    }
+
+    /**
+     * @return the generateData
+     */
+    public Boolean getGenerateData() {
+        return generateData;
+    }
+
+    /**
+     * @param generateData the generateData to set
+     */
+    public void setGenerateData(Boolean generateData) {
+        this.generateData = generateData;
     }
 
 }
