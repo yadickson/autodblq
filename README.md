@@ -99,6 +99,8 @@ Maven plugin to generate xml liquibase files from database
         <version>...</version>
         <lqversion>...</lqversion>
         <lqpro>...</lqpro>
+        <csvQuotchar>...</csvQuotchar>
+        <csvSeparator>...</csvSeparator>
         <tables>
             <param>...</param>
             <param>...</param>
@@ -111,10 +113,10 @@ Maven plugin to generate xml liquibase files from database
             <param>...</param>
             <param>...</param>
         </functions>
-        <dataTables>
+        <loadData>
             <param>...</param>
             <param>...</param>
-        </dataTables>
+        </loadData>
         <sortViews>
             <param>...</param>
             <param>...</param>
@@ -214,6 +216,18 @@ Functions to include, example FXY.*
 ### schemas (optional)
 
 Schemas to include, example MN.*
+
+### loadData (optional)
+
+Load data table content, example TXY.*
+
+### csvQuotchar (optional, default ')
+
+Csv Quotchar to load data table content
+
+### csvSeparator (optional, default ,)
+
+Csv Separator to load data table content
 
 # Command line support
 

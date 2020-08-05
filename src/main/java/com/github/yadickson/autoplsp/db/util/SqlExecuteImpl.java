@@ -12,17 +12,26 @@ import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
-import com.github.yadickson.autoplsp.handler.BusinessException;
 import org.apache.commons.dbutils.handlers.BeanListHandler;
 
+import com.github.yadickson.autoplsp.handler.BusinessException;
+
 /**
+ * Sql execute implementation.
  *
  * @author Yadickson Soto
- * @param <T> template
  */
-public final class FindImpl<T> {
+public final class SqlExecuteImpl implements SqlExecute {
 
-    public List<T> getList(Connection connection, String sql, Class<T> t) throws BusinessException {
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public <T> List<T> execute(
+            final Connection connection,
+            final String sql,
+            final Class<T> clazz
+    ) throws BusinessException {
 
         List<T> list = new ArrayList<T>();
 
@@ -31,12 +40,12 @@ public final class FindImpl<T> {
         }
 
         QueryRunner run = new QueryRunner();
-        ResultSetHandler<List<T>> h = new BeanListHandler<T>(t);
+        ResultSetHandler<List<T>> h = new BeanListHandler<T>(clazz);
 
         try {
             list = run.query(connection, sql, h);
         } catch (SQLException ex) {
-            throw new BusinessException("[FindImpl] Error find elements", ex);
+            throw new BusinessException("[SqlExecute] Error to execute sql", ex);
         }
 
         return list;

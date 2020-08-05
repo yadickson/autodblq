@@ -38,11 +38,13 @@ public final class DefinitionGenerator extends TemplateGenerator {
 
     private final String definitionPath;
     private final List<Table> tables;
+    private final List<Table> loadData;
     private final List<View> views;
     private final List<Function> functions;
     private final String driverName;
     private final String driverVersion;
 
+    private final String dbVersion;
     private final String version;
     private final String author;
     private final String lqVersion;
@@ -55,12 +57,12 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private final String VIEW = "view";
     private final String FUNCTION = "function";
     private final String PROCEDURE = "procedure";
-    private final String CSV = "csv";
 
     private static final String FILE = "file";
     private static final String VERSION = "version";
     private static final String AUTHOR = "author";
     private static final String TABLES = "tables";
+    private static final String LOAD_DATA = "loaddata";
     private static final String VIEWS = "views";
     private static final String FUNCTIONS = "functions";
     private static final String DRIVER_NAME = "driverName";
@@ -73,6 +75,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
     private static final String ENCODE = "encode";
     private static final String QUOTCHAR = "quotchar";
     private static final String SEPARATOR = "separator";
+    private static final String DB_VERSION = "dbversion";
 
     /**
      * Class constructor
@@ -80,6 +83,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * @param outputDir Output resource directory
      * @param definitionPath definition path
      * @param tables table list
+     * @param loadData data table list
      * @param views view list
      * @param functions functions
      * @param driverName The driver name.
@@ -91,11 +95,13 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * @param encode encode
      * @param csvQuotchar csv quotchar
      * @param csvSeparator csv separator
+     * @param dbVersion data base version
      */
     public DefinitionGenerator(
             final String outputDir,
             final String definitionPath,
             final List<Table> tables,
+            final List<Table> loadData,
             final List<View> views,
             final List<Function> functions,
             final String driverName,
@@ -106,11 +112,13 @@ public final class DefinitionGenerator extends TemplateGenerator {
             final Boolean lqPro,
             final String encode,
             final String csvQuotchar,
-            final String csvSeparator
+            final String csvSeparator,
+            final String dbVersion
     ) {
         super(outputDir, null);
         this.definitionPath = definitionPath;
         this.tables = tables;
+        this.loadData = loadData;
         this.views = views;
         this.functions = functions;
         this.driverName = driverName;
@@ -122,6 +130,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
         this.encode = encode;
         this.csvQuotchar = csvQuotchar;
         this.csvSeparator = csvSeparator;
+        this.dbVersion = dbVersion;
     }
 
     /**
@@ -131,10 +140,11 @@ public final class DefinitionGenerator extends TemplateGenerator {
      * error
      */
     public void process() throws BusinessException {
-        LoggerManager.getInstance().info("[LiquibaseGenerator] Process template tables");
+        LoggerManager.getInstance().info("[LiquibaseGenerator] Process templates");
         Map<String, Object> input = new HashMap<String, Object>();
 
         input.put(TABLES, tables);
+        input.put(LOAD_DATA, loadData);
         input.put(VIEWS, views);
         input.put(VERSION, version);
         input.put(AUTHOR, author);
@@ -147,6 +157,7 @@ public final class DefinitionGenerator extends TemplateGenerator {
         input.put(ENCODE, encode);
         input.put(QUOTCHAR, csvQuotchar);
         input.put(SEPARATOR, csvSeparator);
+        input.put(DB_VERSION, dbVersion);
 
         int file = 0;
 
@@ -189,7 +200,9 @@ public final class DefinitionGenerator extends TemplateGenerator {
             name = String.format("%02d-foreign-keys.xml", file);
             createTemplate(input, "/definition/changelog/foreign-key.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));
             files.add(name);
+        }
 
+        if (!loadData.isEmpty()) {
             input.put(FILE, ++file);
             name = String.format("%02d-load-data.xml", file);
             createTemplate(input, "/definition/changelog/load-data.ftl", getFileNamePath(version + File.separator + CHANGELOG, name));

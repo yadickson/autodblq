@@ -214,13 +214,13 @@ public class AutoGenerator extends AbstractMojo {
     private String[] mFunctions;
 
     /**
-     * List data tables to read.
+     * List data tables to read the content.
      */
     @Parameter(
-            alias = "dataTables",
+            alias = "loadData",
             readonly = true,
             required = false)
-    private String[] mDataTables;
+    private String[] mLoadData;
 
     /**
      * List schemas to build.
@@ -299,7 +299,6 @@ public class AutoGenerator extends AbstractMojo {
         getLog().info("[AutoGenerator] Encode: " + encode);
         getLog().info("[AutoGenerator] CSV Quotchar: " + csvQuotchar);
         getLog().info("[AutoGenerator] CSV Separator: " + csvSeparator);
-        
 
         if (!outputDirectory.exists() && !outputDirectory.mkdirs()) {
             throw new MojoExecutionException("Fail make " + outputDirectory + " directory.");
@@ -310,7 +309,7 @@ public class AutoGenerator extends AbstractMojo {
         String regexTable = getRegex(mTables);
         String regexView = getRegex(mViews);
         String regexFunction = getRegex(mFunctions);
-        String regexDataTable = getRegex(mDataTables);
+        String regexLoadData = getRegex(mLoadData);
         String regexSortFunction = getRegex(mSortFunctions);
         String regexSortViews = getRegex(mSortViews);
         String regexSchema = getRegex(mSchemas);
@@ -323,7 +322,7 @@ public class AutoGenerator extends AbstractMojo {
         LoggerManager.getInstance().info("[AutoGenerator] RegexTable: " + regexTable);
         LoggerManager.getInstance().info("[AutoGenerator] RegexView: " + regexView);
         LoggerManager.getInstance().info("[AutoGenerator] RegexFunction: " + regexFunction);
-        LoggerManager.getInstance().info("[AutoGenerator] RegexDataTable: " + regexDataTable);
+        LoggerManager.getInstance().info("[AutoGenerator] RegexLoadData: " + regexLoadData);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSortFunction: " + regexSortFunction);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSortView: " + regexSortViews);
         LoggerManager.getInstance().info("[AutoGenerator] RegexSchema: " + regexSchema);
@@ -339,13 +338,14 @@ public class AutoGenerator extends AbstractMojo {
             Connection connection = connManager.getConnection();
 
             List<Table> tables = new ArrayList<Table>();
+            List<Table> loadData = new ArrayList<Table>();
             List<View> views = new ArrayList<View>();
             List<Function> functions = new ArrayList<Function>();
 
             Pattern patternT = Pattern.compile(regexTable, Pattern.CASE_INSENSITIVE);
             Pattern patternV = Pattern.compile(regexView, Pattern.CASE_INSENSITIVE);
             Pattern patternF = Pattern.compile(regexFunction, Pattern.CASE_INSENSITIVE);
-            Pattern patternDT = Pattern.compile(regexDataTable, Pattern.CASE_INSENSITIVE);
+            Pattern patternDT = Pattern.compile(regexLoadData, Pattern.CASE_INSENSITIVE);
             Pattern patternSortV = Pattern.compile(regexSortViews, Pattern.CASE_INSENSITIVE);
             Pattern patternSortF = Pattern.compile(regexSortFunction, Pattern.CASE_INSENSITIVE);
             Pattern patternS = Pattern.compile(regexSchema, Pattern.CASE_INSENSITIVE);
@@ -353,15 +353,24 @@ public class AutoGenerator extends AbstractMojo {
             Pattern patternExcludeV = Pattern.compile(regexExcludeView, Pattern.CASE_INSENSITIVE);
             Pattern patternExcludeF = Pattern.compile(regexExcludeFunction, Pattern.CASE_INSENSITIVE);
 
-            if (!regexTable.isEmpty() || !regexSchema.isEmpty()) {
-                List<Table> tablesFound = generator.findTables(connection);
+            String dbVersion = generator.getVersion(connection);
+            List<Table> tablesFound = new ArrayList<Table>();
 
+            if (!regexTable.isEmpty() || !regexLoadData.isEmpty()) {
+                tablesFound = generator.findTables(connection);
+            }
+
+            if (!regexTable.isEmpty()) {
                 for (Table table : tablesFound) {
 
                     String name = table.getName();
                     String schema = table.getSchema();
 
-                    boolean match = patternT.matcher(name).matches() || patternS.matcher(schema).matches();
+                    boolean match = patternT.matcher(name).matches();
+
+                    if (!regexSchema.isEmpty()) {
+                        match = match && patternS.matcher(schema).matches();
+                    }
 
                     if (match && !patternExcludeT.matcher(name).matches()) {
                         tables.add(table);
@@ -377,11 +386,33 @@ public class AutoGenerator extends AbstractMojo {
                     generator.fillIndConstraints(connection, table);
                     generator.fillDefConstraints(connection, table);
                     generator.fillIncConstraints(connection, table);
-                    table.setGenerateData(patternDT.matcher(table.getName()).matches());
                 }
             }
 
-            if (!regexView.isEmpty() || !regexSchema.isEmpty()) {
+            if (!regexLoadData.isEmpty()) {
+                for (Table table : tablesFound) {
+
+                    String name = table.getName();
+                    String schema = table.getSchema();
+
+                    boolean match = patternDT.matcher(name).matches();
+
+                    if (!regexSchema.isEmpty()) {
+                        match = match && patternS.matcher(schema).matches();
+                    }
+
+                    if (match) {
+                        loadData.add(table);
+                    }
+                }
+
+                for (Table table : loadData) {
+                    LoggerManager.getInstance().info("[AutoGenerator] Process table name: " + table.getFullName());
+                    generator.fillColumns(connection, table);
+                }
+            }
+
+            if (!regexView.isEmpty()) {
                 List<View> viewsFound = generator.findViews(connection);
                 List<View> viewList = new ArrayList<View>();
 
@@ -390,7 +421,11 @@ public class AutoGenerator extends AbstractMojo {
                     String name = view.getName();
                     String schema = view.getSchema();
 
-                    boolean match = patternV.matcher(name).matches() || patternS.matcher(schema).matches();
+                    boolean match = patternV.matcher(name).matches();
+
+                    if (!regexSchema.isEmpty()) {
+                        match = match && patternS.matcher(schema).matches();
+                    }
 
                     if (match && !patternExcludeV.matcher(name).matches()) {
                         LoggerManager.getInstance().info("[AutoGenerator] Process view name: " + view.getFullName());
@@ -407,7 +442,7 @@ public class AutoGenerator extends AbstractMojo {
                 views.addAll(viewList);
             }
 
-            if (!regexFunction.isEmpty() || !regexSchema.isEmpty()) {
+            if (!regexFunction.isEmpty()) {
                 List<Function> functionsFound = generator.findFunctions(connection);
                 List<Function> proceduresFound = generator.findProcedures(connection);
                 List<Function> functionsList = new ArrayList<Function>();
@@ -419,7 +454,11 @@ public class AutoGenerator extends AbstractMojo {
                     String name = func.getName();
                     String schema = func.getSchema();
 
-                    boolean match = patternF.matcher(name).matches() || patternS.matcher(schema).matches();
+                    boolean match = patternF.matcher(name).matches();
+
+                    if (!regexSchema.isEmpty()) {
+                        match = match && patternS.matcher(schema).matches();
+                    }
 
                     if (match && !patternExcludeF.matcher(name).matches()) {
                         LoggerManager.getInstance().info("[AutoGenerator] Process function name: " + func.getFullName());
@@ -446,6 +485,7 @@ public class AutoGenerator extends AbstractMojo {
                     outputDirectory.getPath(),
                     definitionFolder,
                     tables,
+                    loadData,
                     views,
                     functions,
                     generator.getName(),
@@ -456,10 +496,26 @@ public class AutoGenerator extends AbstractMojo {
                     "true".equalsIgnoreCase(lqpro),
                     encode,
                     csvQuotchar,
-                    csvSeparator
+                    csvSeparator,
+                    dbVersion
             );
 
             definition.process();
+
+            CsvGenerator csvGefinition;
+            csvGefinition = new CsvGenerator(
+                    outputDirectory.getPath(),
+                    definitionFolder,
+                    generator,
+                    connection,
+                    loadData,
+                    version,
+                    encode,
+                    csvQuotchar,
+                    csvSeparator
+            );
+
+            csvGefinition.process();
 
         } catch (RuntimeException ex) {
             getLog().error(ex.getMessage(), ex);
@@ -539,12 +595,12 @@ public class AutoGenerator extends AbstractMojo {
     }
 
     /**
-     * Setter the data tables from configuracion
+     * Setter the load data tables from configuracion
      *
      * @param tables the data tables to include from configuracion
      */
-    public void setDataTables(String[] tables) {
-        mDataTables = tables == null ? null : tables.clone();
+    public void setLoadData(String[] tables) {
+        mLoadData = tables == null ? null : tables.clone();
     }
 
     /**

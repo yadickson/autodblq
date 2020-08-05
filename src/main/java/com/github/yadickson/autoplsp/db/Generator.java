@@ -19,19 +19,22 @@ package com.github.yadickson.autoplsp.db;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.util.ArrayList;
+import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+
+import com.github.yadickson.autoplsp.db.bean.ContentBean;
+import com.github.yadickson.autoplsp.db.bean.FunctionBean;
 import com.github.yadickson.autoplsp.db.bean.TableBean;
+import com.github.yadickson.autoplsp.db.bean.TableDefBean;
 import com.github.yadickson.autoplsp.db.bean.TableFieldBean;
 import com.github.yadickson.autoplsp.db.bean.TableFkBean;
+import com.github.yadickson.autoplsp.db.bean.TableIncBean;
 import com.github.yadickson.autoplsp.db.bean.TableIndBean;
 import com.github.yadickson.autoplsp.db.bean.TablePkBean;
 import com.github.yadickson.autoplsp.db.bean.TableUnqBean;
+import com.github.yadickson.autoplsp.db.bean.VersionBean;
 import com.github.yadickson.autoplsp.db.bean.ViewBean;
-import com.github.yadickson.autoplsp.db.bean.ContentBean;
-import com.github.yadickson.autoplsp.db.bean.FunctionBean;
-import com.github.yadickson.autoplsp.db.bean.TableDefBean;
-import com.github.yadickson.autoplsp.db.bean.TableIncBean;
 import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.db.common.TableDef;
@@ -42,13 +45,10 @@ import com.github.yadickson.autoplsp.db.common.TableInd;
 import com.github.yadickson.autoplsp.db.common.TablePk;
 import com.github.yadickson.autoplsp.db.common.TableUnq;
 import com.github.yadickson.autoplsp.db.common.View;
-import com.github.yadickson.autoplsp.db.util.FindFunctionImpl;
-import com.github.yadickson.autoplsp.db.util.FindProcedureImpl;
-import com.github.yadickson.autoplsp.db.util.FindTableImpl;
-import com.github.yadickson.autoplsp.db.util.FindViewImpl;
+import com.github.yadickson.autoplsp.db.util.SqlExecuteImpl;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
-import java.util.HashMap;
+import org.apache.commons.lang.StringUtils;
 
 /**
  * Store procedure and function generator interface
@@ -76,6 +76,13 @@ public abstract class Generator {
     public String getName() {
         return name;
     }
+
+    /**
+     * Method getter sql version information.
+     *
+     * @return sql to find version
+     */
+    public abstract String getVersionQuery();
 
     /**
      * Method getter sql tables.
@@ -183,7 +190,9 @@ public abstract class Generator {
      * @param table table
      * @return sql to find data table count
      */
-    public abstract String getDataTableRegistersQuery(final Table table);
+    public String getDataTableRegistersQuery(final Table table) {
+        return "SELECT COUNT(1) AS COUNT FROM " + table.getFullName();
+    }
 
     /**
      * Method getter sql data tables.
@@ -191,10 +200,28 @@ public abstract class Generator {
      * @param table table
      * @param quotchar char para string
      * @param separator separator
+     * @param start start find registers
      * @param blocks blocks to read
      * @return sql to find data table contents
      */
-    public abstract String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer blocks);
+    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer start, final Integer blocks) {
+
+        if (table.getFields().isEmpty()) {
+            return null;
+        }
+
+        String sql = "SELECT ";
+        List<String> list = new ArrayList<String>();
+
+        for (TableField field : table.getFields()) {
+            list.add(field.getName());
+        }
+
+        sql += StringUtils.join(list, ",");
+        sql += " FROM " + table.getFullName();
+
+        return sql;
+    }
 
     /**
      * Method getter text procedure query.
@@ -210,6 +237,40 @@ public abstract class Generator {
 
     public String getStringJoin(final String string) {
         return string != null ? string.replaceAll("\\s+", ",") : null;
+    }
+
+    /**
+     * Find version from database.
+     *
+     * @param connection Database connection.
+     * @return version.
+     * @throws BusinessException If error.
+     * @throws java.sql.SQLException If error.
+     */
+    public final String getVersion(
+            final Connection connection
+    ) throws BusinessException, SQLException {
+
+        String sql = getVersionQuery();
+
+        if (sql == null) {
+            return null;
+        }
+
+        String version = null;
+
+        LoggerManager.getInstance().info("[FindVersion] Find database version");
+
+        List<VersionBean> versions = new SqlExecuteImpl().execute(connection, sql, VersionBean.class);
+
+        for (VersionBean v : versions) {
+            version = getString(v.getVersion());
+            break;
+        }
+
+        LoggerManager.getInstance().info("[FindVersion] Found " + version);
+        return version;
+
     }
 
     /**
@@ -234,7 +295,7 @@ public abstract class Generator {
 
         LoggerManager.getInstance().info("[FindTables] Find all tables");
 
-        List<TableBean> tables = new FindTableImpl().getTables(connection, sql);
+        List<TableBean> tables = new SqlExecuteImpl().execute(connection, sql, TableBean.class);
         Map<String, Table> mapTables = new HashMap<String, Table>();
 
         for (TableBean t : tables) {
@@ -276,7 +337,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableFieldBean> columns = new FindTableImpl().getColumns(connection, sql);
+        List<TableFieldBean> columns = new SqlExecuteImpl().execute(connection, sql, TableFieldBean.class);
 
         for (TableFieldBean t : columns) {
 
@@ -321,7 +382,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TablePkBean> pks = new FindTableImpl().getPkConstraints(connection, sql);
+        List<TablePkBean> pks = new SqlExecuteImpl().execute(connection, sql, TablePkBean.class);
 
         for (TablePkBean pk : pks) {
 
@@ -357,7 +418,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableFkBean> fks = new FindTableImpl().getFkConstraints(connection, sql);
+        List<TableFkBean> fks = new SqlExecuteImpl().execute(connection, sql, TableFkBean.class);
 
         for (TableFkBean fk : fks) {
 
@@ -399,7 +460,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableUnqBean> uniques = new FindTableImpl().getUniqueConstraints(connection, sql);
+        List<TableUnqBean> uniques = new SqlExecuteImpl().execute(connection, sql, TableUnqBean.class);
 
         for (TableUnqBean unq : uniques) {
 
@@ -435,7 +496,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableIndBean> indexs = new FindTableImpl().getIndexConstraints(connection, sql);
+        List<TableIndBean> indexs = new SqlExecuteImpl().execute(connection, sql, TableIndBean.class);
 
         for (TableIndBean index : indexs) {
 
@@ -472,7 +533,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableDefBean> defaults = new FindTableImpl().getDefConstraints(connection, sql);
+        List<TableDefBean> defaults = new SqlExecuteImpl().execute(connection, sql, TableDefBean.class);
 
         for (TableDefBean def : defaults) {
 
@@ -510,7 +571,7 @@ public abstract class Generator {
             return;
         }
 
-        List<TableIncBean> increments = new FindTableImpl().getIncrementConstraints(connection, sql);
+        List<TableIncBean> increments = new SqlExecuteImpl().execute(connection, sql, TableIncBean.class);
 
         for (TableIncBean inc : increments) {
 
@@ -549,7 +610,7 @@ public abstract class Generator {
 
         LoggerManager.getInstance().info("[FindViews] Find all views");
 
-        List<ViewBean> views = new FindViewImpl().getViews(connection, sql);
+        List<ViewBean> views = new SqlExecuteImpl().execute(connection, sql, ViewBean.class);
         Map<String, View> mapViews = new HashMap<String, View>();
 
         for (ViewBean v : views) {
@@ -590,7 +651,7 @@ public abstract class Generator {
             return;
         }
 
-        List<ContentBean> text = new FindViewImpl().getText(connection, sql);
+        List<ContentBean> text = new SqlExecuteImpl().execute(connection, sql, ContentBean.class);
 
         for (ContentBean value : text) {
             view.setText(value.getText());
@@ -621,7 +682,7 @@ public abstract class Generator {
 
         LoggerManager.getInstance().info("[FindFunctions] Find all functions");
 
-        List<FunctionBean> functions = new FindFunctionImpl().getFunctions(connection, sql);
+        List<FunctionBean> functions = new SqlExecuteImpl().execute(connection, sql, FunctionBean.class);
         Map<String, Function> mapFunctions = new HashMap<String, Function>();
 
         for (FunctionBean f : functions) {
@@ -662,7 +723,7 @@ public abstract class Generator {
             return;
         }
 
-        List<ContentBean> text = new FindFunctionImpl().getText(connection, sql);
+        List<ContentBean> text = new SqlExecuteImpl().execute(connection, sql, ContentBean.class);
 
         for (ContentBean value : text) {
             function.setText(value.getText());
@@ -693,7 +754,7 @@ public abstract class Generator {
 
         LoggerManager.getInstance().info("[FindProcedures] Find all procedures");
 
-        List<FunctionBean> procedures = new FindProcedureImpl().getProcedures(connection, sql);
+        List<FunctionBean> procedures = new SqlExecuteImpl().execute(connection, sql, FunctionBean.class);
         Map<String, Function> mapProcedures = new HashMap<String, Function>();
 
         for (FunctionBean p : procedures) {
@@ -734,43 +795,12 @@ public abstract class Generator {
             return;
         }
 
-        List<ContentBean> text = new FindProcedureImpl().getText(connection, sql);
+        List<ContentBean> text = new SqlExecuteImpl().execute(connection, sql, ContentBean.class);
 
         for (ContentBean value : text) {
             procedure.setText(value.getText());
             LoggerManager.getInstance().info("[FindProcedureText]  - " + procedure.getFullName());
         }
-
-    }
-
-    /**
-     * Fill all data table.
-     *
-     * @param connection Database connection.
-     * @param table table to fill.
-     * @throws BusinessException If error.
-     * @throws java.sql.SQLException If error.
-     */
-    public final void fillDataTable(
-            final Connection connection,
-            final Table table
-    ) throws BusinessException, SQLException {
-
-        String sql = getDataTableQuery(table, "#", ",", 100);
-        LoggerManager.getInstance().info("[fillDataTable]  - " + sql);
-
-        if (sql == null) {
-            return;
-        }
-
-        List<ContentBean> texts = new FindTableImpl().getDataTable(connection, sql);
-
-        for (ContentBean text : texts) {
-            LoggerManager.getInstance().info("[fillDataTable]  - " + text.getText());
-            // table.getDataFields().add(text.getText());
-        }
-
-        LoggerManager.getInstance().info("[fillDataTable]  - registers " + texts.size());
 
     }
 

@@ -38,6 +38,16 @@ public class PostgreSqlGenerator extends Generator {
     }
 
     /**
+     * Method getter sql version information.
+     *
+     * @return sql to find version
+     */
+    @Override
+    public String getVersionQuery() {
+        return "SELECT 'PostgreSQL v' || current_setting('server_version') as \"version\"";
+    }
+
+    /**
      * Method getter sql tables.
      *
      * @return sql to find tables
@@ -121,32 +131,6 @@ public class PostgreSqlGenerator extends Generator {
 
     @Override
     public String getTextProcedureQuery(final Function procedure) {
-        return null;
-    }
-
-    /**
-     * Method getter sql data tables count.
-     *
-     * @param table table
-     * @return sql to find data table count
-     */
-    @Override
-    public String getDataTableRegistersQuery(final Table table){
-        return null;
-    }
-            
-
-    /**
-     * Method getter sql data tables.
-     *
-     * @param table table
-     * @param quotchar char para string
-     * @param separator separator
-     * @param blocks blocks to read
-     * @return sql to find data table contents
-     */
-    @Override
-    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer blocks) {
         return null;
     }
 

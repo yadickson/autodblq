@@ -2,6 +2,9 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
+<#if dbversion?? >
+<!-- ${dbversion} -->
+</#if>
 
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"

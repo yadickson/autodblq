@@ -2,6 +2,9 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
+<#if dbversion?? >
+<!-- ${dbversion} -->
+</#if>
 
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
@@ -19,15 +22,12 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
-<#if tables?? >
-<#list tables as table >
-<#if table.generateData?? >
+<#if loaddata?? >
+<#list loaddata as table >
     <!-- ${table.fullName} -->
-</#if>
 </#list>
 
-<#list tables as table >
-<#if table.generateData?? >
+<#list loaddata as table >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -39,8 +39,8 @@
             encoding="${encode}"
             file="../csv/${table.name}.csv"
             relativeToChangelogFile="true"
-            quotchar="${quotchar}"
-            separator="${separator}"
+            quotchar=<#if quotchar == "\"">'<#else>"</#if>${quotchar}<#if quotchar == "\"">'<#else>"</#if>
+            separator=<#if separator == "\"">'<#else>"</#if>${separator}<#if separator == "\"">'<#else>"</#if>
         >
 
 <#if table.fields?? >
@@ -57,7 +57,6 @@
 
     </changeSet>
 
-</#if>
 </#list>
 </#if>
 </databaseChangeLog>
