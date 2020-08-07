@@ -24,6 +24,7 @@ import java.util.List;
 import java.util.Map;
 
 import com.github.yadickson.autoplsp.db.bean.ContentBean;
+import com.github.yadickson.autoplsp.db.bean.CountBean;
 import com.github.yadickson.autoplsp.db.bean.FunctionBean;
 import com.github.yadickson.autoplsp.db.bean.TableBean;
 import com.github.yadickson.autoplsp.db.bean.TableDefBean;
@@ -48,7 +49,6 @@ import com.github.yadickson.autoplsp.db.common.View;
 import com.github.yadickson.autoplsp.db.util.SqlExecuteImpl;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
-import org.apache.commons.lang.StringUtils;
 
 /**
  * Store procedure and function generator interface
@@ -195,33 +195,39 @@ public abstract class Generator {
     }
 
     /**
+     * Method getter data tables count.
+     *
+     * @param connection connection
+     * @param sql to find data table count
+     * @return register counts
+     * @throws BusinessException if error
+     */
+    public Long getDataTableRegistersCount(final Connection connection, final String sql) throws BusinessException {
+
+        if (sql == null) {
+            return 0L;
+        }
+
+        List<CountBean> counts = new SqlExecuteImpl().execute(connection, sql, CountBean.class);
+
+        if (counts.isEmpty()) {
+            return 0L;
+        }
+
+        return Long.parseLong(counts.get(0).getCount());
+    }
+
+    /**
      * Method getter sql data tables.
      *
      * @param table table
      * @param quotchar char para string
      * @param separator separator
-     * @param start start find registers
+     * @param page page to find registers, start with zero
      * @param blocks blocks to read
      * @return sql to find data table contents
      */
-    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Integer start, final Integer blocks) {
-
-        if (table.getFields().isEmpty()) {
-            return null;
-        }
-
-        String sql = "SELECT ";
-        List<String> list = new ArrayList<String>();
-
-        for (TableField field : table.getFields()) {
-            list.add(field.getName());
-        }
-
-        sql += StringUtils.join(list, ",");
-        sql += " FROM " + table.getFullName();
-
-        return sql;
-    }
+    public abstract String getDataTableQuery(final Table table, final String quotchar, final String separator, final Long page, final Long blocks);
 
     /**
      * Method getter text procedure query.

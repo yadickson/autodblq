@@ -134,4 +134,12 @@ public class PostgreSqlGenerator extends Generator {
         return null;
     }
 
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Long page, final Long blocks) {
+        return null;
+    }
+
 }

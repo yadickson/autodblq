@@ -16,10 +16,9 @@
  */
 package com.github.yadickson.autoplsp;
 
-import java.io.BufferedWriter;
 import java.io.File;
 import java.io.FileWriter;
-import java.io.Writer;
+import java.io.PrintWriter;
 import java.sql.Connection;
 import java.sql.PreparedStatement;
 import java.sql.ResultSet;
@@ -35,8 +34,6 @@ import com.github.yadickson.autoplsp.db.Generator;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.handler.BusinessException;
 import com.github.yadickson.autoplsp.logger.LoggerManager;
-import java.io.OutputStreamWriter;
-import java.io.PrintWriter;
 
 /**
  * Csv definition file generator.
@@ -119,63 +116,81 @@ public final class CsvGenerator extends TemplateGenerator {
 
             createTemplate(input, "/definition/csv/data.ftl", filename);
 
-            String sqlCount = generator.getDataTableRegistersQuery(table);
-            String sql = generator.getDataTableQuery(table, csvQuotchar, csvSeparator, 0, 100);
+            String sql = generator.getDataTableRegistersQuery(table);
+            Long count = generator.getDataTableRegistersCount(connection, sql);
 
-            if (sql == null) {
-                continue;
+            Long page = 0L;
+            Long size = 100L;
+
+            while (process(table, filename, page, size).compareTo(size) == 0) {
+                page++;
             }
 
-            LoggerManager.getInstance().info("[fillDataTable] " + sqlCount);
-            LoggerManager.getInstance().info("[fillDataTable] " + sql);
-
-            PreparedStatement statement = null;
-            PrintWriter output = null;
-            try {
-
-                statement = connection.prepareStatement(sql);
-                output = new PrintWriter(new FileWriter(filename, true));
-
-                ResultSet result = statement.executeQuery();
-                ResultSetMetaData metadata = result.getMetaData();
-                int columnCount = metadata.getColumnCount();
-
-                for (int j = 0; j < metadata.getColumnCount(); j++) {
-                    String cName = metadata.getColumnName(j + 1);
-                    String cType = metadata.getColumnTypeName(j + 1);
-                    LoggerManager.getInstance().info(cName + " " + cType);
-                }
-
-                while (result.next()) {
-                    List<String> objs = new ArrayList<String>(columnCount);
-
-                    for (int j = 0; j < columnCount; j++) {
-                        objs.add(result.getString(j + 1));
-                    }
-
-                    String line = StringUtils.join(objs, csvSeparator);
-                    output.println(line);
-                }
-
-            } catch (Exception ex) {
-                LoggerManager.getInstance().info(ex.getMessage());
-            } finally {
-                try {
-                    if (statement != null) {
-                        statement.close();
-                    }
-                    if (output != null) {
-                        output.close();
-                    }
-                } catch (Exception ex) {
-                    LoggerManager.getInstance().error(ex);
-                }
-            }
-
-            LoggerManager.getInstance().info("[fillDataTable]  - registers ");
-
+            LoggerManager.getInstance().info("[fillDataTable]  - registers " + count);
         }
 
+    }
+
+    public Long process(final Table table, final String filename, final Long page, final Long count) {
+
+        String sql = generator.getDataTableQuery(table, csvQuotchar, csvSeparator, page, count);
+
+        if (sql == null) {
+            return 0L;
+        }
+
+        Long registers = 0L;
+
+        LoggerManager.getInstance().info("[fillDataTable] " + count);
+        LoggerManager.getInstance().info("[fillDataTable] " + sql);
+
+        PreparedStatement statement = null;
+        PrintWriter output = null;
+
+        try {
+
+            statement = connection.prepareStatement(sql);
+            output = new PrintWriter(new FileWriter(filename, true));
+
+            ResultSet result = statement.executeQuery();
+            ResultSetMetaData metadata = result.getMetaData();
+            int columnCount = metadata.getColumnCount();
+
+            for (int j = 0; j < metadata.getColumnCount(); j++) {
+                String cName = metadata.getColumnName(j + 1);
+                String cType = metadata.getColumnTypeName(j + 1);
+                LoggerManager.getInstance().info(cName + " " + cType);
+            }
+
+            while (result.next()) {
+                List<String> objs = new ArrayList<String>(columnCount);
+
+                for (int j = 0; j < columnCount; j++) {
+                    objs.add(result.getString(j + 1));
+                }
+
+                String line = StringUtils.join(objs, csvSeparator);
+                output.println(line);
+                registers++;
+            }
+
+        } catch (Exception ex) {
+            registers = 0L;
+            LoggerManager.getInstance().info(ex.getMessage());
+        } finally {
+            try {
+                if (statement != null) {
+                    statement.close();
+                }
+                if (output != null) {
+                    output.close();
+                }
+            } catch (Exception ex) {
+                LoggerManager.getInstance().error(ex);
+            }
+        }
+
+        return registers;
     }
 
     /**

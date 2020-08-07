@@ -26,7 +26,6 @@ import com.github.yadickson.autoplsp.db.common.Function;
 import com.github.yadickson.autoplsp.db.common.Table;
 import com.github.yadickson.autoplsp.db.common.TableField;
 import com.github.yadickson.autoplsp.db.common.View;
-import com.github.yadickson.autoplsp.db.util.FieldTypeUtil;
 
 /**
  * Oracle Store procedure and function generator class.
@@ -200,6 +199,40 @@ public class DB2Generator extends Generator {
                 + " FROM SYSCAT.PROCEDURES\n"
                 + "WHERE PROCNAME = '" + procedure.getName() + "'\n"
                 + "AND PROCSCHEMA = '" + procedure.getSchema() + "'";
+    }
+
+    /**
+     * {@inheritDoc}
+     */
+    @Override
+    public String getDataTableQuery(final Table table, final String quotchar, final String separator, final Long page, final Long blocks) {
+
+        if (table.getFields().isEmpty()) {
+            return null;
+        }
+        
+        String sql = "SELECT ";
+        List<String> mlist = new ArrayList<String>();
+        List<String> ilist = new ArrayList<String>();
+
+        for (TableField field : table.getFields()) {
+            mlist.add("m." + field.getName());
+            ilist.add(field.getName());
+        }
+
+        String rowName = "ROW_NUMBER";
+
+        while (ilist.contains(rowName)) {
+            rowName += "_";
+        }
+        
+        Long init = page * blocks;
+        
+        sql += StringUtils.join(mlist, ",");
+        sql += " FROM ( SELECT ROW_NUMBER() OVER (ORDER BY " + ilist.get(0) + " ) AS " + rowName + ", " + StringUtils.join(ilist, ",") + " FROM " + table.getFullName() + " ) m ";
+        sql += " WHERE m." + rowName + " >= " + (init + 1) + " AND m." + rowName + " < " + ( init + blocks + 1 );
+        
+        return sql;
     }
 
 }
