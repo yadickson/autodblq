@@ -18,6 +18,7 @@ import org.apache.maven.plugin.MojoExecutionException;
 import org.apache.maven.plugins.annotations.LifecyclePhase;
 import org.apache.maven.plugins.annotations.Mojo;
 import org.apache.maven.plugins.annotations.Parameter;
+import org.apache.maven.plugins.annotations.ResolutionScope;
 
 import com.github.yadickson.autodblq.db.DataBaseGenerator;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
@@ -35,7 +36,8 @@ import com.github.yadickson.autodblq.writer.DefinitionGenerator;
 @Mojo(name = "generator",
         threadSafe = true,
         defaultPhase = LifecyclePhase.GENERATE_SOURCES,
-        requiresProject = true)
+        requiresProject = true,
+        requiresDependencyResolution = ResolutionScope.COMPILE_PLUS_RUNTIME)
 public class GeneratorPlugin extends AbstractMojo {
 
     /**
