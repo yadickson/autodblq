@@ -21,20 +21,10 @@
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
+<#if defaults?? >
+<#list defaults as table >
+<#if typeUtil.isNumeric(table.type) || typeUtil.isString(table.type) || (typeUtil.isDate(table.type) && table.value != 'DEFAULT') >
 
-<#if tables?? >
-<#list tables as table >
-<#if table.defFields?? >
-<#list table.defFields as def >
-    <!-- ${table.fullName} : ${def.column} - ${def.type} - ${def.value} -->
-</#list>
-</#if>
-</#list>
-
-<#list tables as table >
-<#if table.defFields?? >
-<#list table.defFields as def >
-<#if typeUtil.isNumeric(def.type) || typeUtil.isString(def.type) || (typeUtil.isDate(def.type) && def.value != 'DEFAULT') >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -44,8 +34,8 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${def.column}"
-            defaultValue<#if typeUtil.isNumeric(def.type) >Numeric<#elseif typeUtil.isDate(def.type) >Computed</#if>="${def.value}"
+            columnName="${table.columnName}"
+            defaultValue<#if typeUtil.isNumeric(table.type) >Numeric<#elseif typeUtil.isDate(table.type) >Computed</#if>="${table.value}"
         />
 
         <rollback>
@@ -54,15 +44,13 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                columnName="${def.column}"
+                columnName="${table.columnName}"
             />
         </rollback>
 
     </changeSet>
+</#if>
+</#list>
+</#if>
 
-</#if>
-</#list>
-</#if>
-</#list>
-</#if>
 </databaseChangeLog>

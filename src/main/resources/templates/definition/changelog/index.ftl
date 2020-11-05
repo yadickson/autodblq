@@ -21,34 +21,24 @@
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
+<#if indexes?? >
+<#list indexes as table >
 
-<#if tables?? >
-<#list tables as table >
-<#if table.indFields?? >
-<#list table.indFields as ind >
-    <!-- ${table.fullName} : ${ind.name} -->
-</#list>
-</#if>
-</#list>
-
-<#list tables as table >
-<#if table.indFields?? >
-<#list table.indFields as ind >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <createIndex
-            indexName="${ind.name}"
+            indexName="${table.indexName}"
 <#if table.schema?? >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            unique="${ind.isUnique?c}"
+            unique="${table.isUnique?c}"
         >
 
-<#list ind.columns?split(",") as icolumn>
-            <column name="${icolumn}"/>
+<#list table.columns?split(",") as column>
+            <column name="${column}"/>
 </#list>
 
         </createIndex>
@@ -59,14 +49,12 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                indexName="${ind.name}"
+                indexName="${table.indexName}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 
-</#list>
-</#if>
-</#list>
-</#if>
 </databaseChangeLog>

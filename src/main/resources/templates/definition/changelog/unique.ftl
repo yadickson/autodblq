@@ -21,30 +21,20 @@
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
+<#if uniques?? >
+<#list uniques as table >
 
-<#if tables?? >
-<#list tables as table >
-<#if table.unqFields?? >
-<#list table.unqFields as unq >
-    <!-- ${table.fullName} : ${unq.name} -->
-</#list>
-</#if>
-</#list>
-
-<#list tables as table >
-<#if table.unqFields?? >
-<#list table.unqFields as unq >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addUniqueConstraint
-            constraintName="${unq.name}"
+            constraintName="${table.constraintName}"
 <#if table.schema?? >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnNames="${unq.columns}"
+            columnNames="${table.columnNames}"
         />
 
         <rollback>
@@ -53,14 +43,12 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                constraintName="${unq.name}"
+                constraintName="${table.constraintName}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 
-</#list>
-</#if>
-</#list>
-</#if>
 </databaseChangeLog>

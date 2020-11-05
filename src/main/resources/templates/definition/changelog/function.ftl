@@ -28,13 +28,9 @@
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
-
 <#if functions?? >
 <#list functions as func >
-    <!-- ${func.fullName} -->
-</#list>
 
-<#list functions as func >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -75,7 +71,7 @@
         </rollback>
 
     </changeSet>
-
 </#list>
 </#if>
+
 </databaseChangeLog>

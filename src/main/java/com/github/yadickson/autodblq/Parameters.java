@@ -1,0 +1,121 @@
+/*
+ * Copyright (C) 2020 Yadickson Soto
+ *
+ * See <http://www.gnu.org/licenses/gpl-3.0.html>.
+ */
+package com.github.yadickson.autodblq;
+
+import java.util.List;
+
+/**
+ *
+ * @author Yadickson Soto
+ */
+public class Parameters {
+
+    private final String driver;
+    private final String url;
+    private final String username;
+    private final String password;
+
+    private final String author;
+    private final String version;
+
+    private final String encode;
+    private final String csvQuotchar;
+    private final String csvSeparator;
+
+    private final String outputDirectory;
+
+    private final String liquibaseVersion;
+    private final String liquibaseProductionEnabled;
+
+    private final List<String> tables;
+    private final List<String> dataTables;
+    private final List<String> views;
+    private final List<String> functions;
+
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String outputDirectory, String liquibaseVersion, String liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions) {
+        this.driver = driver;
+        this.url = url;
+        this.username = username;
+        this.password = password;
+        this.author = author;
+        this.version = version;
+        this.encode = encode;
+        this.csvQuotchar = csvQuotchar;
+        this.csvSeparator = csvSeparator;
+        this.outputDirectory = outputDirectory;
+        this.liquibaseVersion = liquibaseVersion;
+        this.liquibaseProductionEnabled = liquibaseProductionEnabled;
+        this.tables = tables;
+        this.dataTables = dataTables;
+        this.views = views;
+        this.functions = functions;
+    }
+
+    public String getDriver() {
+        return driver;
+    }
+
+    public String getUrl() {
+        return url;
+    }
+
+    public String getUsername() {
+        return username;
+    }
+
+    public String getPassword() {
+        return password;
+    }
+
+    public String getAuthor() {
+        return author;
+    }
+
+    public String getVersion() {
+        return version;
+    }
+
+    public String getEncode() {
+        return encode;
+    }
+
+    public String getCsvQuotchar() {
+        return csvQuotchar;
+    }
+
+    public String getCsvSeparator() {
+        return csvSeparator;
+    }
+
+    public String getOutputDirectory() {
+        return outputDirectory;
+    }
+
+    public String getLiquibaseVersion() {
+        return liquibaseVersion;
+    }
+
+    public String getLiquibaseProductionEnabled() {
+        return liquibaseProductionEnabled;
+    }
+
+    public List<String> getTables() {
+        return tables;
+    }
+
+    public List<String> getDataTables() {
+        return dataTables;
+    }
+
+    public List<String> getViews() {
+        return views;
+    }
+
+    public List<String> getFunctions() {
+        return functions;
+    }
+
+}

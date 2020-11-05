@@ -22,34 +22,25 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
 
-<#if tables?? >
-<#list tables as table >
-<#if table.fkFields?? >
-<#list table.fkFields as fk >
-    <!-- ${table.fullName} : ${fk.name} -->
-</#list>
-</#if>
-</#list>
+<#if foreignKeys?? >
+<#list foreignKeys as table >
 
-<#list tables as table >
-<#if table.fkFields?? >
-<#list table.fkFields as fk >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addForeignKeyConstraint
-            constraintName="${fk.name}"
+            constraintName="${table.constraintName}"
 <#if table.schema?? >
             baseTableSchemaName="${table.schema}"
 </#if>
             baseTableName="${table.name}"
-            baseColumnNames="${fk.columns}"
-<#if fk.tschema?? >
-            referencedTableSchemaName="${fk.tschema}"
+            baseColumnNames="${table.columnNames}"
+<#if table.referenceSchema?? >
+            referencedTableSchemaName="${table.referenceSchema}"
 </#if>
-            referencedTableName="${fk.tname}" 
-            referencedColumnNames="${fk.tcolumns}"
+            referencedTableName="${table.referenceName}" 
+            referencedColumnNames="${table.referenceColumnNames}"
             onDelete="NO ACTION" 
             onUpdate="NO ACTION"
         />
@@ -60,14 +51,12 @@
                 baseTableSchemaName="${table.schema}"
 </#if>
                 baseTableName="${table.name}"
-                constraintName="${fk.name}"
+                constraintName="${table.constraintName}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 
-</#list>
-</#if>
-</#list>
-</#if>
 </databaseChangeLog>

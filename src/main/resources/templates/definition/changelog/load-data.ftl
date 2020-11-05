@@ -21,13 +21,9 @@
     <changeSet id="${step?string["0000"]}" author="${author}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
     </changeSet>
+<#if dataTables?? >
+<#list dataTables as table >
 
-<#if loaddata?? >
-<#list loaddata as table >
-    <!-- ${table.fullName} -->
-</#list>
-
-<#list loaddata as table >
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
@@ -43,8 +39,8 @@
             separator=<#if separator == "\"">'<#else>"</#if>${separator}<#if separator == "\"">'<#else>"</#if>
         >
 
-<#if table.fields?? >
-<#list table.fields as column >
+<#if table.columns?? >
+<#list table.columns as column >
             <column name="${column.name}" type="<#if typeUtil.isString(column.type) >STRING<#else>NUMERIC</#if>" />
 </#list>
 </#if>
@@ -56,7 +52,7 @@
         </rollback>
 
     </changeSet>
-
 </#list>
 </#if>
+
 </databaseChangeLog>
