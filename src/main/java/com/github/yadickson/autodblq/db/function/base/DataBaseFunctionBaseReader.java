@@ -5,6 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.function.base;
 
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
@@ -36,7 +37,7 @@ public class DataBaseFunctionBaseReader {
     private final DataBaseFunctionBaseMapper dataBaseFunctionMapper;
 
     private String sqlQuery;
-    private List<FunctionBaseBean> tables;
+    private final List<FunctionBaseBean> allFunctions = new ArrayList<>();
 
     @Inject
     public DataBaseFunctionBaseReader(
@@ -56,37 +57,76 @@ public class DataBaseFunctionBaseReader {
 
         try {
 
+            allFunctions.clear();
+
             if (CollectionUtils.isEmpty(filter)) {
                 return Collections.EMPTY_LIST;
             }
 
-            findSqlQuery(filter, driverConnection);
-            findFunctions(driverConnection);
-            return processFunctions();
+            findAndAddFunctions(filter, driverConnection);
+            findAndAddProcedures(filter, driverConnection);
+
+            return processFunctions(filter);
 
         } catch (RuntimeException ex) {
             throw new DataBaseFunctionBaseReaderException(ex);
         }
     }
 
-    private void findSqlQuery(
+    private void findAndAddFunctions(
+            final List<String> filter,
+            final DriverConnection driverConnection
+    ) {
+        findSqlFunctionsQuery(filter, driverConnection);
+        allFunctions.addAll(findFunctions(driverConnection));
+    }
+
+    private void findAndAddProcedures(
+            final List<String> filter,
+            final DriverConnection driverConnection
+    ) {
+        findSqlProceduresQuery(filter, driverConnection);
+        allFunctions.addAll(findProcedures(driverConnection));
+    }
+
+    private void findSqlFunctionsQuery(
             final List<String> filter,
             final DriverConnection driverConnection
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseFunctionBaseQuery query = dataBaseFunctionQueryFactory.apply(driver);
-        sqlQuery = query.get(filter);
+        sqlQuery = query.getFunctions(filter);
         LOGGER.debug("[DataBaseFunctionBaseReader] SQL: " + sqlQuery);
     }
 
-    private void findFunctions(final DriverConnection driverConnection) {
+    private List<FunctionBaseBean> findFunctions(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseFunctionBaseReader] Starting");
-        tables = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
-        LOGGER.info("[DataBaseFunctionBaseReader] Total: " + tables.size());
+        final List<FunctionBaseBean> functions = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
+        LOGGER.info("[DataBaseFunctionBaseReader] Total Functions: " + functions.size());
+        return functions;
     }
 
-    private List<FunctionBase> processFunctions() {
-        return dataBaseFunctionMapper.apply(tables);
+    private void findSqlProceduresQuery(
+            final List<String> filter,
+            final DriverConnection driverConnection
+    ) {
+        final Driver driver = driverConnection.getDriver();
+        final DataBaseFunctionBaseQuery query = dataBaseFunctionQueryFactory.apply(driver);
+        sqlQuery = query.getProcedures(filter);
+        LOGGER.debug("[DataBaseFunctionBaseReader] SQL: " + sqlQuery);
+    }
+
+    private List<FunctionBaseBean> findProcedures(final DriverConnection driverConnection) {
+        LOGGER.info("[DataBaseFunctionBaseReader] Starting");
+        List<FunctionBaseBean> procedures = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
+        LOGGER.info("[DataBaseFunctionBaseReader] Total Procedures: " + procedures.size());
+        return procedures;
+    }
+
+    private List<FunctionBase> processFunctions(final List<String> filter) {
+        List<FunctionBase> definitions = dataBaseFunctionMapper.apply(allFunctions);
+        Collections.sort(definitions, new DataBaseFunctionBaseSort(filter));
+        return definitions;
     }
 
 }

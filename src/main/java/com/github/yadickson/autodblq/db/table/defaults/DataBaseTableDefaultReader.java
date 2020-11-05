@@ -35,9 +35,6 @@ public class DataBaseTableDefaultReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableDefaultMapper dataBaseTableDefaultMapper;
 
-    private String sqlQuery;
-    private List<TableDefaultBean> defaults;
-
     @Inject
     public DataBaseTableDefaultReader(
             final DataBaseTableDefaultQueryFactory dataBaseTableDefaultQueryFactory,
@@ -51,33 +48,27 @@ public class DataBaseTableDefaultReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findDefaults(driverConnection);
-        return processDefaultes(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableDefaultQuery query = dataBaseTableDefaultQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableDefaultReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findDefaults(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTableDefaultReader] Starting");
-        defaults = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableDefaultBean.class);
+        List<TableDefaultBean> defaults = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableDefaultBean.class);
         LOGGER.info("[DataBaseTableDefaultReader] Total: " + defaults.size());
-    }
-
-    private List<TableBase> processDefaultes(final TableBase tableBase) {
-        return dataBaseTableDefaultMapper.apply(tableBase, defaults);
+        return dataBaseTableDefaultMapper.apply(table, defaults);
     }
 
 }

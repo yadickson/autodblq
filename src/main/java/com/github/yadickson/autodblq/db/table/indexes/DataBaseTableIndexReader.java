@@ -35,9 +35,6 @@ public class DataBaseTableIndexReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableIndexMapper dataBaseTableIndexMapper;
 
-    private String sqlQuery;
-    private List<TableIndexBean> indexes;
-
     @Inject
     public DataBaseTableIndexReader(
             final DataBaseTableIndexQueryFactory dataBaseTableIndexQueryFactory,
@@ -51,33 +48,27 @@ public class DataBaseTableIndexReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findIndexes(driverConnection);
-        return processIndexes(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableIndexQuery query = dataBaseTableIndexQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableIndexReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findIndexes(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTableIndexReader] Starting");
-        indexes = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableIndexBean.class);
+        List<TableIndexBean> indexes = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableIndexBean.class);
         LOGGER.info("[DataBaseTableIndexReader] Total: " + indexes.size());
-    }
-
-    private List<TableBase> processIndexes(final TableBase tableBase) {
-        return dataBaseTableIndexMapper.apply(tableBase, indexes);
+        return dataBaseTableIndexMapper.apply(table, indexes);
     }
 
 }

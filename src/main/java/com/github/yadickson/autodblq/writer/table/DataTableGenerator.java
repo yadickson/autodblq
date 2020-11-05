@@ -65,7 +65,7 @@ public class DataTableGenerator {
     }
 
     private void makeOutputDirectory(final Parameters parameters) {
-        outputDirectory = parameters.getOutputDirectory();
+        outputDirectory = parameters.getOutputDirectory() + File.separatorChar + parameters.getVersion() + File.separatorChar;
     }
 
     private void makeDataTables(final Parameters parameters, final DriverConnection driverConnection, final List<TableBase> tables) {
@@ -88,7 +88,7 @@ public class DataTableGenerator {
 
     private void readerTable(final Parameters parameters, final DriverConnection driverConnection, final TableBase table, final String path) {
         DataBaseDataTableReaderIterator iterator = dataBaseDataTableReader.execute(parameters, driverConnection, table);
-        
+
         while (iterator.nextBlock()) {
             List<String> lines = iterator.getBlock();
             writeFile(path, lines);

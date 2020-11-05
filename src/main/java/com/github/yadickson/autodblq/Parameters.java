@@ -24,18 +24,19 @@ public class Parameters {
     private final String encode;
     private final String csvQuotchar;
     private final String csvSeparator;
+    private final String csvComment;
 
     private final String outputDirectory;
 
     private final String liquibaseVersion;
-    private final String liquibaseProductionEnabled;
+    private final Boolean liquibaseProductionEnabled;
 
     private final List<String> tables;
     private final List<String> dataTables;
     private final List<String> views;
     private final List<String> functions;
 
-    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String outputDirectory, String liquibaseVersion, String liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions) {
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions) {
         this.driver = driver;
         this.url = url;
         this.username = username;
@@ -45,6 +46,7 @@ public class Parameters {
         this.encode = encode;
         this.csvQuotchar = csvQuotchar;
         this.csvSeparator = csvSeparator;
+        this.csvComment = csvComment;
         this.outputDirectory = outputDirectory;
         this.liquibaseVersion = liquibaseVersion;
         this.liquibaseProductionEnabled = liquibaseProductionEnabled;
@@ -90,6 +92,10 @@ public class Parameters {
         return csvSeparator;
     }
 
+    public String getCsvComment() {
+        return csvComment;
+    }
+
     public String getOutputDirectory() {
         return outputDirectory;
     }
@@ -98,7 +104,7 @@ public class Parameters {
         return liquibaseVersion;
     }
 
-    public String getLiquibaseProductionEnabled() {
+    public Boolean getLiquibaseProductionEnabled() {
         return liquibaseProductionEnabled;
     }
 

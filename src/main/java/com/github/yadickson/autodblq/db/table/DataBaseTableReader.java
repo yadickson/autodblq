@@ -5,10 +5,10 @@
  */
 package com.github.yadickson.autodblq.db.table;
 
-import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 
@@ -54,6 +54,16 @@ public abstract class DataBaseTableReader {
         return tableElements;
     }
 
-    protected abstract List<TableBase> processTable(final DriverConnection driverConnection, final TableBase table);
+    protected List<TableBase> processTable(
+            final DriverConnection driverConnection,
+            final TableBase table
+    ) {
+        final String sqlQuery = findSqlQuery(driverConnection, table);
+        return findElements(driverConnection, table, sqlQuery);
+    }
+
+    protected abstract String findSqlQuery(final DriverConnection driverConnection, final TableBase table);
+
+    protected abstract List<TableBase> findElements(final DriverConnection driverConnection, final TableBase table, final String sqlQuery);
 
 }

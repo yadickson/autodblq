@@ -3,9 +3,9 @@
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@
 <#if dbversion?? >
-<!-- ${dbversion} -->
+-- ${dbversion}
 </#if>
 
-<#if function.text?? >
-${function.text}
+<#if function.content?? >
+${function.content}
 </#if>

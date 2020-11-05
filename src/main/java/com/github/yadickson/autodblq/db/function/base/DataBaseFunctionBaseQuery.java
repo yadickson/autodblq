@@ -13,6 +13,8 @@ import java.util.List;
  */
 public interface DataBaseFunctionBaseQuery {
 
-    String get(List<String> filter);
+    String getFunctions(List<String> filter);
+
+    String getProcedures(List<String> filter);
 
 }

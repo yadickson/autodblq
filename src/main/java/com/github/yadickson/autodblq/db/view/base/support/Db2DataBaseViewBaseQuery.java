@@ -21,14 +21,14 @@ public class Db2DataBaseViewBaseQuery implements DataBaseViewBaseQuery {
 
     @Override
     public String get(final List<String> filter) {
-        return "SELECT DISTINCT \n"
+        return "SELECT \n"
                 + " v.viewschema schema, \n"
                 + " v.viewname name, \n"
                 + " v.text content \n"
                 + "FROM SYSCAT.VIEWS V \n"
                 + "WHERE \n"
                 + filterByNames(filter)
-                + "ORDER BY v.SCHEMA ASC, v.name asc";
+                + "ORDER BY v.viewschema ASC, v.viewname asc";
     }
 
     private String filterByNames(final List<String> filter) {

@@ -32,20 +32,14 @@
 <#if table.schema?? >
             schemaName="${table.schema}"
 </#if>
+            tableName="${table.name}"
             encoding="${encode}"
-            file="../csv/${table.name}.csv"
+            file="../table/${table.name}.csv"
             relativeToChangelogFile="true"
-            quotchar=<#if quotchar == "\"">'<#else>"</#if>${quotchar}<#if quotchar == "\"">'<#else>"</#if>
-            separator=<#if separator == "\"">'<#else>"</#if>${separator}<#if separator == "\"">'<#else>"</#if>
-        >
-
-<#if table.columns?? >
-<#list table.columns as column >
-            <column name="${column.name}" type="<#if typeUtil.isString(column.type) >STRING<#else>NUMERIC</#if>" />
-</#list>
-</#if>
-
-        </loadData>
+            commentLineStartsWith= "${csvComment}"
+            quotchar=<#if csvQuotchar == "\"">'<#else>"</#if>${csvQuotchar}<#if csvQuotchar == "\"">'<#else>"</#if>
+            separator=<#if csvSeparator == "\"">'<#else>"</#if>${csvSeparator}<#if csvSeparator == "\"">'<#else>"</#if>
+        />
 
         <rollback>
             <delete tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if>/>

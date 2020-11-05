@@ -35,9 +35,6 @@ public class DataBaseTablePrimaryKeyReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTablePrimaryKeyMapper dataBaseTablePrimaryKeyMapper;
 
-    private String sqlQuery;
-    private List<TablePrimaryKeyBean> primaryKeys;
-
     @Inject
     public DataBaseTablePrimaryKeyReader(
             final DataBaseTablePrimaryKeyQueryFactory dataBaseTablePrimaryKeyQueryFactory,
@@ -51,33 +48,27 @@ public class DataBaseTablePrimaryKeyReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findPrimaryKeys(driverConnection);
-        return processPrimaryKeys(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTablePrimaryKeyQuery query = dataBaseTablePrimaryKeyQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTablePrimaryKeyReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findPrimaryKeys(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTablePrimaryKeyReader] Starting");
-        primaryKeys = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TablePrimaryKeyBean.class);
+        List<TablePrimaryKeyBean> primaryKeys = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TablePrimaryKeyBean.class);
         LOGGER.info("[DataBaseTablePrimaryKeyReader] Total: " + primaryKeys.size());
-    }
-
-    private List<TableBase> processPrimaryKeys(final TableBase tableBase) {
-        return dataBaseTablePrimaryKeyMapper.apply(tableBase, primaryKeys);
+        return dataBaseTablePrimaryKeyMapper.apply(table, primaryKeys);
     }
 
 }

@@ -20,25 +20,27 @@ public class Db2DataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery {
     private static final String SEPARATOR = "','";
 
     @Override
-    public String get(final List<String> filter) {
-
-        return "SELECT DISTINCT \n"
+    public String getFunctions(final List<String> filter) {
+        return "SELECT \n"
                 + " FUNCSCHEMA schema, \n"
                 + " FUNCNAME name, \n"
                 + " BODY content,"
                 + " 'true' ISFUNCTION \n"
                 + "FROM syscat.FUNCTIONS \n"
-                + "WHERE\n"
+                + "WHERE \n"
                 + filterFunctionByNames(filter)
-                + "ORDER BY FUNCSCHEMA ASC, FUNCNAME asc"
-                + "UNION "
-                + "select DISTINCT \n"
+                + "ORDER BY FUNCSCHEMA ASC, FUNCNAME asc";
+    }
+
+    @Override
+    public String getProcedures(final List<String> filter) {
+        return "select \n"
                 + " PROCSCHEMA schema, \n"
                 + " PROCNAME name, \n"
                 + " TEXT content, \n"
                 + " 'false' ISFUNCTION \n"
-                + "from SYSCAT.PROCEDURES"
-                + "WHERE\n"
+                + "from SYSCAT.PROCEDURES \n"
+                + "WHERE \n"
                 + filterProceduresByNames(filter)
                 + "ORDER BY PROCSCHEMA ASC, PROCNAME asc";
     }

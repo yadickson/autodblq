@@ -66,7 +66,7 @@ public class DataBaseTableBaseReader {
 
             findSqlQuery(filter, driverConnection);
             findTables(driverConnection);
-            return processTables(driverConnection);
+            return processTables(driverConnection, filter);
 
         } catch (RuntimeException ex) {
             throw new DataBaseTableBaseReaderException(ex);
@@ -89,9 +89,11 @@ public class DataBaseTableBaseReader {
         LOGGER.info("[DataBaseTableBaseReader] Total: " + tables.size());
     }
 
-    private List<TableBase> processTables(final DriverConnection driverConnection) {
+    private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {
         List<TableBase> result = dataBaseTableMapper.apply(tables);
-        return dataBaseTableDefinitionReader.execute(driverConnection, result);
+        List<TableBase> definitions = dataBaseTableDefinitionReader.execute(driverConnection, result);
+        Collections.sort(definitions, new DataBaseTableBaseSort(filter));
+        return definitions;
     }
 
 }

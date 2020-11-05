@@ -16,7 +16,12 @@ import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseQuery;
 public class PostgreSqlDataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery {
 
     @Override
-    public String get(final List<String> filter) {
+    public String getFunctions(final List<String> filter) {
+        return null;
+    }
+
+    @Override
+    public String getProcedures(final List<String> filter) {
         return null;
     }
 

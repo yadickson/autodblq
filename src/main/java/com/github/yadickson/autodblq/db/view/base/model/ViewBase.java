@@ -5,6 +5,8 @@
  */
 package com.github.yadickson.autodblq.db.view.base.model;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *
  * @author Yadickson Soto
@@ -14,6 +16,7 @@ public final class ViewBase {
     private final String schema;
     private final String name;
     private final String content;
+    private final String fullName;
 
     public ViewBase(ViewBase viewBase) {
         this(viewBase.getSchema(), viewBase.getName(), viewBase.getContent());
@@ -23,6 +26,7 @@ public final class ViewBase {
         this.schema = schema;
         this.name = name;
         this.content = content;
+        this.fullName = StringUtils.isEmpty(schema) ? name : schema + "." + name;
     }
 
     public String getSchema() {
@@ -35,6 +39,10 @@ public final class ViewBase {
 
     public String getContent() {
         return content;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
 }

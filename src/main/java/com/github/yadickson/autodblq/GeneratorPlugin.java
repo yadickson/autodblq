@@ -23,6 +23,7 @@ import com.github.yadickson.autodblq.db.DataBaseGenerator;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.DriverConnectionDecorator;
+import com.github.yadickson.autodblq.db.util.StringToBooleanUtil;
 import com.github.yadickson.autodblq.logger.MavenLoggerConfiguration;
 import com.github.yadickson.autodblq.writer.DefinitionGenerator;
 
@@ -138,7 +139,7 @@ public class GeneratorPlugin extends AbstractMojo {
      */
     @Parameter(
             property = "autodblq.csvQuotchar",
-            defaultValue = "'",
+            defaultValue = "\"",
             alias = "csvQuotchar",
             required = true)
     private String csvQuotchar;
@@ -152,6 +153,16 @@ public class GeneratorPlugin extends AbstractMojo {
             alias = "csvSeparator",
             required = true)
     private String csvSeparator;
+
+    /**
+     * csvComment.
+     */
+    @Parameter(
+            property = "autodblq.csvComment",
+            defaultValue = "#",
+            alias = "csvComment",
+            required = true)
+    private String csvComment;
 
     /**
      * Tables to build.
@@ -192,6 +203,7 @@ public class GeneratorPlugin extends AbstractMojo {
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
     private final DataBaseGenerator dataBaseGenerator;
     private final DefinitionGenerator definitionGenerator;
+    private final StringToBooleanUtil stringToBooleanUtil;
 
     private Parameters parameters;
     private Map<DataBaseGeneratorType, Object> dataBaseGeneratorResult;
@@ -200,11 +212,13 @@ public class GeneratorPlugin extends AbstractMojo {
     public GeneratorPlugin(
             final MavenLoggerConfiguration mavenLoggerConfiguration,
             final DataBaseGenerator dataBaseGenerator,
-            final DefinitionGenerator definitionGenerator
+            final DefinitionGenerator definitionGenerator,
+            final StringToBooleanUtil stringToBooleanUtil
     ) {
         this.mavenLoggerConfiguration = mavenLoggerConfiguration;
         this.dataBaseGenerator = dataBaseGenerator;
         this.definitionGenerator = definitionGenerator;
+        this.stringToBooleanUtil = stringToBooleanUtil;
     }
 
     @Override
@@ -222,7 +236,7 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void makeParameters() {
-        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, outputDirectory, lqVersion, lqProductionEnabled, tables, dataTables, views, functions));
+        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions));
     }
 
     private void printParameters() {

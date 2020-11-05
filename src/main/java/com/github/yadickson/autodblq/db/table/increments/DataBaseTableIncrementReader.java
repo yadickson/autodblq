@@ -35,9 +35,6 @@ public class DataBaseTableIncrementReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableIncrementMapper dataBaseTableIncrementMapper;
 
-    private String sqlQuery;
-    private List<TableIncrementBean> increments;
-
     @Inject
     public DataBaseTableIncrementReader(
             final DataBaseTableIncrementQueryFactory dataBaseTableIncrementQueryFactory,
@@ -51,33 +48,27 @@ public class DataBaseTableIncrementReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findIncrements(driverConnection);
-        return processIncrements(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableIncrementQuery query = dataBaseTableIncrementQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableIncrementReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findIncrements(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTableIncrementReader] Starting");
-        increments = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableIncrementBean.class);
+        List<TableIncrementBean> increments = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableIncrementBean.class);
         LOGGER.info("[DataBaseTableIncrementReader] Total: " + increments.size());
-    }
-
-    private List<TableBase> processIncrements(final TableBase tableBase) {
-        return dataBaseTableIncrementMapper.apply(tableBase, increments);
+        return dataBaseTableIncrementMapper.apply(table, increments);
     }
 
 }

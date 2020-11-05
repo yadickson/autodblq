@@ -5,7 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.table.base.model;
 
-import org.apache.commons.lang3.StringUtils;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *

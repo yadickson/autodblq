@@ -35,9 +35,6 @@ public class DataBaseTableUniqueReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableUniqueMapper dataBaseTableUniqueMapper;
 
-    private String sqlQuery;
-    private List<TableUniqueBean> uniques;
-
     @Inject
     public DataBaseTableUniqueReader(
             final DataBaseTableUniqueQueryFactory dataBaseTableUniqueQueryFactory,
@@ -51,33 +48,27 @@ public class DataBaseTableUniqueReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findUniques(driverConnection);
-        return processUniques(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableUniqueQuery query = dataBaseTableUniqueQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableUniqueReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findUniques(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTableUniqueReader] Starting");
-        uniques = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableUniqueBean.class);
+        List<TableUniqueBean> uniques = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableUniqueBean.class);
         LOGGER.info("[DataBaseTableUniqueReader] Total: " + uniques.size());
-    }
-
-    private List<TableBase> processUniques(final TableBase tableBase) {
-        return dataBaseTableUniqueMapper.apply(tableBase, uniques);
+        return dataBaseTableUniqueMapper.apply(table, uniques);
     }
 
 }

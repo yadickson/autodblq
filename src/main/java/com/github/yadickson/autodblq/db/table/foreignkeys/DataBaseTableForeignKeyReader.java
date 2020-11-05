@@ -35,9 +35,6 @@ public class DataBaseTableForeignKeyReader extends DataBaseTableReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableForeignKeyMapper dataBaseTableForeignKeyMapper;
 
-    private String sqlQuery;
-    private List<TableForeignKeyBean> foreignKeys;
-
     @Inject
     public DataBaseTableForeignKeyReader(
             final DataBaseTableForeignKeyQueryFactory dataBaseTableForeignKeyQueryFactory,
@@ -51,32 +48,26 @@ public class DataBaseTableForeignKeyReader extends DataBaseTableReader {
     }
 
     @Override
-    protected List<TableBase> processTable(
-            final DriverConnection driverConnection,
-            final TableBase table
-    ) {
-        findSqlQuery(driverConnection, table);
-        findForeignKeys(driverConnection);
-        return processForeignKeys(table);
-    }
-
-    private void findSqlQuery(
+    protected String findSqlQuery(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableForeignKeyQuery query = dataBaseTableForeignKeyQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        final String sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableForeignKeyReader] SQL: " + sqlQuery);
+        return sqlQuery;
     }
 
-    private void findForeignKeys(final DriverConnection driverConnection) {
+    @Override
+    protected List<TableBase> findElements(
+            final DriverConnection driverConnection,
+            final TableBase table,
+            final String sqlQuery
+    ) {
         LOGGER.info("[DataBaseTableForeignKeyReader] Starting");
-        foreignKeys = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableForeignKeyBean.class);
+        List<TableForeignKeyBean> foreignKeys = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableForeignKeyBean.class);
         LOGGER.info("[DataBaseTableForeignKeyReader] Total: " + foreignKeys.size());
-    }
-
-    private List<TableBase> processForeignKeys(final TableBase table) {
         return dataBaseTableForeignKeyMapper.apply(table, foreignKeys);
     }
 

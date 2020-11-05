@@ -58,14 +58,14 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
         final String schema = stringTrimUtil.apply(functionBean.getSchema());
         final String name = stringTrimUtil.apply(functionBean.getName());
         final String content = stringTrimUtil.apply(functionBean.getContent());
-        final Boolean function = stringToBooleanUtil.apply(functionBean.getIsfunction());
+        final Boolean isFunction = stringToBooleanUtil.apply(functionBean.getIsfunction());
 
         LOGGER.debug("[DataBaseFunctionBaseMapper] Schema: " + schema);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Name: " + name);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Content: " + content);
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Is Function: " + function);
+        LOGGER.debug("[DataBaseFunctionBaseMapper] Is Function: " + isFunction);
 
-        return new FunctionBase(schema, name, content, function);
+        return new FunctionBase(schema, name, content, isFunction);
     }
 
 }

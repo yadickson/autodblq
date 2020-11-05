@@ -5,6 +5,8 @@
  */
 package com.github.yadickson.autodblq.db.function.base.model;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *
  * @author Yadickson Soto
@@ -14,17 +16,19 @@ public final class FunctionBase {
     private final String schema;
     private final String name;
     private final String content;
-    private final Boolean function;
+    private final Boolean isFunction;
+    private final String fullName;
 
     public FunctionBase(FunctionBase functionBase) {
-        this(functionBase.getSchema(), functionBase.getName(), functionBase.getContent(), functionBase.getFunction());
+        this(functionBase.getSchema(), functionBase.getName(), functionBase.getContent(), functionBase.getIsFunction());
     }
 
-    public FunctionBase(String schema, String name, String content, Boolean function) {
+    public FunctionBase(String schema, String name, String content, Boolean isFunction) {
         this.schema = schema;
         this.name = name;
         this.content = content;
-        this.function = function;
+        this.isFunction = isFunction;
+        this.fullName = StringUtils.isEmpty(schema) ? name : schema + "." + name;
     }
 
     public String getSchema() {
@@ -39,8 +43,12 @@ public final class FunctionBase {
         return content;
     }
 
-    public Boolean getFunction() {
-        return function;
+    public Boolean getIsFunction() {
+        return isFunction;
+    }
+
+    public String getFullName() {
+        return fullName;
     }
 
 }

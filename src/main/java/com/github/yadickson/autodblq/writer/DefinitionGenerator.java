@@ -6,6 +6,7 @@
 package com.github.yadickson.autodblq.writer;
 
 import java.io.File;
+import java.io.IOException;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -14,6 +15,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 import javax.inject.Singleton;
+
+import org.apache.commons.io.FileUtils;
 
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
@@ -25,8 +28,6 @@ import com.github.yadickson.autodblq.directory.DirectoryBuilder;
 import com.github.yadickson.autodblq.writer.table.DataTableGenerator;
 import com.github.yadickson.autodblq.writer.template.TemplateGenerator;
 import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
-import java.io.IOException;
-import org.apache.commons.io.FileUtils;
 
 /**
  *
@@ -87,8 +88,9 @@ public final class DefinitionGenerator {
     private static final String FILES_GENERATED = "files";
     private static final String TYPE_UTIL = "typeUtil";
     private static final String ENCODE = "encode";
-    private static final String QUOTCHAR = "quotchar";
-    private static final String SEPARATOR = "separator";
+    private static final String CSV_QUOTCHAR = "csvQuotchar";
+    private static final String CSV_SEPARATOR = "csvSeparator";
+    private static final String CSV_COMMENT = "csvComment";
 
     @Inject
     public DefinitionGenerator(
@@ -138,8 +140,9 @@ public final class DefinitionGenerator {
         values.put(AUTHOR, parameters.getAuthor());
 
         values.put(ENCODE, parameters.getEncode());
-        values.put(QUOTCHAR, parameters.getCsvQuotchar());
-        values.put(SEPARATOR, parameters.getCsvSeparator());
+        values.put(CSV_QUOTCHAR, parameters.getCsvQuotchar());
+        values.put(CSV_SEPARATOR, parameters.getCsvSeparator());
+        values.put(CSV_COMMENT, parameters.getCsvComment());
 
         values.put(DATA_BASE_VERSION, version);
         values.put(DATA_BASE_TABLES, tables);
@@ -260,7 +263,7 @@ public final class DefinitionGenerator {
 
         for (FunctionBase function : functions) {
 
-            if (function.getFunction()) {
+            if (function.getIsFunction()) {
                 values.put(FUNCTION, function);
                 makeFunctionFile(function);
             } else {
@@ -313,11 +316,11 @@ public final class DefinitionGenerator {
     }
 
     private void makeMasterChangelog() {
-        
-        if (!filesGenerated.isEmpty()) {
+
+        if (filesGenerated.isEmpty()) {
             return;
         }
-        
+
         final DefinitionGeneratorType type = DefinitionGeneratorType.MASTER_CHANGLE_LOG;
         final String filename = type.getFilename();
         final String path = makeFilenamePath(".", filename);
