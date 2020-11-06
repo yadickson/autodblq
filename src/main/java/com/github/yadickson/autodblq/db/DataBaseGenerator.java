@@ -17,9 +17,9 @@ import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseReader;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
-import com.github.yadickson.autodblq.db.table.DataBaseTableChain;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
 import com.github.yadickson.autodblq.db.version.base.DataBaseVersionReader;
 import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseReader;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
@@ -32,9 +32,9 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 @Singleton
 public class DataBaseGenerator {
 
-    private final DataBaseVersionReader dataBaseVersionHandler;
+    private final DataBaseVersionReader dataBaseVersionReader;
     private final DataBaseTableBaseReader dataBaseTableBaseReader;
-    private final DataBaseTableChain dataBaseTableChain;
+    private final DataBaseTableConstraintChain dataBaseTableConstraintReader;
     private final DataBaseViewBaseReader dataBaseViewBaseReader;
     private final DataBaseFunctionBaseReader dataBaseFunctionBaseReader;
 
@@ -42,15 +42,15 @@ public class DataBaseGenerator {
 
     @Inject
     public DataBaseGenerator(
-            final DataBaseVersionReader dataBaseVersionHandler,
+            final DataBaseVersionReader dataBaseVersionReader,
             final DataBaseTableBaseReader dataBaseTableBaseReader,
-            final DataBaseTableChain dataBaseTableChain,
+            final DataBaseTableConstraintChain dataBaseTableConstraintReader,
             final DataBaseViewBaseReader dataBaseViewBaseReader,
             final DataBaseFunctionBaseReader dataBaseFunctionBaseReader
     ) {
-        this.dataBaseVersionHandler = dataBaseVersionHandler;
+        this.dataBaseVersionReader = dataBaseVersionReader;
         this.dataBaseTableBaseReader = dataBaseTableBaseReader;
-        this.dataBaseTableChain = dataBaseTableChain;
+        this.dataBaseTableConstraintReader = dataBaseTableConstraintReader;
         this.dataBaseViewBaseReader = dataBaseViewBaseReader;
         this.dataBaseFunctionBaseReader = dataBaseFunctionBaseReader;
     }
@@ -75,7 +75,7 @@ public class DataBaseGenerator {
 
     private void findVersion(final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.VERSION;
-        final String version = dataBaseVersionHandler.execute(driverConnection);
+        final String version = dataBaseVersionReader.execute(driverConnection);
         result.put(key, version);
     }
 
@@ -84,7 +84,11 @@ public class DataBaseGenerator {
         final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
         result.put(key, tables);
 
-        final Map<DataBaseGeneratorType, List<TableBase>> response = dataBaseTableChain.execute(driverConnection, tables);
+        findConstraints(driverConnection, tables);
+    }
+
+    private void findConstraints(final DriverConnection driverConnection, final List<TableBase> tables) {
+        final Map<DataBaseGeneratorType, List<TableBase>> response = dataBaseTableConstraintReader.execute(driverConnection, tables);
         result.putAll(response);
     }
 

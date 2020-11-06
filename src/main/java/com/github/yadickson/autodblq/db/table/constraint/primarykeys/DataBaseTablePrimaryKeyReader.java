@@ -1,0 +1,33 @@
+/*
+ * Copyright (C) 2020 Yadickson Soto
+ *
+ * See <http://www.gnu.org/licenses/gpl-3.0.html>.
+ */
+package com.github.yadickson.autodblq.db.table.constraint.primarykeys;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+import javax.inject.Singleton;
+
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
+
+/**
+ *
+ * @author Yadickson Soto
+ */
+@Named
+@Singleton
+public class DataBaseTablePrimaryKeyReader extends DataBaseTableConstraintReader {
+
+    @Inject
+    public DataBaseTablePrimaryKeyReader(
+            final DataBaseTablePrimaryKeyQueryFactory dataBaseTablePrimaryKeyQueryFactory,
+            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final DataBaseTablePrimaryKeyMapper dataBaseTablePrimaryKeyMapper
+    ) {
+        super(DataBaseGeneratorType.TABLE_PRIMARY_KEYS, dataBaseTablePrimaryKeyQueryFactory, sqlExecuteToGetListFactory, dataBaseTablePrimaryKeyMapper);
+    }
+
+}

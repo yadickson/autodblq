@@ -15,7 +15,7 @@ import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.util.StringTrimUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 

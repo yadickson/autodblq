@@ -14,13 +14,15 @@ import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.table.DataBaseTableReaderException;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.definitions.model.TableColumnBean;
 import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetList;
 
 /**
  *
@@ -42,11 +44,11 @@ public class DataBaseTableDefinitionReader {
     @Inject
     public DataBaseTableDefinitionReader(
             final DataBaseTableDefinitionQueryFactory dataBaseTableDefinitionQueryFactory,
-            final SqlExecuteToGetList sqlExecuteToGetList,
+            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
             final DataBaseTableDefinitionMapper dataBaseTableDefinitionMapper
     ) {
         this.dataBaseTableDefinitionQueryFactory = dataBaseTableDefinitionQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetList;
+        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_DEFINITION);
         this.dataBaseTableDefinitionMapper = dataBaseTableDefinitionMapper;
     }
 
@@ -57,7 +59,7 @@ public class DataBaseTableDefinitionReader {
             return processTables(driverConnection, tables);
 
         } catch (RuntimeException ex) {
-            throw new DataBaseTableReaderException(ex);
+            throw new DataBaseTableConstraintReaderException(ex);
         }
 
     }
@@ -97,7 +99,7 @@ public class DataBaseTableDefinitionReader {
 
     private void findDefinitions(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseTableDefinitionReader] Starting");
-        columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableColumnBean.class);
+        columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.info("[DataBaseTableDefinitionReader] Total: " + columns.size());
     }
 

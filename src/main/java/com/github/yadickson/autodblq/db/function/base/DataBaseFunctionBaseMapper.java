@@ -17,8 +17,8 @@ import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
-import com.github.yadickson.autodblq.db.util.StringToBooleanUtil;
-import com.github.yadickson.autodblq.db.util.StringTrimUtil;
+import com.github.yadickson.autodblq.util.StringToBooleanUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 
 /**
  *

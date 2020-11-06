@@ -15,12 +15,14 @@ import javax.inject.Singleton;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import com.github.yadickson.autodblq.db.table.definitions.DataBaseTableDefinitionReader;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetList;
 
 /**
  *
@@ -43,12 +45,12 @@ public class DataBaseTableBaseReader {
     @Inject
     public DataBaseTableBaseReader(
             final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory,
-            final SqlExecuteToGetList sqlExecuteToGetList,
+            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
             final DataBaseTableBaseMapper dataBaseTableMapper,
             final DataBaseTableDefinitionReader dataBaseTableDefinitionReader
     ) {
         this.dataBaseTableQueryFactory = dataBaseTableQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetList;
+        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_BASE);
         this.dataBaseTableMapper = dataBaseTableMapper;
         this.dataBaseTableDefinitionReader = dataBaseTableDefinitionReader;
     }
@@ -85,12 +87,16 @@ public class DataBaseTableBaseReader {
 
     private void findTables(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseTableBaseReader] Starting");
-        tables = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableBaseBean.class);
+        tables = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.info("[DataBaseTableBaseReader] Total: " + tables.size());
     }
 
     private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {
         List<TableBase> result = dataBaseTableMapper.apply(tables);
+        return sortTables(driverConnection, result, filter);
+    }
+
+    private List<TableBase> sortTables(final DriverConnection driverConnection, final List<TableBase> result, final List<String> filter) {
         List<TableBase> definitions = dataBaseTableDefinitionReader.execute(driverConnection, result);
         Collections.sort(definitions, new DataBaseTableBaseSort(filter));
         return definitions;

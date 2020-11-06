@@ -13,7 +13,7 @@ import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetObject;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetObject;
 import com.github.yadickson.autodblq.db.version.base.model.VersionBean;
 
 /**

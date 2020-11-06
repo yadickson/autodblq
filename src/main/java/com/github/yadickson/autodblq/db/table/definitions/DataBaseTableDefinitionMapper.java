@@ -17,9 +17,9 @@ import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
 import com.github.yadickson.autodblq.db.table.definitions.model.TableColumnBean;
-import com.github.yadickson.autodblq.db.util.StringToBooleanUtil;
-import com.github.yadickson.autodblq.db.util.StringToUpperCaseUtil;
-import com.github.yadickson.autodblq.db.util.StringTrimUtil;
+import com.github.yadickson.autodblq.util.StringToBooleanUtil;
+import com.github.yadickson.autodblq.util.StringToUpperCaseUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 
 /**
  *

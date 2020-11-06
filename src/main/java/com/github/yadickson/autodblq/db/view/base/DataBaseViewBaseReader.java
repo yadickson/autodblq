@@ -15,9 +15,11 @@ import javax.inject.Singleton;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 
@@ -41,11 +43,11 @@ public class DataBaseViewBaseReader {
     @Inject
     public DataBaseViewBaseReader(
             final DataBaseViewBaseQueryFactory dataBaseViewQueryFactory,
-            final SqlExecuteToGetList sqlExecuteToGetList,
+            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
             final DataBaseViewBaseMapper dataBaseViewMapper
     ) {
         this.dataBaseViewQueryFactory = dataBaseViewQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetList;
+        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.VIEW_DEFINITION);
         this.dataBaseViewMapper = dataBaseViewMapper;
     }
 
@@ -81,7 +83,7 @@ public class DataBaseViewBaseReader {
 
     private void findViews(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseViewReader] Starting");
-        views = sqlExecuteToGetList.execute(driverConnection, sqlQuery, ViewBaseBean.class);
+        views = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.info("[DataBaseViewReader] Total: " + views.size());
     }
 

@@ -14,7 +14,7 @@ import org.apache.log4j.Logger;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.data.model.CountBean;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetObject;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetObject;
 
 /**
  *

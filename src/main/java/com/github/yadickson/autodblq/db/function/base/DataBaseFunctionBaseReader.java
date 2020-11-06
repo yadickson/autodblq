@@ -16,11 +16,13 @@ import javax.inject.Singleton;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
-import com.github.yadickson.autodblq.db.util.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 
 /**
  *
@@ -42,11 +44,11 @@ public class DataBaseFunctionBaseReader {
     @Inject
     public DataBaseFunctionBaseReader(
             final DataBaseFunctionBaseQueryFactory dataBaseFunctionQueryFactory,
-            final SqlExecuteToGetList sqlExecuteToGetList,
+            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
             final DataBaseFunctionBaseMapper dataBaseFunctionMapper
     ) {
         this.dataBaseFunctionQueryFactory = dataBaseFunctionQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetList;
+        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.FUNCTION_DEFINITION);
         this.dataBaseFunctionMapper = dataBaseFunctionMapper;
     }
 
@@ -101,7 +103,7 @@ public class DataBaseFunctionBaseReader {
 
     private List<FunctionBaseBean> findFunctions(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseFunctionBaseReader] Starting");
-        final List<FunctionBaseBean> functions = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
+        final List<FunctionBaseBean> functions = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.info("[DataBaseFunctionBaseReader] Total Functions: " + functions.size());
         return functions;
     }
@@ -118,7 +120,7 @@ public class DataBaseFunctionBaseReader {
 
     private List<FunctionBaseBean> findProcedures(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseFunctionBaseReader] Starting");
-        List<FunctionBaseBean> procedures = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
+        List<FunctionBaseBean> procedures = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.info("[DataBaseFunctionBaseReader] Total Procedures: " + procedures.size());
         return procedures;
     }
