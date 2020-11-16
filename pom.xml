@@ -41,7 +41,7 @@
         <maven.compiler.source>1.7</maven.compiler.source>
         <maven.compiler.target>1.7</maven.compiler.target>
         <project.build.sourceEncoding>UTF-8</project.build.sourceEncoding>
-        <jacoco.version>0.8.3</jacoco.version>
+        <jacoco.version>0.8.5</jacoco.version>
         <junit.version>4.13.1</junit.version>
         <mockito.version>1.10.19</mockito.version>
         <powermock.version>1.7.4</powermock.version>
@@ -316,7 +316,20 @@
                     <skip>true</skip>
                 </configuration>
             </plugin>
-            
+
+            <plugin>
+                <groupId>org.owasp</groupId>
+                <artifactId>dependency-check-maven</artifactId>
+                <version>6.0.2</version>
+                <executions>
+                    <execution>
+                        <goals>
+                            <goal>check</goal>
+                        </goals>
+                    </execution>
+                </executions>
+            </plugin>
+
         </plugins>
                 
         <pluginManagement>
