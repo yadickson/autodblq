@@ -11,7 +11,6 @@ import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +23,6 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List<ViewBase>> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseViewBaseMapper.class);

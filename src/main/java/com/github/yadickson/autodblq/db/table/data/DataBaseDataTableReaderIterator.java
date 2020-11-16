@@ -29,7 +29,7 @@ import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionW
  */
 public class DataBaseDataTableReaderIterator {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableReader.class);
+    private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableReaderIterator.class);
 
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final DriverConnection driverConnection;

@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.definitions;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.definitions.support.Db2DataBaseTableDefinitionQuery;
@@ -20,7 +19,6 @@ import com.github.yadickson.autodblq.db.table.definitions.support.PostgreSqlData
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableDefinitionQueryFactory implements Function<Driver, DataBaseTableDefinitionQuery> {
     
     @Override

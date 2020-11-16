@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.sqlquery;
 import java.sql.SQLException;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.dbutils.QueryRunner;
 import org.apache.commons.dbutils.ResultSetHandler;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.connection.DriverConnection;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class SqlExecuteToGetObject {
 
     public <T> T execute(

@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.constraint.indexes;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -24,7 +23,6 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableIndexMapper extends DataBaseTableConstraintMapper<TableIndexBean> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableIndexMapper.class);

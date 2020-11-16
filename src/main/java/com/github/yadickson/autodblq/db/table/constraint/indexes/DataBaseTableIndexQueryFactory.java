@@ -6,7 +6,6 @@
 package com.github.yadickson.autodblq.db.table.constraint.indexes;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.table.constraint.indexes.support.Postgre
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableIndexQueryFactory implements DataBaseTableConstraintQueryFactory {
 
     @Override

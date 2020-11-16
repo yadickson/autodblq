@@ -11,7 +11,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
@@ -29,7 +28,6 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseFunctionBaseReader {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseFunctionBaseReader.class);

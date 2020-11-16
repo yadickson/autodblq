@@ -5,10 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.defaults;
 
-import java.util.function.Function;
-
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
@@ -23,7 +20,6 @@ import com.github.yadickson.autodblq.db.table.constraint.defaults.support.Postgr
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableDefaultQueryFactory implements DataBaseTableConstraintQueryFactory {
 
     @Override

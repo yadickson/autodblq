@@ -12,7 +12,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
@@ -30,7 +29,6 @@ import org.apache.commons.lang3.tuple.Pair;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableConstraintChain {
 
     private final List<DataBaseTableConstraintReader> handlers = new ArrayList<>();

@@ -20,7 +20,6 @@ import java.nio.charset.Charset;
 import java.util.Map;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -31,7 +30,6 @@ import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class TemplateGenerator {
 
     private static final Logger LOGGER = Logger.getLogger(TemplateGenerator.class);

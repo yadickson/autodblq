@@ -14,7 +14,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
@@ -29,7 +28,6 @@ import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataTableGenerator {
 
     private final DataBaseDataTableCountReader dataBaseDataTableCountReader;

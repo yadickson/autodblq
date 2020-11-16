@@ -11,7 +11,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
@@ -29,7 +28,6 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseGenerator {
 
     private final DataBaseVersionReader dataBaseVersionReader;

@@ -10,7 +10,6 @@ import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -29,7 +28,6 @@ import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionW
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableDefinitionReader {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefinitionReader.class);

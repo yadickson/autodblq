@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.sqlquery;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
@@ -27,7 +26,6 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class SqlExecuteToGetListFactory implements Function<DataBaseGeneratorType, SqlExecuteToGetList> {
 
     @Override

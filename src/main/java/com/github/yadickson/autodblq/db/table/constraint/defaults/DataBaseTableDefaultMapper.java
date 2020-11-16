@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -22,7 +21,6 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableDefaultMapper extends DataBaseTableConstraintMapper<TableDefaultBean> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefaultMapper.class);

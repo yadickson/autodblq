@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.data;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetObject;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseDataTableCountReader {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableCountReader.class);

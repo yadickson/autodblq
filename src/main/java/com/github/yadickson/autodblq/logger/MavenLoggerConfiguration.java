@@ -6,7 +6,6 @@
 package com.github.yadickson.autodblq.logger;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.BasicConfigurator;
 import org.apache.maven.plugin.logging.Log;
@@ -16,7 +15,6 @@ import org.apache.maven.plugin.logging.Log;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class MavenLoggerConfiguration {
 
     public void execute(final Log logger) {

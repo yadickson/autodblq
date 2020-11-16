@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.function.base;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.function.base.support.Db2DataBaseFunctionBaseQuery;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.function.base.support.PostgreSqlDataBase
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseFunctionBaseQueryFactory implements Function<Driver, DataBaseFunctionBaseQuery> {
 
     @Override

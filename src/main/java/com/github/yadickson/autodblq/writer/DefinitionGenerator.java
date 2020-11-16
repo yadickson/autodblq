@@ -14,7 +14,6 @@ import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.commons.io.FileUtils;
 
@@ -34,7 +33,6 @@ import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public final class DefinitionGenerator {
 
     private final TemplateGenerator templateGenerator;

@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.constraint.uniques;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -23,7 +22,6 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableUniqueMapper extends DataBaseTableConstraintMapper<TableUniqueBean> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableUniqueMapper.class);

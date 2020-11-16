@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.table.data;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.data.support.Db2DataBaseDataTableBlockQuery;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.table.data.support.PostgreSqlDataBaseDat
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseDataTableBlockQueryFactory implements Function<Driver, DataBaseDataTableBlockQuery> {
 
     @Override

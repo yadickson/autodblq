@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.version.base;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import org.apache.log4j.Logger;
 
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.version.base.model.VersionBean;
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseVersionReader {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseVersionReader.class);

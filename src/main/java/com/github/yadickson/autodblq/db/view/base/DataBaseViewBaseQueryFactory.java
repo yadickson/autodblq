@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.view.base;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.view.base.support.Db2DataBaseViewBaseQuery;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.view.base.support.PostgreSqlDataBaseView
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseViewBaseQueryFactory implements Function<Driver, DataBaseViewBaseQuery> {
 
     @Override

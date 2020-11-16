@@ -8,7 +8,6 @@ package com.github.yadickson.autodblq.db.version.base;
 import java.util.function.Function;
 
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.version.base.support.Db2DataBaseVersionQuery;
@@ -21,7 +20,6 @@ import com.github.yadickson.autodblq.db.version.base.support.PostgreSqlDataBaseV
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseVersionQueryFactory implements Function<Driver, DataBaseVersionQuery> {
 
     @Override

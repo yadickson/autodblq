@@ -7,7 +7,6 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
@@ -18,7 +17,6 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DataBaseTableDefaultReader extends DataBaseTableConstraintReader {
 
     @Inject

@@ -7,14 +7,12 @@ package com.github.yadickson.autodblq.directory;
 
 import java.io.File;
 import javax.inject.Named;
-import javax.inject.Singleton;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-@Singleton
 public class DirectoryBuilder {
 
     public void execute(final String path) {
