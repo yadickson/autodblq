@@ -37,11 +37,13 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
     @Override
     public DataBaseTableProperty apply(final TableDefaultBean tableBean) {
         final String constraintColumn = stringToSnakeCaseUtil.apply(tableBean.getColumn());
+        final String constraintColumnType = stringToSnakeCaseUtil.apply(tableBean.getColumntype());
         final String constraintValue = stringTrimUtil.apply(tableBean.getValue());
 
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Column: " + constraintColumn);
+        LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint ColumnType: " + constraintColumnType);
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Value: " + constraintValue);
 
-        return new TableDefault(constraintColumn, constraintValue);
+        return new TableDefault(constraintColumn, constraintColumnType, constraintValue);
     }
 }

@@ -25,7 +25,12 @@ public class StringToIntegerUtil implements Function<String, Integer> {
     
     @Override
     public Integer apply(final String input) {
-        return Integer.parseInt(stringTrimUtil.apply(input));
+        try {
+            return Integer.parseInt(stringTrimUtil.apply(input));
+        }
+        catch (Exception ex) {
+            return 0;
+        }
     }
 
 }

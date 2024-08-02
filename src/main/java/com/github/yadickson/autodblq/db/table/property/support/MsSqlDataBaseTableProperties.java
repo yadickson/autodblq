@@ -24,22 +24,15 @@ public class MsSqlDataBaseTableProperties extends SupportType implements DataBas
 
     @Override
     public TablePropertyType get(DataBaseTableProperty column) {
-        String type = column.getType();
+        String type = column.getType() == null ? "" : column.getType();
+        String defaultType = column.getDefaultType() == null ? "" : column.getDefaultType();
+        String defaultValue = column.getDefaultValue() == null ? "" : column.getDefaultValue();
         String value;
 
-        if (type == null)
-        {
-            return null;
-        }
-        else if ("uniqueidentifier".compareTo(type) == 0)
+        if ("uniqueidentifier".compareTo(type) == 0 || "uuid".compareTo(type) == 0)
         {
             type = TablePropertyName.UUID.getMessage();
             value = "uuid";
-        }
-        else if (type.contains("newid"))
-        {
-            type = TablePropertyName.UUID_FUNCTION.getMessage();
-            value = "newid()";
         }
         else if ("bit".compareTo(type) == 0)
         {
@@ -51,7 +44,7 @@ public class MsSqlDataBaseTableProperties extends SupportType implements DataBas
             type = TablePropertyName.INTEGER.getMessage();
             value = "int";
         }
-        else if (type.contains("date"))
+        else if (type.contains("date") || type.contains("timestamp"))
         {
             type = TablePropertyName.DATETIME.getMessage();
             value = "datetimeoffset";
@@ -62,6 +55,16 @@ public class MsSqlDataBaseTableProperties extends SupportType implements DataBas
             String nsize = !size.isEmpty() ? "(" + column.getLength() + ")" : "(max)";
             type = "string" + size;
             value = "varchar" + nsize;
+        }
+        else if ("bit".compareTo(defaultType) == 0)
+        {
+            type = "1".compareTo(defaultValue) == 0 ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage();
+            value = defaultValue;
+        }
+        else if (defaultValue.contains("newid") || defaultValue.contains("gen_random_uuid"))
+        {
+            type = TablePropertyName.UUID_FUNCTION.getMessage();
+            value = "newid()";
         }
         else
         {

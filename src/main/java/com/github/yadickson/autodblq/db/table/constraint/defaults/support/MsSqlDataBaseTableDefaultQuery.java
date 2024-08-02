@@ -19,10 +19,12 @@ public class MsSqlDataBaseTableDefaultQuery implements DataBaseTableConstraintQu
     public String get(final TableBase table) {
         return "SELECT "
                 + " c.name as 'column', \n"
+                + " ct.name as 'columntype', \n"
                 + " REPLACE(REPLACE(dc.definition, '((', ''), '))', '') as 'value' \n"
                 + "FROM sys.tables t \n"
                 + "INNER JOIN sys.default_constraints dc on t.object_id = dc.parent_object_id \n"
                 + "INNER JOIN sys.columns c on dc.parent_object_id = c.object_id and c.column_id = dc.parent_column_id \n"
+                + "inner join sys.types ct ON ct.user_type_id = c.user_type_id \n"
                 + "WHERE \n"
                 + filterByName(table)
                 + filterBySchema(table)

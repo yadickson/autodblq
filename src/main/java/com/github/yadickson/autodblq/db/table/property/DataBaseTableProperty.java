@@ -14,6 +14,8 @@ public class DataBaseTableProperty {
     private final String name;
     private final String type;
     private final Integer length;
+    private String defaultType;
+    private String defaultValue;
     private String propertyType;
 
     public DataBaseTableProperty(final String name) {
@@ -40,6 +42,22 @@ public class DataBaseTableProperty {
 
     public Integer getLength() {
         return length;
+    }
+
+    public String getDefaultType() {
+        return defaultType;
+    }
+
+    public void setDefaultType(String defaultType) {
+        this.defaultType = defaultType;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public void setDefaultValue(String defaultValue) {
+        this.defaultValue = defaultValue;
     }
 
     public String getPropertyType() {

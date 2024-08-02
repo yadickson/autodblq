@@ -36,8 +36,8 @@
 </#if>
             tableName="${table.name}"
             columnName="${constraint.name}"
-            incrementBy="${constraint.incrementBy}"
-            startWith="${constraint.incrementBy}"
+            incrementBy="${constraint.incrementValue}"
+            startWith="${constraint.seedValue}"
         />
 
         <rollback>

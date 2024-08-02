@@ -15,10 +15,12 @@ public final class TableDefault extends DataBaseTableProperty {
 
     private final String value;
 
-    public TableDefault(String name, String value)
+    public TableDefault(String name, String defaultType, String columnValue)
     {
-        super(name, value);
-        this.value = value;
+        super(name);
+        this.setDefaultType(defaultType);
+        this.setDefaultValue(columnValue);
+        this.value = columnValue;
     }
 
     public String getValue() {

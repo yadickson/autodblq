@@ -14,6 +14,8 @@ public enum TablePropertyName {
     UUID("uuid"),
     UUID_FUNCTION("uuid_function"),
     BOOLEAN("boolean"),
+    BOOLEAN_TRUE("boolean_true"),
+    BOOLEAN_FALSE("boolean_false"),
     INTEGER("integer"),
     DATETIME("datetime"),
     DATETIME_FUNCTION("datetime_function");

@@ -20,7 +20,7 @@ public class Db2DataBaseTableDefaultQuery implements DataBaseTableConstraintQuer
     public String get(final TableBase table) {
         return "SELECT "
                 + " t.colname column, \n"
-                + " t.typename type, \n"
+                + " t.typename columntype, \n"
                 + " t.default value \n"
                 + "FROM syscat.columns t \n"
                 + "WHERE \n"

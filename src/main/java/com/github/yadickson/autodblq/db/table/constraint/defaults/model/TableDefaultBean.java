@@ -12,6 +12,7 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults.model;
 public final class TableDefaultBean {
 
     private String column;
+    private String columntype;
     private String value;
 
     public String getColumn() {
@@ -20,6 +21,14 @@ public final class TableDefaultBean {
 
     public void setColumn(String column) {
         this.column = column;
+    }
+
+    public String getColumntype() {
+        return columntype;
+    }
+
+    public void setColumntype(String columntype) {
+        this.columntype = columntype;
     }
 
     public String getValue() {

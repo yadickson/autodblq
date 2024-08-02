@@ -74,6 +74,7 @@ public class DataBaseTableBaseReader {
                     .collect(Collectors.toList());
 
         } catch (RuntimeException ex) {
+            LOGGER.error(ex);
             throw new DataBaseTableBaseReaderException(ex);
         }
     }
