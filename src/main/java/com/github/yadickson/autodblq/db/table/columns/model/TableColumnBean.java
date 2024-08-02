@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.definitions.model;
+package com.github.yadickson.autodblq.db.table.columns.model;
 
 /**
  *
@@ -18,7 +18,6 @@ public final class TableColumnBean {
     private String nullable;
     private String precision;
     private String scale;
-    private String defaultvalue;
     private String identity;
     private String remarks;
 
@@ -68,14 +67,6 @@ public final class TableColumnBean {
 
     public void setScale(String scale) {
         this.scale = scale;
-    }
-
-    public String getDefaultvalue() {
-        return defaultvalue;
-    }
-
-    public void setDefaultvalue(String defaultvalue) {
-        this.defaultvalue = defaultvalue;
     }
 
     public String getIdentity() {

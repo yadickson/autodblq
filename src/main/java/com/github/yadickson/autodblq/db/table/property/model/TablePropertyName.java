@@ -9,16 +9,18 @@ package com.github.yadickson.autodblq.db.table.property.model;
  *
  * @author Yadickson Soto
  */
-public enum TableColumnType {
+public enum TablePropertyName {
 
     UUID("uuid"),
+    UUID_FUNCTION("uuid_function"),
     BOOLEAN("boolean"),
     INTEGER("integer"),
-    DATETIME("datetime");
+    DATETIME("datetime"),
+    DATETIME_FUNCTION("datetime_function");
 
     private final String message;
 
-    private TableColumnType(final String message) {
+    private TablePropertyName(final String message) {
         this.message = message;
     }
 

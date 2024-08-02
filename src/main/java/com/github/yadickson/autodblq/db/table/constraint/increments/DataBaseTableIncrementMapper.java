@@ -8,6 +8,8 @@ package com.github.yadickson.autodblq.db.table.constraint.increments;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
+import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
@@ -15,6 +17,8 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 import com.github.yadickson.autodblq.db.table.constraint.increments.model.TableIncrementBean;
 import com.github.yadickson.autodblq.db.table.constraint.increments.model.TableIncrementWrapper;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
+
+import java.util.List;
 
 /**
  *
@@ -33,21 +37,22 @@ public class DataBaseTableIncrementMapper extends DataBaseTableConstraintMapper<
     }
 
     @Override
-    protected TableBase mapper(final TableBase tableBase, final TableIncrementBean tableBean) {
+    public TableBase apply(final TableBase tableBase, final List<TableIncrementBean> constraints) {
+//        final String constraintColumn = stringTrimUtil.apply(tableBean.getColumn());
+//        final String constraintType = stringTrimUtil.apply(tableBean.getType());
+//        final String incrementBy = stringTrimUtil.apply(tableBean.getIncrementby());
+//        final String startWith = stringTrimUtil.apply(tableBean.getStartwith());
+//
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Schema: " + tableBase.getSchema());
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Name: " + tableBase.getName());
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Column: " + constraintColumn);
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Type: " + constraintType);
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Increment By: " + incrementBy);
+//        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Start With: " + startWith);
+//
+//        return new TableIncrementWrapper(tableBase, constraintColumn, constraintType, incrementBy, startWith);
 
-        final String constraintColumn = stringTrimUtil.apply(tableBean.getColumn());
-        final String constraintType = stringTrimUtil.apply(tableBean.getType());
-        final String incrementBy = stringTrimUtil.apply(tableBean.getIncrementby());
-        final String startWith = stringTrimUtil.apply(tableBean.getStartwith());
-
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Schema: " + tableBase.getSchema());
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Name: " + tableBase.getName());
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Column: " + constraintColumn);
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Type: " + constraintType);
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Increment By: " + incrementBy);
-        LOGGER.debug("[DataBaseTableIncrementMapper] Table Constraint Start With: " + startWith);
-
-        return new TableIncrementWrapper(tableBase, constraintColumn, constraintType, incrementBy, startWith);
+        return tableBase;
     }
 
 }

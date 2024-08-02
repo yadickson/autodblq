@@ -31,9 +31,11 @@
         <createTable tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
 <#if table.columns?? >
 <#list table.columns as column >
-            <column name="${column.name}" type="<#if column.propertyType??>${r"${"}${column.propertyType?lower_case}${r"}"}<#else>${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if></#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
-                <constraints nullable="<#if column.nullable?? >${column.nullable?c}<#else>false</#if>"/>
+            <column name="${column.name}" type="<#if column.propertyType??>${r"${"}${column.propertyType?lower_case}${r"}"}<#else>${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if></#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if> <#if addNullable?? && addNullable == true><#else>/</#if>>
+<#if column.nullable?? && addNullable?? && addNullable == true>
+                <constraints nullable="${column.nullable?c}"/>
             </column>
+</#if>
 </#list>
 </#if>
         </createTable>

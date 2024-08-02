@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.definitions;
+package com.github.yadickson.autodblq.db.table.columns;
 
 import java.util.ArrayList;
 import java.util.Comparator;
@@ -14,21 +14,21 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumnBean;
+import com.github.yadickson.autodblq.db.table.columns.model.TableColumn;
+import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableDefinitionMapper implements Function<List<TableColumnBean>, List<TableColumn>> {
+public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean>, List<DataBaseTableProperty>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefinitionMapper.class);
+    private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsMapper.class);
 
     private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
@@ -37,7 +37,7 @@ public class DataBaseTableDefinitionMapper implements Function<List<TableColumnB
     private final StringToIntegerUtil stringToIntegerUtil;
 
     @Inject
-    public DataBaseTableDefinitionMapper(
+    public DataBaseTableColumnsMapper(
             final StringTrimUtil stringTrimUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
@@ -52,7 +52,7 @@ public class DataBaseTableDefinitionMapper implements Function<List<TableColumnB
     }
 
     @Override
-    public List<TableColumn> apply(List<TableColumnBean> tableColumnBeans) {
+    public List<DataBaseTableProperty> apply(List<TableColumnBean> tableColumnBeans) {
 
         final List<TableColumn> tableColumns = new ArrayList<>();
 
@@ -74,9 +74,8 @@ public class DataBaseTableDefinitionMapper implements Function<List<TableColumnB
         final Integer length = stringToIntegerUtil.apply(tableColumnBean.getLength());
         final String precision = stringTrimUtil.apply(tableColumnBean.getPrecision());
         final String scale = stringTrimUtil.apply(tableColumnBean.getScale());
-        final Boolean nulleable = stringToBooleanUtil.apply(tableColumnBean.getNullable());
+        final Boolean nullable = stringToBooleanUtil.apply(tableColumnBean.getNullable());
         final String remarks = stringTrimUtil.apply(tableColumnBean.getRemarks());
-        final String defaultValue = stringTrimUtil.apply(tableColumnBean.getDefaultvalue());
 
         LOGGER.debug("[DataBaseTableColumnMapper] Name: " + name);
         LOGGER.debug("[DataBaseTableColumnMapper] Type: " + type);
@@ -84,11 +83,10 @@ public class DataBaseTableDefinitionMapper implements Function<List<TableColumnB
         LOGGER.debug("[DataBaseTableColumnMapper] Length: " + length);
         LOGGER.debug("[DataBaseTableColumnMapper] Precision: " + precision);
         LOGGER.debug("[DataBaseTableColumnMapper] Scale: " + scale);
-        LOGGER.debug("[DataBaseTableColumnMapper] Nulleable: " + nulleable);
         LOGGER.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
-        LOGGER.debug("[DataBaseTableColumnMapper] DefaultValue: " + defaultValue);
+        LOGGER.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
 
-        return new TableColumn(name, type, position, length, precision, scale, nulleable, remarks, defaultValue);
+        return new TableColumn(name, type, position, length, precision, scale, remarks, nullable);
     }
 
 }

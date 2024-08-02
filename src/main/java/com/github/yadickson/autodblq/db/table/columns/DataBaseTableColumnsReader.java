@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.definitions;
+package com.github.yadickson.autodblq.db.table.columns;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -20,34 +20,33 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumnBean;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableDefinitionReader {
+public class DataBaseTableColumnsReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefinitionReader.class);
+    private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsReader.class);
 
-    private final DataBaseTableDefinitionQueryFactory dataBaseTableDefinitionQueryFactory;
+    private final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
-    private final DataBaseTableDefinitionMapper dataBaseTableDefinitionMapper;
+    private final DataBaseTableColumnsMapper dataBaseTableColumnsMapper;
 
     private String sqlQuery;
     private List<TableColumnBean> columns;
 
     @Inject
-    public DataBaseTableDefinitionReader(
-            final DataBaseTableDefinitionQueryFactory dataBaseTableDefinitionQueryFactory,
+    public DataBaseTableColumnsReader(
+            final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory,
             final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
-            final DataBaseTableDefinitionMapper dataBaseTableDefinitionMapper
+            final DataBaseTableColumnsMapper dataBaseTableColumnsMapper
     ) {
-        this.dataBaseTableDefinitionQueryFactory = dataBaseTableDefinitionQueryFactory;
+        this.dataBaseTableColumnsQueryFactory = dataBaseTableColumnsQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_DEFINITION);
-        this.dataBaseTableDefinitionMapper = dataBaseTableDefinitionMapper;
+        this.dataBaseTableColumnsMapper = dataBaseTableColumnsMapper;
     }
 
     public List<TableBase> execute(final DriverConnection driverConnection, final List<TableBase> tables) {
@@ -90,7 +89,7 @@ public class DataBaseTableDefinitionReader {
             final TableBase table
     ) {
         final Driver driver = driverConnection.getDriver();
-        final DataBaseTableDefinitionQuery query = dataBaseTableDefinitionQueryFactory.apply(driver);
+        final DataBaseTableColumnsQuery query = dataBaseTableColumnsQueryFactory.apply(driver);
         sqlQuery = query.get(table);
         LOGGER.debug("[DataBaseTableDefinitionReader] SQL: " + sqlQuery);
     }
@@ -102,7 +101,7 @@ public class DataBaseTableDefinitionReader {
     }
 
     private TableBase fillDefinitions(final TableBase table) {
-        return new TableDefinitionWrapper(table, dataBaseTableDefinitionMapper.apply(columns));
+        return new DataBaseTableColumnsWrapper(table, dataBaseTableColumnsMapper.apply(columns));
     }
 
 }

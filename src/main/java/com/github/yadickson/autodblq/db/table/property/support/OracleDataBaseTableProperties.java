@@ -7,9 +7,9 @@ package com.github.yadickson.autodblq.db.table.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 
 /**
  *
@@ -22,7 +22,7 @@ public class OracleDataBaseTableProperties extends SupportType implements DataBa
     }
 
     @Override
-    public TableColumnProperty get(TableColumn column) {
+    public TablePropertyType get(DataBaseTableProperty column) {
         return null;
     }
 

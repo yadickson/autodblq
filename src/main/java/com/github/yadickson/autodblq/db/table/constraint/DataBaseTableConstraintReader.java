@@ -18,7 +18,6 @@ import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 
 /**
  *
@@ -31,21 +30,20 @@ public abstract class DataBaseTableConstraintReader {
     private final DataBaseGeneratorType type;
     private final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
-    private final DataBaseTableConstraintMapper mapper;
+    private final DataBaseTableConstraintMapper constraintMapper;
 
     private String sqlQuery;
-    private List<TableBase> constraints;
 
     public DataBaseTableConstraintReader(
             final DataBaseGeneratorType type,
             final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQuery,
             final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
-            final DataBaseTableConstraintMapper mapper
+            final DataBaseTableConstraintMapper constraintMapper
     ) {
         this.type = type;
         this.dataBaseTableConstraintQueryFactory = dataBaseTableConstraintQuery;
         this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(type);
-        this.mapper = mapper;
+        this.constraintMapper = constraintMapper;
     }
 
     public Pair<DataBaseGeneratorType, List<TableBase>> execute(final DriverConnection driverConnection, final List<TableBase> tables) {
@@ -67,19 +65,18 @@ public abstract class DataBaseTableConstraintReader {
         List<TableBase> elements = new ArrayList<>();
 
         for (TableBase table : tables) {
-            processTable(driverConnection, table);
-            elements.addAll(constraints);
+            elements.add(processTable(driverConnection, table));
         }
 
         return elements;
     }
 
-    protected void processTable(
+    protected TableBase processTable(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         findSqlQuery(driverConnection, table);
-        findElements(driverConnection, table);
+        return findElements(driverConnection, table);
     }
 
     private void findSqlQuery(
@@ -92,14 +89,14 @@ public abstract class DataBaseTableConstraintReader {
         LOGGER.debug("[DataBaseTableConstraintReader] SQL " + type.getMessage() + ": " + sqlQuery);
     }
 
-    private void findElements(
+    private TableBase findElements(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         LOGGER.debug("[DataBaseTableConstraintReader] Starting " + type.getMessage());
-        List<TableDefaultBean> elements = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
+        List<?> elements = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
         LOGGER.debug("[DataBaseTableConstraintReader] Total " + type.getMessage() + ": " + elements.size());
-        constraints = mapper.apply(table, elements);
+        return constraintMapper.apply(table, elements);
     }
 
 }

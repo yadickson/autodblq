@@ -9,10 +9,9 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults.model;
  *
  * @author Yadickson Soto
  */
-public final class TableDefaultBean{
+public final class TableDefaultBean {
 
     private String column;
-    private String type;
     private String value;
 
     public String getColumn() {
@@ -21,14 +20,6 @@ public final class TableDefaultBean{
 
     public void setColumn(String column) {
         this.column = column;
-    }
-
-    public String getType() {
-        return type;
-    }
-
-    public void setType(String type) {
-        this.type = type;
     }
 
     public String getValue() {

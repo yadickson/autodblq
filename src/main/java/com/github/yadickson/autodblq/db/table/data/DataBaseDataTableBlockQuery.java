@@ -5,7 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.table.data;
 
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 
 /**
  *
@@ -13,6 +13,6 @@ import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionW
  */
 public interface DataBaseDataTableBlockQuery {
 
-    String get(final TableDefinitionWrapper table, final Long page, final Long blocks);
+    String get(final DataBaseTableColumnsWrapper table, final Long page, final Long blocks);
 
 }

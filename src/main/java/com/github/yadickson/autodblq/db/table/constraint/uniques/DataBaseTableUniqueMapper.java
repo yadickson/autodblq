@@ -8,14 +8,12 @@ package com.github.yadickson.autodblq.db.table.constraint.uniques;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintMapper;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
-import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueWrapper;
-import com.github.yadickson.autodblq.util.StringJoinUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+
+import java.util.List;
 
 /**
  *
@@ -24,32 +22,17 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableUniqueMapper extends DataBaseTableConstraintMapper<TableUniqueBean> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableUniqueMapper.class);
-
-    private final StringTrimUtil stringTrimUtil;
-    private final StringJoinUtil stringJoinUtil;
+    private final DataBaseTableUniqueConstraintsMapper mapper;
 
     @Inject
     public DataBaseTableUniqueMapper(
-            final StringTrimUtil stringTrimUtil,
-            final StringJoinUtil stringJoinUtil
+            final DataBaseTableUniqueConstraintsMapper mapper
     ) {
-        this.stringTrimUtil = stringTrimUtil;
-        this.stringJoinUtil = stringJoinUtil;
+        this.mapper = mapper;
     }
 
     @Override
-    protected TableBase mapper(final TableBase tableBase, final TableUniqueBean tableBean) {
-
-        final String constraintName = stringTrimUtil.apply(tableBean.getName());
-        final String constraintColumns = stringJoinUtil.apply(tableBean.getColumns());
-
-        LOGGER.debug("[DataBaseTableUniqueMapper] Table Schema: " + tableBase.getSchema());
-        LOGGER.debug("[DataBaseTableUniqueMapper] Table Name: " + tableBase.getName());
-        LOGGER.debug("[DataBaseTableUniqueMapper] Table Constraint Name: " + constraintName);
-        LOGGER.debug("[DataBaseTableUniqueMapper] Table Constraint Columns: " + constraintColumns);
-
-        return new TableUniqueWrapper(tableBase, constraintName, constraintColumns);
+    public TableBase apply(final TableBase tableBase, final List<TableUniqueBean> constraints) {
+        return new DataBaseTableConstraintsWrapper(tableBase, mapper.apply(constraints));
     }
-
 }

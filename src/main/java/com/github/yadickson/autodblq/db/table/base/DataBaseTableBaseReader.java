@@ -13,8 +13,6 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
@@ -25,7 +23,7 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
-import com.github.yadickson.autodblq.db.table.definitions.DataBaseTableDefinitionReader;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsReader;
 
 /**
  *
@@ -39,7 +37,7 @@ public class DataBaseTableBaseReader {
     private final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableBaseMapper dataBaseTableMapper;
-    private final DataBaseTableDefinitionReader dataBaseTableDefinitionReader;
+    private final DataBaseTableColumnsReader dataBaseTableColumnsReader;
 
     private String sqlQuery;
     private List<TableBaseBean> tables;
@@ -49,12 +47,12 @@ public class DataBaseTableBaseReader {
             final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory,
             final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
             final DataBaseTableBaseMapper dataBaseTableMapper,
-            final DataBaseTableDefinitionReader dataBaseTableDefinitionReader
+            final DataBaseTableColumnsReader dataBaseTableColumnsReader
     ) {
         this.dataBaseTableQueryFactory = dataBaseTableQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_BASE);
         this.dataBaseTableMapper = dataBaseTableMapper;
-        this.dataBaseTableDefinitionReader = dataBaseTableDefinitionReader;
+        this.dataBaseTableColumnsReader = dataBaseTableColumnsReader;
     }
 
     public List<TableBase> execute(
@@ -102,7 +100,7 @@ public class DataBaseTableBaseReader {
     }
 
     private List<TableBase> sortTables(final DriverConnection driverConnection, final List<TableBase> result, final List<String> filter) {
-        List<TableBase> definitions = dataBaseTableDefinitionReader.execute(driverConnection, result);
+        List<TableBase> definitions = dataBaseTableColumnsReader.execute(driverConnection, result);
         Collections.sort(definitions, new DataBaseTableBaseSort(filter));
         return definitions;
     }

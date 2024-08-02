@@ -24,23 +24,25 @@
 
 <#if foreignKeys?? >
 <#list foreignKeys as table >
+<#if table.constraints?? && table.constraints?has_content >
+<#list table.constraints as constraint >
 
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addForeignKeyConstraint
-            constraintName="${table.constraintName}"
+            constraintName="${constraint.name}"
 <#if table.schema?? && addSchema?? && addSchema == true >
             baseTableSchemaName="${table.schema}"
 </#if>
             baseTableName="${table.name}"
-            baseColumnNames="${table.columnNames}"
-<#if table.referenceSchema?? >
-            referencedTableSchemaName="${table.referenceSchema}"
+            baseColumnNames="${constraint.columns}"
+<#if constraint.referenceSchema?? && addSchema?? && addSchema == true >
+            referencedTableSchemaName="${constraint.referenceSchema}"
 </#if>
-            referencedTableName="${table.referenceName}" 
-            referencedColumnNames="${table.referenceColumnNames}"
+            referencedTableName="${constraint.referenceName}"
+            referencedColumnNames="${constraint.referenceColumns}"
             onDelete="NO ACTION" 
             onUpdate="NO ACTION"
         />
@@ -51,11 +53,13 @@
                 baseTableSchemaName="${table.schema}"
 </#if>
                 baseTableName="${table.name}"
-                constraintName="${table.constraintName}"
+                constraintName="${constraint.name}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 </#list>
 </#if>
 

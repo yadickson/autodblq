@@ -8,14 +8,13 @@ package com.github.yadickson.autodblq.db.table.constraint.primarykeys;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintMapper;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
-import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyWrapper;
-import com.github.yadickson.autodblq.util.StringJoinUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+
+import java.util.List;
 
 /**
  *
@@ -24,32 +23,18 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTablePrimaryKeyMapper extends DataBaseTableConstraintMapper<TablePrimaryKeyBean> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTablePrimaryKeyMapper.class);
-
-    private final StringTrimUtil stringTrimUtil;
-    private final StringJoinUtil stringJoinUtil;
+    private final DataBaseTablePrimaryKeyConstraintsMapper mapper;
 
     @Inject
     public DataBaseTablePrimaryKeyMapper(
-            final StringTrimUtil stringTrimUtil,
-            final StringJoinUtil stringJoinUtil
+            final DataBaseTablePrimaryKeyConstraintsMapper mapper
     ) {
-        this.stringTrimUtil = stringTrimUtil;
-        this.stringJoinUtil = stringJoinUtil;
+        this.mapper = mapper;
     }
 
     @Override
-    protected TableBase mapper(final TableBase tableBase, final TablePrimaryKeyBean tableBean) {
-
-        final String constraintName = stringTrimUtil.apply(tableBean.getName());
-        final String constraintColumns = stringJoinUtil.apply(tableBean.getColumns());
-
-        LOGGER.debug("[DataBaseTablePrimaryKeyMapper] Table Schema: " + tableBase.getSchema());
-        LOGGER.debug("[DataBaseTablePrimaryKeyMapper] Table Name: " + tableBase.getName());
-        LOGGER.debug("[DataBaseTablePrimaryKeyMapper] Table Constraint Name: " + constraintName);
-        LOGGER.debug("[DataBaseTablePrimaryKeyMapper] Table Constraint Columns: " + constraintColumns);
-
-        return new TablePrimaryKeyWrapper(tableBase, constraintName, constraintColumns);
+    public TableBase apply(final TableBase tableBase, final List<TablePrimaryKeyBean> constraints) {
+        return new DataBaseTableConstraintsWrapper(tableBase, mapper.apply(constraints));
     }
 
 }

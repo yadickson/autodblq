@@ -5,27 +5,21 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.indexes.model;
 
-import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TableIndexWrapper extends TableBase {
+public final class TableIndex extends DataBaseTableProperty {
 
-    private final String indexName;
     private final String columns;
     private final Boolean isUnique;
 
-    public TableIndexWrapper(final TableBase table, final String indexName, final String columns, final Boolean isUnique) {
-        super(table);
-        this.indexName = indexName;
+    public TableIndex(String name, String columns, Boolean isUnique) {
+        super(name);
         this.columns = columns;
         this.isUnique = isUnique;
-    }
-
-    public String getIndexName() {
-        return indexName;
     }
 
     public String getColumns() {
@@ -35,5 +29,4 @@ public final class TableIndexWrapper extends TableBase {
     public Boolean getIsUnique() {
         return isUnique;
     }
-
 }

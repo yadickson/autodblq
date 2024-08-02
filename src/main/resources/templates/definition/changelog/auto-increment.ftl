@@ -23,6 +23,8 @@
     </changeSet>
 <#if increments?? >
 <#list increments as table >
+<#if table.constraints?? && table.constraints?has_content >
+<#list table.constraints as constraint >
 
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
@@ -33,15 +35,17 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${table.columnName}"
-            incrementBy="${table.incrementBy}"
-            startWith="${table.incrementBy}"
+            columnName="${constraint.name}"
+            incrementBy="${constraint.incrementBy}"
+            startWith="${constraint.incrementBy}"
         />
 
         <rollback>
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 </#list>
 </#if>
 

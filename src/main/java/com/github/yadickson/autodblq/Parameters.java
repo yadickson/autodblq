@@ -5,6 +5,8 @@
  */
 package com.github.yadickson.autodblq;
 
+import com.sun.org.apache.xpath.internal.operations.Bool;
+
 import java.util.List;
 
 /**
@@ -39,8 +41,9 @@ public class Parameters {
     private final Boolean addDbVersion;
     private final Boolean addSchema;
     private final Boolean addDbms;
+    private final Boolean addNullable;
 
-    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms) {
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms, Boolean addNullable) {
         this.driver = driver;
         this.url = url;
         this.username = username;
@@ -61,6 +64,7 @@ public class Parameters {
         this.addDbVersion = addDbVersion;
         this.addSchema = addSchema;
         this.addDbms = addDbms;
+        this.addNullable = addNullable;
     }
 
     public String getDriver() {
@@ -141,5 +145,9 @@ public class Parameters {
 
     public Boolean getAddDbms() {
         return addDbms;
+    }
+
+    public Boolean getAddNullable() {
+        return addNullable;
     }
 }

@@ -8,21 +8,20 @@ package com.github.yadickson.autodblq.db;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
-import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseReader;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTablePropertiesMapper;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.version.base.DataBaseVersionReader;
 import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseReader;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
@@ -88,20 +87,28 @@ public class DataBaseGenerator {
         final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_DEFINITION;
         final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
         result.put(key, tables);
-
-        findProperties(tables);
         findConstraints(driverConnection, tables);
-    }
-
-    private void findProperties(final List<TableBase> tables) {
-        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
-        Map<String, List<TableColumnProperty>> properties = dataBaseTablePropertiesMapper.apply(tables);
-        result.put(key, properties);
     }
 
     private void findConstraints(final DriverConnection driverConnection, final List<TableBase> tables) {
         final Map<DataBaseGeneratorType, List<TableBase>> response = dataBaseTableConstraintReader.execute(driverConnection, tables);
         result.putAll(response);
+
+        List<TableBase> allTables = response
+                .values()
+                .stream()
+                .flatMap(List::stream)
+                .collect(Collectors.toList());
+
+        allTables.addAll(tables);
+
+        findProperties(allTables);
+    }
+
+    private void findProperties(final List<TableBase> tables) {
+        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
+        Map<String, List<TablePropertyType>> properties = dataBaseTablePropertiesMapper.apply(tables);
+        result.put(key, properties);
     }
 
     private void findDataTables(final Parameters parameters, final DriverConnection driverConnection) {

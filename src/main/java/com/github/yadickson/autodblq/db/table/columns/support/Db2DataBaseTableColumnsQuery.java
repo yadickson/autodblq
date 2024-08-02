@@ -3,18 +3,18 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.definitions.support;
+package com.github.yadickson.autodblq.db.table.columns.support;
 
 import org.apache.commons.lang.StringUtils;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.definitions.DataBaseTableDefinitionQuery;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class Db2DataBaseTableDefinitionQuery implements DataBaseTableDefinitionQuery {
+public class Db2DataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
     public String get(final TableBase table) {

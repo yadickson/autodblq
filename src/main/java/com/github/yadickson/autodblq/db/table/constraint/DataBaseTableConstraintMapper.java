@@ -15,20 +15,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
  *
  * @author Yadickson Soto
  */
-public abstract class DataBaseTableConstraintMapper<T> implements BiFunction<TableBase, List<T>, List<TableBase>> {
+public abstract class DataBaseTableConstraintMapper<T> implements BiFunction<TableBase, List<T>, TableBase> {
 
-    @Override
-    public List<TableBase> apply(final TableBase tableBase, final List<T> tableBeans) {
-
-        final List<TableBase> tables = new ArrayList<>();
-
-        for (T tableBean : tableBeans) {
-            TableBase result = mapper(tableBase, tableBean);
-            tables.add(result);
-        }
-
-        return tables;
-    }
-
-    protected abstract TableBase mapper(TableBase tableBase, T tableBean);
+    public abstract TableBase apply(final TableBase tableBase, final List<T> tableBeans);
 }

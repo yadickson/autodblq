@@ -23,18 +23,20 @@
     </changeSet>
 <#if primaryKeys?? >
 <#list primaryKeys as table >
+<#if table.constraints?? && table.constraints?has_content >
+<#list table.constraints as constraint >
 
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addPrimaryKey
-            constraintName="${table.constraintName}"
+            constraintName="${constraint.name}"
 <#if table.schema?? && addSchema?? && addSchema == true >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnNames="${table.columnNames}"
+            columnNames="${constraint.columns}"
         />
 
         <rollback>
@@ -43,11 +45,13 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                constraintName="${table.constraintName}"
+                constraintName="${constraint.name}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 </#list>
 </#if>
 

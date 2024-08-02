@@ -23,7 +23,8 @@
     </changeSet>
 <#if defaults?? >
 <#list defaults as table >
-<#if typeUtil.isNumeric(table.type) || typeUtil.isString(table.type) || (typeUtil.isDate(table.type) && table.value != 'DEFAULT') >
+<#if table.constraints?? && table.constraints?has_content >
+<#list table.constraints as constraint >
 
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
@@ -34,8 +35,8 @@
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            columnName="${table.columnName}"
-            defaultValue<#if typeUtil.isNumeric(table.type) >Numeric<#elseif typeUtil.isDate(table.type) >Computed</#if>="${table.value}"
+            columnName="${constraint.name}"
+            defaultValueNumeric="<#if constraint.propertyType??>${r"${"}${constraint.propertyType?lower_case}${r"}"}<#else>${constraint.value}</#if>"
         />
 
         <rollback>
@@ -44,11 +45,12 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                columnName="${table.columnName}"
+                columnName="${constraint.name}"
             />
         </rollback>
 
     </changeSet>
+</#list>
 </#if>
 </#list>
 </#if>

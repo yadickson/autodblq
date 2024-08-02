@@ -1,14 +1,14 @@
-package com.github.yadickson.autodblq.db.table.definitions.support;
+package com.github.yadickson.autodblq.db.table.columns.support;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.definitions.DataBaseTableDefinitionQuery;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 import org.apache.commons.lang.StringUtils;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class MsSqlDataBaseTableDefinitionQuery implements DataBaseTableDefinitionQuery {
+public class MsSqlDataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
     public String get(final TableBase table) {

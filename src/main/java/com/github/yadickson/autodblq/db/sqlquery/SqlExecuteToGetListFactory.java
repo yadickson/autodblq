@@ -13,7 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumnBean;
+import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
 import com.github.yadickson.autodblq.db.table.constraint.increments.model.TableIncrementBean;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;

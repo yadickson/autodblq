@@ -7,6 +7,7 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults.support;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -16,7 +17,29 @@ public class MsSqlDataBaseTableDefaultQuery implements DataBaseTableConstraintQu
 
     @Override
     public String get(final TableBase table) {
-        return null;
+        return "SELECT "
+                + " c.name as 'column', \n"
+                + " REPLACE(REPLACE(dc.definition, '((', ''), '))', '') as 'value' \n"
+                + "FROM sys.tables t \n"
+                + "INNER JOIN sys.default_constraints dc on t.object_id = dc.parent_object_id \n"
+                + "INNER JOIN sys.columns c on dc.parent_object_id = c.object_id and c.column_id = dc.parent_column_id \n"
+                + "WHERE \n"
+                + filterByName(table)
+                + filterBySchema(table)
+                + "ORDER BY c.column_id ";
+    }
+
+    private String filterByName(final TableBase table) {
+        return " t.name = '" + table.getName() + "' \n";
+    }
+
+    private String filterBySchema(final TableBase table) {
+
+        if (StringUtils.isEmpty(table.getSchema())) {
+            return StringUtils.EMPTY;
+        }
+
+        return " AND t.schema_id = schema_id('" + table.getSchema() + "') \n";
     }
 
 }

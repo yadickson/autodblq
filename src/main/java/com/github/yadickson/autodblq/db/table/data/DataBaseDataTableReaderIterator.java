@@ -21,7 +21,7 @@ import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 
 /**
  *
@@ -77,7 +77,7 @@ public class DataBaseDataTableReaderIterator {
     private void findSqlQuery(final DriverConnection driverConnection, final TableBase table, final Long pageCount) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseDataTableBlockQuery query = dataBaseDataTableBlockQueryFactory.apply(driver);
-        sqlQuery = query.get((TableDefinitionWrapper) table, pageCount, BLOCK);
+        sqlQuery = query.get((DataBaseTableColumnsWrapper) table, pageCount, BLOCK);
         LOGGER.debug("[DataBaseDataTableReaderIterator] SQL: " + sqlQuery);
     }
 

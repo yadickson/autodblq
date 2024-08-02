@@ -8,11 +8,12 @@ package com.github.yadickson.autodblq.db.table.data.support;
 import java.util.ArrayList;
 import java.util.List;
 
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.columns.model.TableColumn;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 
 /**
  *
@@ -23,14 +24,14 @@ public class Db2DataBaseDataTableBlockQuery implements DataBaseDataTableBlockQue
     private static final String ROW_NUMBER = "ROW_NUMBER";
 
     @Override
-    public String get(TableDefinitionWrapper table, Long page, Long blocks) {
+    public String get(DataBaseTableColumnsWrapper table, Long page, Long blocks) {
 
         StringBuilder sql = new StringBuilder("SELECT ");
 
         List<String> mlist = new ArrayList<>();
         List<String> ilist = new ArrayList<>();
 
-        for (TableColumn field : table.getColumns()) {
+        for (DataBaseTableProperty field : table.getColumns()) {
             mlist.add("m." + field.getName());
             ilist.add(field.getName());
         }

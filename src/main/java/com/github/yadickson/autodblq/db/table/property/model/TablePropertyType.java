@@ -9,12 +9,12 @@ package com.github.yadickson.autodblq.db.table.property.model;
  *
  * @author Yadickson Soto
  */
-public final class TableColumnProperty {
+public final class TablePropertyType {
 
     private final String name;
     private final String value;
 
-    public TableColumnProperty(final String name, final String value) {
+    public TablePropertyType(final String name, final String value) {
         this.name = name;
         this.value = value;
     }

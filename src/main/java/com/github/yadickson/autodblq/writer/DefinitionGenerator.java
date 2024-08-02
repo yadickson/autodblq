@@ -16,7 +16,7 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import org.apache.commons.io.FileUtils;
 
 import com.github.yadickson.autodblq.Parameters;
@@ -52,7 +52,7 @@ public final class DefinitionGenerator {
     private List<TableBase> dataTables;
     private List<ViewBase> views;
     private List<FunctionBase> functions;
-    private Map<Driver, List<TableColumnProperty>> properties;
+    private Map<Driver, List<TablePropertyType>> properties;
 
     private final Map<String, Object> values = new HashMap();
     private final List<String> filesGenerated = new ArrayList<>();
@@ -96,6 +96,7 @@ public final class DefinitionGenerator {
     private static final String ADD_DB_VERSION = "addDbVersion";
     private static final String ADD_SCHEMA = "addSchema";
     private static final String ADD_DBMS = "addDbms";
+    private static final String ADD_NULLABLE = "addNullable";
 
     @Inject
     public DefinitionGenerator(
@@ -174,6 +175,7 @@ public final class DefinitionGenerator {
         values.put(ADD_DB_VERSION, parameters.getAddDbVersion());
         values.put(ADD_SCHEMA, parameters.getAddSchema());
         values.put(ADD_DBMS, parameters.getAddDbms());
+        values.put(ADD_NULLABLE, parameters.getAddNullable());
     }
 
     private void cleanOutputDirectory(final Parameters parameters) throws IOException {

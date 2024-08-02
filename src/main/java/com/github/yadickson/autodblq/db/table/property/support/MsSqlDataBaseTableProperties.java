@@ -7,10 +7,10 @@ package com.github.yadickson.autodblq.db.table.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnType;
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyName;
 
 /**
  *
@@ -23,44 +23,53 @@ public class MsSqlDataBaseTableProperties extends SupportType implements DataBas
     }
 
     @Override
-    public TableColumnProperty get(TableColumn column) {
-        String name = column.getType();
-        String value = column.getType();
+    public TablePropertyType get(DataBaseTableProperty column) {
+        String type = column.getType();
+        String value;
 
-        if ("uniqueidentifier".compareTo(column.getType()) == 0)
+        if (type == null)
         {
-            name = TableColumnType.UUID.getMessage();
+            return null;
+        }
+        else if ("uniqueidentifier".compareTo(type) == 0)
+        {
+            type = TablePropertyName.UUID.getMessage();
             value = "uuid";
         }
-        else if ("bit".compareTo(column.getType()) == 0)
+        else if (type.contains("newid"))
         {
-            name = TableColumnType.BOOLEAN.getMessage();
+            type = TablePropertyName.UUID_FUNCTION.getMessage();
+            value = "newid()";
+        }
+        else if ("bit".compareTo(type) == 0)
+        {
+            type = TablePropertyName.BOOLEAN.getMessage();
             value = "boolean";
         }
-        else if ("int".compareTo(column.getType()) == 0)
+        else if ("int".compareTo(type) == 0)
         {
-            name = TableColumnType.INTEGER.getMessage();
+            type = TablePropertyName.INTEGER.getMessage();
             value = "int";
         }
-        else if (column.getType().contains("date"))
+        else if (type.contains("date"))
         {
-            name = TableColumnType.DATETIME.getMessage();
+            type = TablePropertyName.DATETIME.getMessage();
             value = "datetimeoffset";
         }
-        else if (column.getType().contains("char"))
+        else if (type.contains("char"))
         {
             String size = column.getLength() > 0 ? "_" + column.getLength() : "";
-            String nsize = !size.isEmpty() ? "(" + column.getLength() + ")" : "";
-            name = "string" + size;
-            value = "nvarchar" + nsize;
+            String nsize = !size.isEmpty() ? "(" + column.getLength() + ")" : "(max)";
+            type = "string" + size;
+            value = "varchar" + nsize;
         }
         else
         {
             return null;
         }
 
-        column.setPropertyType(name);
+        column.setPropertyType(type);
 
-        return new TableColumnProperty(name, value);
+        return new TablePropertyType(type, value);
     }
 }

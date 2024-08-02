@@ -22,7 +22,7 @@ public enum DataBaseGeneratorType {
     TABLE_DEFAULTS("defaults"),
     TABLE_INCREMENTS("increments"),
     VIEW_DEFINITION("views"),
-    FUNCTION_DEFINITION("funtions"),
+    FUNCTION_DEFINITION("functions"),
     DATA_DEFINITION("dataTables");
     
     private final String message;

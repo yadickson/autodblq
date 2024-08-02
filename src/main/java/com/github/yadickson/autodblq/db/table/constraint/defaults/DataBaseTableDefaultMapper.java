@@ -8,13 +8,13 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
+import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintMapper;
-import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
-import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultWrapper;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
+
+import java.util.List;
 
 /**
  *
@@ -23,29 +23,16 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableDefaultMapper extends DataBaseTableConstraintMapper<TableDefaultBean> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefaultMapper.class);
-
-    private final StringTrimUtil stringTrimUtil;
+    private final DataBaseTableDefaultConstraintsMapper mapper;
 
     @Inject
-    public DataBaseTableDefaultMapper(final StringTrimUtil stringTrimUtil) {
-        this.stringTrimUtil = stringTrimUtil;
+    public DataBaseTableDefaultMapper(DataBaseTableDefaultConstraintsMapper mapper) {
+        this.mapper = mapper;
     }
 
     @Override
-    protected TableBase mapper(final TableBase tableBase, final TableDefaultBean tableBean) {
-
-        final String constraintColumn = stringTrimUtil.apply(tableBean.getColumn());
-        final String constraintType = stringTrimUtil.apply(tableBean.getType());
-        final String constraintValue = stringTrimUtil.apply(tableBean.getValue());
-
-        LOGGER.debug("[DataBaseTableDefaultMapper] Table Schema: " + tableBase.getSchema());
-        LOGGER.debug("[DataBaseTableDefaultMapper] Table Name: " + tableBase.getName());
-        LOGGER.debug("[DataBaseTableDefaultMapper] Table Constraint Column: " + constraintColumn);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Table Constraint Type: " + constraintType);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Table Constraint Value: " + constraintValue);
-
-        return new TableDefaultWrapper(tableBase, constraintColumn, constraintType, constraintValue);
+    public TableBase apply(final TableBase tableBase, final List<TableDefaultBean> constraints) {
+        return new DataBaseTableConstraintsWrapper(tableBase, mapper.apply(constraints));
     }
 
 }

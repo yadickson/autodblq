@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.data.support;
 
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 
 /**
  *
@@ -15,7 +15,7 @@ import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionW
 public class MsSqlDataBaseDataTableBlockQuery implements DataBaseDataTableBlockQuery {
 
     @Override
-    public String get(TableDefinitionWrapper table, Long page, Long blocks) {
+    public String get(DataBaseTableColumnsWrapper table, Long page, Long blocks) {
         return null;
     }
     

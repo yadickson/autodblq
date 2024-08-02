@@ -23,23 +23,26 @@
     </changeSet>
 <#if indexes?? >
 <#list indexes as table >
+<#if table.constraints?? && table.constraints?has_content >
+<#list table.constraints as constraint >
 
 <#assign step++ >
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <createIndex
-            indexName="${table.indexName}"
+            indexName="${constraint.name}"
 <#if table.schema?? && addSchema?? && addSchema == true>
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
-            unique="${table.isUnique?c}"
+            unique="${constraint.isUnique?c}"
         >
-
-<#list table.columns?split(",") as column>
+<#if constraint.columns?? >
+<#list constraint.columns?split(",") as column>
             <column name="${column}"/>
 </#list>
+</#if>
 
         </createIndex>
 
@@ -49,11 +52,13 @@
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"
-                indexName="${table.indexName}"
+                indexName="${constraint.name}"
             />
         </rollback>
 
     </changeSet>
+</#list>
+</#if>
 </#list>
 </#if>
 

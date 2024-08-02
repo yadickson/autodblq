@@ -8,14 +8,12 @@ package com.github.yadickson.autodblq.db.table.constraint.foreignkeys;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintMapper;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
-import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyWrapper;
-import com.github.yadickson.autodblq.util.StringJoinUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+
+import java.util.List;
 
 /**
  *
@@ -24,37 +22,18 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableForeignKeyMapper extends DataBaseTableConstraintMapper<TableForeignKeyBean> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableForeignKeyMapper.class);
-
-    private final StringTrimUtil stringTrimUtil;
-    private final StringJoinUtil stringJoinUtil;
+    private final DataBaseTableForeignKeyConstraintsMapper mapper;
 
     @Inject
     public DataBaseTableForeignKeyMapper(
-            final StringTrimUtil stringTrimUtil,
-            final StringJoinUtil stringJoinUtil
+            final DataBaseTableForeignKeyConstraintsMapper mapper
     ) {
-        this.stringTrimUtil = stringTrimUtil;
-        this.stringJoinUtil = stringJoinUtil;
+        this.mapper = mapper;
     }
 
     @Override
-    protected TableBase mapper(final TableBase tableBase, final TableForeignKeyBean tableBean) {
-        final String constraintName = stringTrimUtil.apply(stringTrimUtil.apply(tableBean.getName()));
-        final String constraintColumns = stringJoinUtil.apply(tableBean.getColumns());
-        final String referenceSchema = stringTrimUtil.apply(tableBean.getRefschema());
-        final String referenceName = stringTrimUtil.apply(tableBean.getRefname());
-        final String referenceColumns = stringJoinUtil.apply(tableBean.getRefcolumns());
-
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Table Schema: " + tableBase.getSchema());
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Table Name: " + tableBase.getName());
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Table Constraint Name: " + constraintName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Table Constraint Columns: " + constraintColumns);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Ref Table Schema: " + referenceSchema);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Ref Table Name: " + referenceName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Ref Table Columns: " + referenceColumns);
-
-        return new TableForeignKeyWrapper(tableBase, constraintName, constraintColumns, referenceSchema, referenceName, referenceColumns);
+    public TableBase apply(final TableBase tableBase, final List<TableForeignKeyBean> constraints) {
+        return new DataBaseTableConstraintsWrapper(tableBase, mapper.apply(constraints));
     }
 
 }

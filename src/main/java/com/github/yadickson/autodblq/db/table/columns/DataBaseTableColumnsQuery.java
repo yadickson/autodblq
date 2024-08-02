@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.definitions;
+package com.github.yadickson.autodblq.db.table.columns;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 
@@ -11,7 +11,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
  *
  * @author Yadickson Soto
  */
-public interface DataBaseTableDefinitionQuery {
+public interface DataBaseTableColumnsQuery {
 
     String get(TableBase table);
 

@@ -6,13 +6,12 @@
 package com.github.yadickson.autodblq.db.table.property;
 
 import com.github.yadickson.autodblq.db.support.Support;
-import com.github.yadickson.autodblq.db.table.definitions.model.TableColumn;
-import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 
 /**
  *
  * @author Yadickson Soto
  */
 public interface DataBaseTableProperties extends Support {
-    TableColumnProperty get(TableColumn column);
+    TablePropertyType get(DataBaseTableProperty column);
 }
