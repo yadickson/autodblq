@@ -36,7 +36,11 @@ public class Parameters {
     private final List<String> views;
     private final List<String> functions;
 
-    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions) {
+    private final Boolean addDbVersion;
+    private final Boolean addSchema;
+    private final Boolean addDbms;
+
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms) {
         this.driver = driver;
         this.url = url;
         this.username = username;
@@ -54,6 +58,9 @@ public class Parameters {
         this.dataTables = dataTables;
         this.views = views;
         this.functions = functions;
+        this.addDbVersion = addDbVersion;
+        this.addSchema = addSchema;
+        this.addDbms = addDbms;
     }
 
     public String getDriver() {
@@ -124,4 +131,15 @@ public class Parameters {
         return functions;
     }
 
+    public Boolean getAddDbVersion() {
+        return addDbVersion;
+    }
+
+    public Boolean getAddSchema() {
+        return addSchema;
+    }
+
+    public Boolean getAddDbms() {
+        return addDbms;
+    }
 }

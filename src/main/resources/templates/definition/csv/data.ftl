@@ -2,7 +2,7 @@ ${csvComment} Table: ${table.fullName}
 ${csvComment}
 ${csvComment} @GENERATOR.NAME@
 ${csvComment} @GENERATOR.VERSION@
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 ${csvComment} ${dbversion}
 </#if>
 ${csvComment}

@@ -15,7 +15,7 @@ public class MsSqlDataBaseVersionQuery implements DataBaseVersionQuery {
 
     @Override
     public String get() {
-        return null;
+        return "SELECT substring(@@VERSION, 0, CHARINDEX('(', @@VERSION)) + ' - version ' + cast(serverproperty('productversion') as varchar) AS version";
     }
 
 }

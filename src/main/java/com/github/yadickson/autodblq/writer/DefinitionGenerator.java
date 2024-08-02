@@ -15,6 +15,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
 import org.apache.commons.io.FileUtils;
 
 import com.github.yadickson.autodblq.Parameters;
@@ -50,12 +52,13 @@ public final class DefinitionGenerator {
     private List<TableBase> dataTables;
     private List<ViewBase> views;
     private List<FunctionBase> functions;
+    private Map<Driver, List<TableColumnProperty>> properties;
 
     private final Map<String, Object> values = new HashMap();
     private final List<String> filesGenerated = new ArrayList<>();
 
     private String outputDirectory;
-    private Integer fileCounter = 0;
+    private Integer fileCounter = -1;
 
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
@@ -69,6 +72,7 @@ public final class DefinitionGenerator {
 
     private static final String DATA_BASE_VERSION = "dbversion";
     private static final String DATA_BASE_TABLES = "tables";
+    private static final String DATA_BASE_PROPERTIES = "properties";
     private static final String DATA_BASE_DEFAULTS = "defaults";
     private static final String DATA_BASE_INCREMENTS = "increments";
     private static final String DATA_BASE_INDEXES = "indexes";
@@ -89,6 +93,9 @@ public final class DefinitionGenerator {
     private static final String CSV_QUOTCHAR = "csvQuotchar";
     private static final String CSV_SEPARATOR = "csvSeparator";
     private static final String CSV_COMMENT = "csvComment";
+    private static final String ADD_DB_VERSION = "addDbVersion";
+    private static final String ADD_SCHEMA = "addSchema";
+    private static final String ADD_DBMS = "addDbms";
 
     @Inject
     public DefinitionGenerator(
@@ -130,6 +137,7 @@ public final class DefinitionGenerator {
         foreignKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_FOREIGN_KEYS);
         views = (List) dataBaseGenerator.get(DataBaseGeneratorType.VIEW_DEFINITION);
         functions = (List) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION);
+        properties = (Map) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PROPERTIES);
     }
 
     private void makeInputValues(final Parameters parameters, final DriverConnection driverConnection) {
@@ -153,6 +161,7 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_FOREIGN_KEYS, foreignKeys);
         values.put(DATA_BASE_VIEWS, views);
         values.put(DATA_BASE_FUNCTIONS, functions);
+        values.put(DATA_BASE_PROPERTIES, properties);
 
         values.put(LQ_VERSION, parameters.getLiquibaseVersion());
         values.put(LQ_PRO, parameters.getLiquibaseProductionEnabled());
@@ -161,6 +170,10 @@ public final class DefinitionGenerator {
 
         values.put(CHANGELOG_PATH, CHANGELOG);
         values.put(TYPE_UTIL, new TableColumnTypeUtil());
+
+        values.put(ADD_DB_VERSION, parameters.getAddDbVersion());
+        values.put(ADD_SCHEMA, parameters.getAddSchema());
+        values.put(ADD_DBMS, parameters.getAddDbms());
     }
 
     private void cleanOutputDirectory(final Parameters parameters) throws IOException {
@@ -169,6 +182,7 @@ public final class DefinitionGenerator {
     }
 
     private void makeDefinitions() {
+        makeProperties();
         makeTables();
         makeDefaults();
         makeIncrements();
@@ -179,6 +193,12 @@ public final class DefinitionGenerator {
         makeDataTables();
         makeViews();
         makeFunctions();
+    }
+
+    private void makeProperties() {
+        if (!tables.isEmpty()) {
+            addAndMakeFileBase(DefinitionGeneratorType.PROPERTIES);
+        }
     }
 
     private void makeTables() {

@@ -2,7 +2,7 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 <!-- ${dbversion} -->
 </#if>
 
@@ -26,12 +26,12 @@
 <#list foreignKeys as table >
 
 <#assign step++ >
-    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+    <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addForeignKeyConstraint
             constraintName="${table.constraintName}"
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
             baseTableSchemaName="${table.schema}"
 </#if>
             baseTableName="${table.name}"
@@ -47,7 +47,7 @@
 
         <rollback>
             <dropForeignKeyConstraint
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
                 baseTableSchemaName="${table.schema}"
 </#if>
                 baseTableName="${table.name}"

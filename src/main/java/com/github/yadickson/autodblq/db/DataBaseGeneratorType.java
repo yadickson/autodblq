@@ -13,6 +13,7 @@ public enum DataBaseGeneratorType {
     
     VERSION("version"),
     TABLE_BASE("tables"),
+    TABLE_PROPERTIES("properties"),
     TABLE_DEFINITION("tables"),
     TABLE_PRIMARY_KEYS("primaryKeys"),
     TABLE_FOREIGN_KEYS("foreignKeys"),

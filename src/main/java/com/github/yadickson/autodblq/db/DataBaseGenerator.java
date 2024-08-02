@@ -14,11 +14,15 @@ import javax.inject.Named;
 
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
+import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseReader;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
+import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.property.DataBaseTablePropertiesMapper;
+import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
 import com.github.yadickson.autodblq.db.version.base.DataBaseVersionReader;
 import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseReader;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
@@ -32,6 +36,7 @@ public class DataBaseGenerator {
 
     private final DataBaseVersionReader dataBaseVersionReader;
     private final DataBaseTableBaseReader dataBaseTableBaseReader;
+    private final DataBaseTablePropertiesMapper dataBaseTablePropertiesMapper;
     private final DataBaseTableConstraintChain dataBaseTableConstraintReader;
     private final DataBaseViewBaseReader dataBaseViewBaseReader;
     private final DataBaseFunctionBaseReader dataBaseFunctionBaseReader;
@@ -42,12 +47,14 @@ public class DataBaseGenerator {
     public DataBaseGenerator(
             final DataBaseVersionReader dataBaseVersionReader,
             final DataBaseTableBaseReader dataBaseTableBaseReader,
+            final DataBaseTablePropertiesMapper dataBaseTablePropertiesMapper,
             final DataBaseTableConstraintChain dataBaseTableConstraintReader,
             final DataBaseViewBaseReader dataBaseViewBaseReader,
             final DataBaseFunctionBaseReader dataBaseFunctionBaseReader
     ) {
         this.dataBaseVersionReader = dataBaseVersionReader;
         this.dataBaseTableBaseReader = dataBaseTableBaseReader;
+        this.dataBaseTablePropertiesMapper = dataBaseTablePropertiesMapper;
         this.dataBaseTableConstraintReader = dataBaseTableConstraintReader;
         this.dataBaseViewBaseReader = dataBaseViewBaseReader;
         this.dataBaseFunctionBaseReader = dataBaseFunctionBaseReader;
@@ -82,7 +89,14 @@ public class DataBaseGenerator {
         final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
         result.put(key, tables);
 
+        findProperties(tables);
         findConstraints(driverConnection, tables);
+    }
+
+    private void findProperties(final List<TableBase> tables) {
+        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
+        Map<String, List<TableColumnProperty>> properties = dataBaseTablePropertiesMapper.apply(tables);
+        result.put(key, properties);
     }
 
     private void findConstraints(final DriverConnection driverConnection, final List<TableBase> tables) {

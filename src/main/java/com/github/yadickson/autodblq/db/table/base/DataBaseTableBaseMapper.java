@@ -14,6 +14,7 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -27,10 +28,12 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableBaseMapper.class);
 
+    private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableBaseMapper(final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableBaseMapper(final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringTrimUtil = stringTrimUtil;
     }
 
@@ -48,7 +51,7 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
 
     private TableBase processTable(final TableBaseBean tableBean) {
         final String schema = stringTrimUtil.apply(tableBean.getSchema());
-        final String name = stringTrimUtil.apply(tableBean.getName());
+        final String name = stringToSnakeCaseUtil.apply(tableBean.getName());
         final String remarks = stringTrimUtil.apply(tableBean.getRemarks());
 
         LOGGER.debug("[DataBaseTableBaseMapper] Schema: " + schema);

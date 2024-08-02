@@ -202,6 +202,36 @@ public class GeneratorPlugin extends AbstractMojo {
             required = false)
     private List<String> functions;
 
+    /**
+     * addDbVersion.
+     */
+    @Parameter(
+            property = "autodblq.addDbVersion",
+            defaultValue = "false",
+            alias = "addDbVersion",
+            required = false)
+    private String addDbVersion;
+
+    /**
+     * addSchema.
+     */
+    @Parameter(
+            property = "autodblq.addSchema",
+            defaultValue = "false",
+            alias = "addSchema",
+            required = false)
+    private String addSchema;
+
+    /**
+     * addDbms.
+     */
+    @Parameter(
+            property = "autodblq.addDbms",
+            defaultValue = "false",
+            alias = "addDbms",
+            required = false)
+    private String addDbms;
+
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
     private final DataBaseGenerator dataBaseGenerator;
     private final DefinitionGenerator definitionGenerator;
@@ -238,7 +268,7 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void makeParameters() {
-        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions));
+        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms)));
     }
 
     private void printParameters() {
@@ -254,6 +284,9 @@ public class GeneratorPlugin extends AbstractMojo {
         getLog().info("[Generator] OutputDirectory: " + parameters.getOutputDirectory());
         getLog().info("[Generator] LiquibaseVersion: " + parameters.getLiquibaseVersion());
         getLog().info("[Generator] LiquibaseProductionEnabled: " + parameters.getLiquibaseProductionEnabled());
+        getLog().info("[Generator] AddDbVersion: " + parameters.getAddDbVersion());
+        getLog().info("[Generator] AddSchema: " + parameters.getAddSchema());
+        getLog().info("[Generator] AddDbms: " + parameters.getAddDbms());
     }
 
     private void generate() throws MojoExecutionException {

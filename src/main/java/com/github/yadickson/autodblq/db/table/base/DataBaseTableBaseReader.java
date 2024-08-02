@@ -6,11 +6,15 @@
 package com.github.yadickson.autodblq.db.table.base;
 
 import java.util.Collections;
+import java.util.Comparator;
 import java.util.List;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.db.table.definitions.model.TableDefinitionWrapper;
+import com.github.yadickson.autodblq.db.table.property.model.TableColumnProperty;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
@@ -66,7 +70,10 @@ public class DataBaseTableBaseReader {
 
             findSqlQuery(filter, driverConnection);
             findTables(driverConnection);
-            return processTables(driverConnection, filter);
+            return processTables(driverConnection, filter)
+                    .stream()
+                    .sorted(Comparator.comparing(TableBase::getName))
+                    .collect(Collectors.toList());
 
         } catch (RuntimeException ex) {
             throw new DataBaseTableBaseReaderException(ex);

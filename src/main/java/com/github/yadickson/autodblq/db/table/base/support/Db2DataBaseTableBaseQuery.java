@@ -7,6 +7,8 @@ package com.github.yadickson.autodblq.db.table.base.support;
 
 import java.util.List;
 
+import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.support.SupportType;
 import org.apache.commons.lang.StringUtils;
 
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseQuery;
@@ -15,9 +17,13 @@ import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseQuery;
  *
  * @author Yadickson Soto
  */
-public class Db2DataBaseTableBaseQuery implements DataBaseTableBaseQuery {
+public class Db2DataBaseTableBaseQuery extends SupportType implements DataBaseTableBaseQuery {
 
     private static final String SEPARATOR = "','";
+
+    public Db2DataBaseTableBaseQuery() {
+        super(Driver.DB2);
+    }
 
     @Override
     public String get(final List<String> filter) {

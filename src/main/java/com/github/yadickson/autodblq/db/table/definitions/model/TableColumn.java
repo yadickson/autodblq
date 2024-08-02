@@ -13,20 +13,26 @@ public final class TableColumn  {
 
     private final String name;
     private final String type;
-    private final String position;
-    private final String length;
+    private final Integer position;
+    private final Integer length;
     private final Boolean nullable;
+    private final String precision;
     private final String scale;
     private final String remarks;
+    private final String defaultValue;
 
-    public TableColumn(final String name, final String type, final String position, final String length, final String scale, final Boolean nullable, final String remarks) {
+    private String propertyType;
+
+    public TableColumn(final String name, final String type, final Integer position, final Integer length, final String precision, final String scale, final Boolean nullable, final String remarks, final String defaultValue) {
         this.name = name;
         this.type = type;
         this.position = position;
         this.length = length;
+        this.precision = precision;
         this.scale = scale;
         this.nullable = nullable;
         this.remarks = remarks;
+        this.defaultValue = defaultValue;
     }
 
     public String getName() {
@@ -37,11 +43,11 @@ public final class TableColumn  {
         return type;
     }
 
-    public String getPosition() {
+    public Integer getPosition() {
         return position;
     }
 
-    public String getLength() {
+    public Integer getLength() {
         return length;
     }
 
@@ -57,4 +63,19 @@ public final class TableColumn  {
         return remarks;
     }
 
+    public String getPrecision() {
+        return precision;
+    }
+
+    public String getDefaultValue() {
+        return defaultValue;
+    }
+
+    public String getPropertyType() {
+        return propertyType;
+    }
+
+    public void setPropertyType(String propertyType) {
+        this.propertyType = propertyType;
+    }
 }

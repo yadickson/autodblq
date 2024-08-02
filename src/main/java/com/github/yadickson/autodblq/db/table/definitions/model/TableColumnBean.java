@@ -16,8 +16,9 @@ public final class TableColumnBean {
     private String type;
     private String length;
     private String nullable;
+    private String precision;
     private String scale;
-    private String defaultval;
+    private String defaultvalue;
     private String identity;
     private String remarks;
 
@@ -69,12 +70,12 @@ public final class TableColumnBean {
         this.scale = scale;
     }
 
-    public String getDefaultval() {
-        return defaultval;
+    public String getDefaultvalue() {
+        return defaultvalue;
     }
 
-    public void setDefaultval(String defaultval) {
-        this.defaultval = defaultval;
+    public void setDefaultvalue(String defaultvalue) {
+        this.defaultvalue = defaultvalue;
     }
 
     public String getIdentity() {
@@ -93,4 +94,11 @@ public final class TableColumnBean {
         this.remarks = remarks;
     }
 
+    public String getPrecision() {
+        return precision;
+    }
+
+    public void setPrecision(String precision) {
+        this.precision = precision;
+    }
 }

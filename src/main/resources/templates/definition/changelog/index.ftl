@@ -2,7 +2,7 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 <!-- ${dbversion} -->
 </#if>
 
@@ -25,12 +25,12 @@
 <#list indexes as table >
 
 <#assign step++ >
-    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+    <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <createIndex
             indexName="${table.indexName}"
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true>
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
@@ -45,7 +45,7 @@
 
         <rollback>
             <dropIndex
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"

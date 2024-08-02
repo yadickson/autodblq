@@ -2,7 +2,7 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 <!-- ${dbversion} -->
 </#if>
 
@@ -26,11 +26,11 @@
 <#if typeUtil.isNumeric(table.type) || typeUtil.isString(table.type) || (typeUtil.isDate(table.type) && table.value != 'DEFAULT') >
 
 <#assign step++ >
-    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+    <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addDefaultValue
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
@@ -40,7 +40,7 @@
 
         <rollback>
             <dropDefaultValue
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
                 schemaName="${table.schema}"
 </#if>
                 tableName="${table.name}"

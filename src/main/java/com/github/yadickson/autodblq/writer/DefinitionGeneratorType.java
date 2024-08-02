@@ -11,6 +11,7 @@ package com.github.yadickson.autodblq.writer;
  */
 public enum DefinitionGeneratorType {
 
+    PROPERTIES("/definition/changelog/properties.ftl", "%02d-properties.xml"),
     TABLES("/definition/changelog/table.ftl", "%02d-tables.xml"),
     PRIMARY_KEYS("/definition/changelog/primary-key.ftl", "%02d-primary-keys.xml"),
     FOREIGN_KEYS("/definition/changelog/foreign-key.ftl", "%02d-foreign-keys.xml"),
@@ -21,7 +22,7 @@ public enum DefinitionGeneratorType {
     VIEWS("/definition/changelog/view.ftl", "%02d-views.xml"),
     FUNCTIONS("/definition/changelog/function.ftl", "%02d-functions.xml"),
     DATA_TABLES("/definition/changelog/load-data.ftl", "%02d-load-data.xml"),
-    MASTER_CHANGLE_LOG("/definition/masterchangelog.ftl", "version-changelog.xml"),
+    MASTER_CHANGLE_LOG("/definition/masterchangelog.ftl", "masterchangelog.xml"),
     VIEW("/definition/view.ftl", "%s.sql"),
     FUNCTION("/definition/function.ftl", "%s.sql"),
     PROCEDURE("/definition/procedure.ftl", "%s.sql"),

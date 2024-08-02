@@ -2,7 +2,7 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 <!-- ${dbversion} -->
 </#if>
 
@@ -25,11 +25,11 @@
 <#list dataTables as table >
 
 <#assign step++ >
-    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+    <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <loadData
-<#if table.schema?? >
+<#if table.schema?? && addSchema?? && addSchema == true >
             schemaName="${table.schema}"
 </#if>
             tableName="${table.name}"
@@ -42,7 +42,7 @@
         />
 
         <rollback>
-            <delete tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if>/>
+            <delete tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if>/>
         </rollback>
 
     </changeSet>

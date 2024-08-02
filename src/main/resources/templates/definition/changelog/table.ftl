@@ -2,7 +2,7 @@
 
 <!-- @GENERATOR.NAME@ -->
 <!-- @GENERATOR.VERSION@ -->
-<#if dbversion?? >
+<#if dbversion?? && addDbVersion?? && addDbVersion == true >
 <!-- ${dbversion} -->
 </#if>
 
@@ -25,13 +25,13 @@
 <#list tables as table >
 
 <#assign step++ >
-    <changeSet id="${step?string["0000"]}" author="${author}" dbms="${driverName}" runOnChange="false">
+    <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <createTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
+        <createTable tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
 <#if table.columns?? >
 <#list table.columns as column >
-            <column name="${column.name}" type="${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
+            <column name="${column.name}" type="<#if column.propertyType??>${r"${"}${column.propertyType?lower_case}${r"}"}<#else>${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if></#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if>>
                 <constraints nullable="<#if column.nullable?? >${column.nullable?c}<#else>false</#if>"/>
             </column>
 </#list>
@@ -39,7 +39,7 @@
         </createTable>
 
         <rollback>
-            <dropTable tableName="${table.name}"<#if table.schema?? > schemaName="${table.schema}"</#if>/>
+            <dropTable tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if>/>
         </rollback>
 
     </changeSet>
