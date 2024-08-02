@@ -40,7 +40,7 @@ public class PostgreSqlDataBaseTableBaseQuery extends SupportType implements Dat
     }
 
     private String filterByNames(final List<String> filter) {
-        return " t.table_name in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
+        return " t.table_schema not in('information_schema', 'pg_catalog') and t.table_name in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
     }
 
 }

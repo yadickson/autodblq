@@ -34,12 +34,12 @@ public class PostgreSqlDataBaseTableProperties extends SupportType implements Da
             type = TablePropertyName.UUID.getMessage();
             value = "uuid";
         }
-        else if ("bit".compareTo(type) == 0)
+        else if ("bit".compareTo(type) == 0 || "bool".compareTo(type) == 0)
         {
             type = TablePropertyName.BOOLEAN.getMessage();
             value = "boolean";
         }
-        else if ("int".compareTo(type) == 0)
+        else if ("int".compareTo(type) == 0 || "int4".compareTo(type) == 0)
         {
             type = TablePropertyName.INTEGER.getMessage();
             value = "integer";
@@ -56,10 +56,11 @@ public class PostgreSqlDataBaseTableProperties extends SupportType implements Da
             type = "string" + size;
             value = "varchar" + nsize;
         }
-        else if ("bit".compareTo(defaultType) == 0)
+        else if ("bit".compareTo(defaultType) == 0 || "bool".compareTo(defaultType) == 0)
         {
-            type = "1".compareTo(defaultValue) == 0 ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage();
-            value = "1".compareTo(defaultValue) == 0 ? "true" : "false";
+            boolean ok = "1".compareTo(defaultValue) == 0 || "true".compareTo(defaultValue) == 0;
+            type = ok ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage();
+            value = ok ? "true" : "false";
         }
         else if (defaultValue.contains("newid") || defaultValue.contains("gen_random_uuid"))
         {
