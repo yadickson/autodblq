@@ -14,6 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
+import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
+import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
@@ -31,6 +34,7 @@ public class DataBaseDataTableReaderIterator {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableReaderIterator.class);
 
+    private final DataTablePropertyManager dataTablePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final DriverConnection driverConnection;
     private final TableBase table;
@@ -43,11 +47,13 @@ public class DataBaseDataTableReaderIterator {
     private static final Long BLOCK = 20L;
 
     public DataBaseDataTableReaderIterator(
+            final DataTablePropertyManager dataTablePropertyManager,
             final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory,
             final Parameters parameters,
             final DriverConnection driverConnection,
             final TableBase table
     ) {
+        this.dataTablePropertyManager = dataTablePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.separator = parameters.getCsvSeparator();
         this.driverConnection = driverConnection;
@@ -128,7 +134,17 @@ public class DataBaseDataTableReaderIterator {
             List<String> objs = new ArrayList<>(columnCount);
 
             for (int j = 0; j < columnCount; j++) {
-                objs.add(resultSet.getString(j + 1));
+
+//                String columnName = metadata.getColumnName(j + 1);
+//                String columnType = metadata.getColumnTypeName(j + 1);
+                String columnValue = resultSet.getString(j + 1);
+
+//                TablePropertyType result = dataTablePropertyManager.process(new DataBaseTableProperty(columnName, columnName).setDefaultType(columnType).setDefaultValue(columnValue));
+//
+//                if (result != null)
+//                    objs.add(String.format("${%s}", result.getName()));
+//                else
+                    objs.add(columnValue);
             }
 
             String line = StringUtils.join(objs, separator);

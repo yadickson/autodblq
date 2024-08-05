@@ -54,23 +54,26 @@ public class DataBaseTableProperty {
         return defaultType;
     }
 
-    public void setDefaultType(String defaultType) {
+    public DataBaseTableProperty setDefaultType(String defaultType) {
         this.defaultType = defaultType;
+        return this;
     }
 
     public String getDefaultValue() {
         return defaultValue;
     }
 
-    public void setDefaultValue(String defaultValue) {
+    public DataBaseTableProperty setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
+        return this;
     }
 
     public String getPropertyType() {
         return propertyType;
     }
 
-    public void setPropertyType(String propertyType) {
+    public DataBaseTableProperty setPropertyType(String propertyType) {
         this.propertyType = propertyType;
+        return this;
     }
 }

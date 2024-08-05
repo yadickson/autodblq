@@ -11,6 +11,7 @@ import javax.inject.Named;
 import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
 
 /**
  *
@@ -19,15 +20,17 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 @Named
 public class DataBaseDataTableReader {
 
+    private final DataTablePropertyManager dataTablePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
 
     @Inject
-    public DataBaseDataTableReader(DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory) {
+    public DataBaseDataTableReader(DataTablePropertyManager dataTablePropertyManager, DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory) {
+        this.dataTablePropertyManager = dataTablePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
     }
 
     public DataBaseDataTableReaderIterator execute(final Parameters parameters, final DriverConnection driverConnection, final TableBase table) {
-        return new DataBaseDataTableReaderIterator(dataBaseDataTableBlockQueryFactory, parameters, driverConnection, table);
+        return new DataBaseDataTableReaderIterator(dataTablePropertyManager, dataBaseDataTableBlockQueryFactory, parameters, driverConnection, table);
     }
 
 }

@@ -5,7 +5,6 @@
  */
 package com.github.yadickson.autodblq.db;
 
-import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -21,7 +20,7 @@ import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTablePropertiesMapper;
+import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.version.base.DataBaseVersionReader;
 import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseReader;
@@ -36,10 +35,10 @@ public class DataBaseGenerator {
 
     private final DataBaseVersionReader dataBaseVersionReader;
     private final DataBaseTableBaseReader dataBaseTableBaseReader;
-    private final DataBaseTablePropertiesMapper dataBaseTablePropertiesMapper;
     private final DataBaseTableConstraintChain dataBaseTableConstraintReader;
     private final DataBaseViewBaseReader dataBaseViewBaseReader;
     private final DataBaseFunctionBaseReader dataBaseFunctionBaseReader;
+    private final DataTablePropertyManager dataTablePropertyManager;
 
     private final Map<DataBaseGeneratorType, Object> result = new HashMap<>();
 
@@ -47,17 +46,17 @@ public class DataBaseGenerator {
     public DataBaseGenerator(
             final DataBaseVersionReader dataBaseVersionReader,
             final DataBaseTableBaseReader dataBaseTableBaseReader,
-            final DataBaseTablePropertiesMapper dataBaseTablePropertiesMapper,
             final DataBaseTableConstraintChain dataBaseTableConstraintReader,
             final DataBaseViewBaseReader dataBaseViewBaseReader,
-            final DataBaseFunctionBaseReader dataBaseFunctionBaseReader
+            final DataBaseFunctionBaseReader dataBaseFunctionBaseReader,
+            final DataTablePropertyManager dataTablePropertyManager
     ) {
         this.dataBaseVersionReader = dataBaseVersionReader;
         this.dataBaseTableBaseReader = dataBaseTableBaseReader;
-        this.dataBaseTablePropertiesMapper = dataBaseTablePropertiesMapper;
         this.dataBaseTableConstraintReader = dataBaseTableConstraintReader;
         this.dataBaseViewBaseReader = dataBaseViewBaseReader;
         this.dataBaseFunctionBaseReader = dataBaseFunctionBaseReader;
+        this.dataTablePropertyManager = dataTablePropertyManager;
     }
 
     public Map<DataBaseGeneratorType, Object> execute(final Parameters parameters, final DriverConnection driverConnection) {
@@ -69,6 +68,7 @@ public class DataBaseGenerator {
             findDataTables(parameters, driverConnection);
             findViews(parameters, driverConnection);
             findFunctions(parameters, driverConnection);
+            findProperties();
 
             return result;
 
@@ -86,10 +86,8 @@ public class DataBaseGenerator {
 
     private void findTables(final Parameters parameters, final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_DEFINITION;
-        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection)
-                .stream()
-                .sorted(Comparator.comparing(TableBase::getName))
-                .collect(Collectors.toList());
+        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
+        dataTablePropertyManager.accept(tables);
         result.put(key, tables);
         findConstraints(driverConnection, tables);
     }
@@ -104,15 +102,7 @@ public class DataBaseGenerator {
                 .flatMap(List::stream)
                 .collect(Collectors.toList());
 
-        allTables.addAll(tables);
-
-        findProperties(allTables);
-    }
-
-    private void findProperties(final List<TableBase> tables) {
-        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
-        Map<String, List<TablePropertyType>> properties = dataBaseTablePropertiesMapper.apply(tables);
-        result.put(key, properties);
+        dataTablePropertyManager.accept(allTables);
     }
 
     private void findDataTables(final Parameters parameters, final DriverConnection driverConnection) {
@@ -131,6 +121,12 @@ public class DataBaseGenerator {
         final DataBaseGeneratorType key = DataBaseGeneratorType.FUNCTION_DEFINITION;
         final List<FunctionBase> functions = dataBaseFunctionBaseReader.execute(parameters.getFunctions(), driverConnection);
         result.put(key, functions);
+    }
+
+    private void findProperties() {
+        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
+        Map<String, List<TablePropertyType>> properties = dataTablePropertyManager.getProperties();
+        result.put(key, properties);
     }
 
 }
