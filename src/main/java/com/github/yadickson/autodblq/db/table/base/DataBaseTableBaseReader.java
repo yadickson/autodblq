@@ -68,10 +68,7 @@ public class DataBaseTableBaseReader {
 
             findSqlQuery(filter, driverConnection);
             findTables(driverConnection);
-            return processTables(driverConnection, filter)
-                    .stream()
-                    .sorted(Comparator.comparing(TableBase::getName))
-                    .collect(Collectors.toList());
+            return processTables(driverConnection, filter);
 
         } catch (RuntimeException ex) {
             LOGGER.error(ex);

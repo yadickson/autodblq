@@ -5,6 +5,7 @@
  */
 package com.github.yadickson.autodblq.db;
 
+import java.util.Comparator;
 import java.util.HashMap;
 import java.util.List;
 import java.util.Map;
@@ -85,7 +86,10 @@ public class DataBaseGenerator {
 
     private void findTables(final Parameters parameters, final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_DEFINITION;
-        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
+        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection)
+                .stream()
+                .sorted(Comparator.comparing(TableBase::getName))
+                .collect(Collectors.toList());
         result.put(key, tables);
         findConstraints(driverConnection, tables);
     }
