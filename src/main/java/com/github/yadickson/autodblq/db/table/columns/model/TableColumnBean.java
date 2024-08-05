@@ -20,6 +20,8 @@ public final class TableColumnBean {
     private String scale;
     private String identity;
     private String remarks;
+    private String startwith;
+    private String incrementby;
 
     public String getPosition() {
         return position;
@@ -91,5 +93,21 @@ public final class TableColumnBean {
 
     public void setPrecision(String precision) {
         this.precision = precision;
+    }
+
+    public String getStartwith() {
+        return startwith;
+    }
+
+    public void setStartwith(String startwith) {
+        this.startwith = startwith;
+    }
+
+    public String getIncrementby() {
+        return incrementby;
+    }
+
+    public void setIncrementby(String incrementby) {
+        this.incrementby = incrementby;
     }
 }

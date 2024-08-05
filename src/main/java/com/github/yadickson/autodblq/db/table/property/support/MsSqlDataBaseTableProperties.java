@@ -6,74 +6,59 @@
 package com.github.yadickson.autodblq.db.table.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyName;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class MsSqlDataBaseTableProperties extends SupportType implements DataBaseTableProperties {
+public class MsSqlDataBaseTableProperties extends DataBaseTablePropertiesBase {
 
     public MsSqlDataBaseTableProperties() {
         super(Driver.MSSQL);
     }
 
     @Override
-    public TablePropertyType get(DataBaseTableProperty column) {
-        String type = column.getType() == null ? "" : column.getType();
-        String defaultType = column.getDefaultType() == null ? "" : column.getDefaultType();
-        String defaultValue = column.getDefaultValue() == null ? "" : column.getDefaultValue();
-        String value;
+    protected String getUuid() {
+        return "uuid";
+    }
 
-        if ("uniqueidentifier".compareTo(type) == 0 || "uuid".compareTo(type) == 0)
-        {
-            type = TablePropertyName.UUID.getMessage();
-            value = "uuid";
-        }
-        else if ("bit".compareTo(type) == 0 || "bool".compareTo(type) == 0)
-        {
-            type = TablePropertyName.BOOLEAN.getMessage();
-            value = "boolean";
-        }
-        else if ("int".compareTo(type) == 0 || "int4".compareTo(type) == 0)
-        {
-            type = TablePropertyName.INTEGER.getMessage();
-            value = "int";
-        }
-        else if (type.contains("date") || type.contains("timestamp"))
-        {
-            type = TablePropertyName.DATETIME.getMessage();
-            value = "datetimeoffset";
-        }
-        else if (type.contains("char"))
-        {
-            String size = column.getLength() > 0 ? "_" + column.getLength() : "";
-            String nsize = !size.isEmpty() ? "(" + column.getLength() + ")" : "(max)";
-            type = "string" + size;
-            value = "varchar" + nsize;
-        }
-        else if ("bit".compareTo(defaultType) == 0 || "bool".compareTo(defaultType) == 0)
-        {
-            boolean ok = "1".compareTo(defaultValue) == 0 || "true".compareTo(defaultValue) == 0;
-            type = ok ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage();
-            value = ok ? "1" : "0";
-        }
-        else if (defaultValue.contains("newid") || defaultValue.contains("gen_random_uuid"))
-        {
-            type = TablePropertyName.UUID_FUNCTION.getMessage();
-            value = "newid()";
-        }
-        else
-        {
-            return null;
-        }
+    @Override
+    protected String getBoolean() {
+        return "boolean";
+    }
 
-        column.setPropertyType(type);
+    @Override
+    protected String getInteger() {
+        return "int";
+    }
 
-        return new TablePropertyType(type, value);
+    @Override
+    protected String getDatetime() {
+        return "datetimeoffset";
+    }
+
+    @Override
+    protected String getVarchar() {
+        return "varchar";
+    }
+
+    @Override
+    protected String getMaxString() {
+        return "(max)";
+    }
+
+    @Override
+    protected String getDefaultBooleanTrueValue() {
+        return "1";
+    }
+
+    @Override
+    protected String getDefaultBooleanFalseValue() {
+        return "0";
+    }
+
+    @Override
+    protected String getDefaultUuidValue() {
+        return "newid()";
     }
 }

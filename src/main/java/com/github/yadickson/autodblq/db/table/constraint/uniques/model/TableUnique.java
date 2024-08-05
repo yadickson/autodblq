@@ -16,7 +16,7 @@ public final class TableUnique extends DataBaseTableProperty {
     private final String columns;
 
     public TableUnique(String name, String columns) {
-        super(name);
+        super(name, name);
         this.columns = columns;
     }
 

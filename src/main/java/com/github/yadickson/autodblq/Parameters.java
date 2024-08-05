@@ -7,7 +7,11 @@ package com.github.yadickson.autodblq;
 
 import com.sun.org.apache.xpath.internal.operations.Bool;
 
+import java.util.ArrayList;
+import java.util.Collections;
 import java.util.List;
+import java.util.Locale;
+import java.util.stream.Collectors;
 
 /**
  *
@@ -42,8 +46,9 @@ public class Parameters {
     private final Boolean addSchema;
     private final Boolean addDbms;
     private final Boolean addNullable;
+    private final Boolean addIdentity;
 
-    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms, Boolean addNullable) {
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms, Boolean addNullable, Boolean addIdentity) {
         this.driver = driver;
         this.url = url;
         this.username = username;
@@ -57,14 +62,19 @@ public class Parameters {
         this.outputDirectory = outputDirectory;
         this.liquibaseVersion = liquibaseVersion;
         this.liquibaseProductionEnabled = liquibaseProductionEnabled;
-        this.tables = tables;
-        this.dataTables = dataTables;
-        this.views = views;
-        this.functions = functions;
+        this.tables = getNotNullList(tables);
+        this.dataTables = getNotNullList(dataTables);
+        this.views = getNotNullList(views);
+        this.functions = getNotNullList(functions);
         this.addDbVersion = addDbVersion;
         this.addSchema = addSchema;
         this.addDbms = addDbms;
         this.addNullable = addNullable;
+        this.addIdentity = addIdentity;
+    }
+
+    private List<String> getNotNullList(List<String> list) {
+        return list == null ? Collections.EMPTY_LIST : list.stream().map(value -> value.toLowerCase(Locale.US)).collect(Collectors.toList());
     }
 
     public String getDriver() {
@@ -149,5 +159,9 @@ public class Parameters {
 
     public Boolean getAddNullable() {
         return addNullable;
+    }
+
+    public Boolean getAddIdentity() {
+        return addIdentity;
     }
 }

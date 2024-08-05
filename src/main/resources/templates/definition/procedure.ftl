@@ -1,4 +1,4 @@
--- Procedure: ${procedure.fullName}
+-- Procedure: ${procedure.newName}
 
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@

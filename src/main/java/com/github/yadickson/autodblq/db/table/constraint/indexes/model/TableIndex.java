@@ -17,7 +17,7 @@ public final class TableIndex extends DataBaseTableProperty {
     private final Boolean isUnique;
 
     public TableIndex(String name, String columns, Boolean isUnique) {
-        super(name);
+        super(name, name);
         this.columns = columns;
         this.isUnique = isUnique;
     }

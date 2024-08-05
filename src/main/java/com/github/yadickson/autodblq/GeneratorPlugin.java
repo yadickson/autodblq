@@ -242,6 +242,16 @@ public class GeneratorPlugin extends AbstractMojo {
             required = false)
     private String addNullable;
 
+    /**
+     * addDbms.
+     */
+    @Parameter(
+            property = "autodblq.addIdentity",
+            defaultValue = "true",
+            alias = "addNullable",
+            required = false)
+    private String addIdentity;
+
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
     private final DataBaseGenerator dataBaseGenerator;
     private final DefinitionGenerator definitionGenerator;
@@ -278,7 +288,7 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void makeParameters() {
-        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms), stringToBooleanUtil.apply(addNullable)));
+        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms), stringToBooleanUtil.apply(addNullable), stringToBooleanUtil.apply(addIdentity)));
     }
 
     private void printParameters() {
@@ -298,6 +308,7 @@ public class GeneratorPlugin extends AbstractMojo {
         getLog().info("[Generator] AddSchema: " + parameters.getAddSchema());
         getLog().info("[Generator] AddDbms: " + parameters.getAddDbms());
         getLog().info("[Generator] AddNullable: " + parameters.getAddNullable());
+        getLog().info("[Generator] AddIdentity: " + parameters.getAddIdentity());
     }
 
     private void generate() throws MojoExecutionException {

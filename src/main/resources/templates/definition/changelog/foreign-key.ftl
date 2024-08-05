@@ -33,10 +33,10 @@
 
         <addForeignKeyConstraint
             constraintName="${constraint.name}"
-<#if table.schema?? && addSchema?? && addSchema == true >
-            baseTableSchemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+            baseTableSchemaName="${table.newSchema}"
 </#if>
-            baseTableName="${table.name}"
+            baseTableName="${table.newName}"
             baseColumnNames="${constraint.columns}"
 <#if constraint.referenceSchema?? && addSchema?? && addSchema == true >
             referencedTableSchemaName="${constraint.referenceSchema}"
@@ -49,10 +49,10 @@
 
         <rollback>
             <dropForeignKeyConstraint
-<#if table.schema?? && addSchema?? && addSchema == true >
-                baseTableSchemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+                baseTableSchemaName="${table.newSchema}"
 </#if>
-                baseTableName="${table.name}"
+                baseTableName="${table.newName}"
                 constraintName="${constraint.name}"
             />
         </rollback>

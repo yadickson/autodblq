@@ -1,4 +1,4 @@
--- View: ${view.fullName}
+-- View: ${view.newName}
 
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@

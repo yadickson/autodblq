@@ -32,7 +32,7 @@ public class Db2DataBaseViewBaseQuery implements DataBaseViewBaseQuery {
     }
 
     private String filterByNames(final List<String> filter) {
-        return " v.viewname in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
+        return " LOWER(v.viewname) in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
     }
 
 }

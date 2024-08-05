@@ -32,10 +32,10 @@
 
         <createIndex
             indexName="${constraint.name}"
-<#if table.schema?? && addSchema?? && addSchema == true>
-            schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true>
+            schemaName="${table.newSchema}"
 </#if>
-            tableName="${table.name}"
+            tableName="${table.newName}"
             unique="${constraint.isUnique?c}"
         >
 <#if constraint.columns?? >
@@ -48,10 +48,10 @@
 
         <rollback>
             <dropIndex
-<#if table.schema?? && addSchema?? && addSchema == true >
-                schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+                schemaName="${table.newSchema}"
 </#if>
-                tableName="${table.name}"
+                tableName="${table.newName}"
                 indexName="${constraint.name}"
             />
         </rollback>

@@ -14,6 +14,7 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import org.apache.log4j.Logger;
 
@@ -28,11 +29,13 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableBaseMapper.class);
 
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableBaseMapper(final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableBaseMapper(final StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringTrimUtil = stringTrimUtil;
     }
@@ -50,15 +53,17 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
     }
 
     private TableBase processTable(final TableBaseBean tableBean) {
-        final String schema = stringTrimUtil.apply(tableBean.getSchema());
-        final String name = stringToSnakeCaseUtil.apply(tableBean.getName());
+        final String schema = stringToLowerCaseUtil.apply(tableBean.getSchema());
+        final String name = stringToLowerCaseUtil.apply(tableBean.getName());
         final String remarks = stringTrimUtil.apply(tableBean.getRemarks());
+        final String newSchema = stringToSnakeCaseUtil.apply(tableBean.getSchema());
+        final String newName = stringToSnakeCaseUtil.apply(tableBean.getName());
 
         LOGGER.debug("[DataBaseTableBaseMapper] Schema: " + schema);
         LOGGER.debug("[DataBaseTableBaseMapper] Name: " + name);
         LOGGER.debug("[DataBaseTableBaseMapper] Remarks: " + remarks);
         
-        return new TableBase(schema, name, remarks);
+        return new TableBase(schema, name, remarks, newSchema, newName);
     }
 
 }

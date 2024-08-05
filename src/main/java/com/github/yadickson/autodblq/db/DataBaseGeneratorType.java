@@ -20,7 +20,6 @@ public enum DataBaseGeneratorType {
     TABLE_UNIQUES("uniques"),
     TABLE_INDEXES("indexes"),
     TABLE_DEFAULTS("defaults"),
-    TABLE_INCREMENTS("increments"),
     VIEW_DEFINITION("views"),
     FUNCTION_DEFINITION("functions"),
     DATA_DEFINITION("dataTables");

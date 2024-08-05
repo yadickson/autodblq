@@ -6,24 +6,60 @@
 package com.github.yadickson.autodblq.db.table.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class OracleDataBaseTableProperties extends SupportType implements DataBaseTableProperties {
+public class OracleDataBaseTableProperties extends DataBaseTablePropertiesBase {
 
     public OracleDataBaseTableProperties() {
         super(Driver.ORACLE);
     }
 
     @Override
-    public TablePropertyType get(DataBaseTableProperty column) {
-        return null;
+    protected String getUuid() {
+        return "varchar(16)";
+    }
+
+    @Override
+    protected String getBoolean() {
+        return "boolean";
+    }
+
+    @Override
+    protected String getInteger() {
+        return "integer";
+    }
+
+    @Override
+    protected String getDatetime() {
+        return "timestamp(2)";
+    }
+
+    @Override
+    protected String getVarchar() {
+        return "varchar";
+    }
+
+    @Override
+    protected String getMaxString() {
+        return "";
+    }
+
+    @Override
+    protected String getDefaultBooleanTrueValue() {
+        return "true";
+    }
+
+    @Override
+    protected String getDefaultBooleanFalseValue() {
+        return "false";
+    }
+
+    @Override
+    protected String getDefaultUuidValue() {
+        return "";
     }
 
 }

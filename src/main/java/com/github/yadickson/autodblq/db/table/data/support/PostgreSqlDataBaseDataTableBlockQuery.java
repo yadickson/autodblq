@@ -12,11 +12,6 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrappe
  *
  * @author Yadickson Soto
  */
-public class PostgreSqlDataBaseDataTableBlockQuery implements DataBaseDataTableBlockQuery {
+public class PostgreSqlDataBaseDataTableBlockQuery extends DataBaseDataTableBlockQueryBase {
 
-    @Override
-    public String get(DataBaseTableColumnsWrapper table, Long page, Long blocks) {
-        return null;
-    }
-    
 }

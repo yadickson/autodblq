@@ -1,4 +1,4 @@
--- Function: ${function.fullName}
+-- Function: ${function.newName}
 
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@

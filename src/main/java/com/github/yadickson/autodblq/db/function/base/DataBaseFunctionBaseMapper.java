@@ -12,12 +12,11 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
-import com.github.yadickson.autodblq.util.StringToBooleanUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
 
 /**
  *
@@ -28,15 +27,19 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseFunctionBaseMapper.class);
 
-    private final StringTrimUtil stringTrimUtil;
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
+    private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
+    private final StringToContentUtil stringToContentUtil;
     private final StringToBooleanUtil stringToBooleanUtil;
 
     @Inject
     public DataBaseFunctionBaseMapper(
-            final StringTrimUtil stringTrimUtil,
+            StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringToContentUtil stringToContentUtil,
             final StringToBooleanUtil stringToBooleanUtil
     ) {
-        this.stringTrimUtil = stringTrimUtil;
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
+        this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
+        this.stringToContentUtil = stringToContentUtil;
         this.stringToBooleanUtil = stringToBooleanUtil;
     }
 
@@ -53,17 +56,19 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
     }
 
     private FunctionBase processFunction(final FunctionBaseBean functionBean) {
-        final String schema = stringTrimUtil.apply(functionBean.getSchema());
-        final String name = stringTrimUtil.apply(functionBean.getName());
-        final String content = stringTrimUtil.apply(functionBean.getContent());
+        final String schema = stringToLowerCaseUtil.apply(functionBean.getSchema());
+        final String name = stringToLowerCaseUtil.apply(functionBean.getName());
+        final String content = stringToContentUtil.apply(functionBean.getContent());
         final Boolean isFunction = stringToBooleanUtil.apply(functionBean.getIsfunction());
+        final String newSchema = stringToSnakeCaseUtil.apply(functionBean.getSchema());
+        final String newName = stringToSnakeCaseUtil.apply(functionBean.getName());
 
         LOGGER.debug("[DataBaseFunctionBaseMapper] Schema: " + schema);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Name: " + name);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Content: " + content);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Is Function: " + isFunction);
 
-        return new FunctionBase(schema, name, content, isFunction);
+        return new FunctionBase(schema, name, content, isFunction, newSchema, newName);
     }
 
 }

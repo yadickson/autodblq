@@ -32,7 +32,7 @@ public class Db2DataBaseTableForeignKeyQuery implements DataBaseTableConstraintQ
     }
 
     private String filterByName(final TableBase table) {
-        return " ref.tabname = '" + table.getName() + "' \n";
+        return " LOWER(ref.tabname) = '" + table.getName() + "' \n";
     }
 
     private String filterBySchema(final TableBase table) {
@@ -41,7 +41,7 @@ public class Db2DataBaseTableForeignKeyQuery implements DataBaseTableConstraintQ
             return StringUtils.EMPTY;
         }
 
-        return " AND ref.tabschema = '" + table.getSchema() + "' \n";
+        return " AND LOWER(ref.tabschema) = '" + table.getSchema() + "' \n";
     }
 
 }

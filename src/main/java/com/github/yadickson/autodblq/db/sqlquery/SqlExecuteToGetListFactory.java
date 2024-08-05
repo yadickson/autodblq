@@ -15,7 +15,6 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
-import com.github.yadickson.autodblq.db.table.constraint.increments.model.TableIncrementBean;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
@@ -46,8 +45,6 @@ public class SqlExecuteToGetListFactory implements Function<DataBaseGeneratorTyp
                 return new SqlExecuteToGetList<>(TableIndexBean.class);
             case TABLE_DEFAULTS:
                 return new SqlExecuteToGetList<>(TableDefaultBean.class);
-            case TABLE_INCREMENTS:
-                return new SqlExecuteToGetList<>(TableIncrementBean.class);
             case VIEW_DEFINITION:
                 return new SqlExecuteToGetList<>(ViewBaseBean.class);
             case FUNCTION_DEFINITION:

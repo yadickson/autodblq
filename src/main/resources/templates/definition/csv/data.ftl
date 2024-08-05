@@ -1,4 +1,4 @@
-${csvComment} Table: ${table.fullName}
+${csvComment} Table: ${table.newName}
 ${csvComment}
 ${csvComment} @GENERATOR.NAME@
 ${csvComment} @GENERATOR.VERSION@

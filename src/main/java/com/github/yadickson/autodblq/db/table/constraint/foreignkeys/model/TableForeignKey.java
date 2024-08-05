@@ -19,7 +19,7 @@ public final class TableForeignKey extends DataBaseTableProperty {
     private final String referenceColumns;
 
     public TableForeignKey(String name, String columns, String referenceSchema, String referenceName, String referenceColumns) {
-        super(name);
+        super(name, name);
         this.columns = columns;
         this.referenceSchema = referenceSchema;
         this.referenceName = referenceName;

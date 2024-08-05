@@ -58,7 +58,7 @@ public class DataBaseVersionReader {
     }
 
     private String findVersion(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseVersionReader] Starting");
+        LOGGER.info(String.format("[DataBaseVersionReader] Starting [%s]", driverConnection.getDriver().getMessage()));
         final String version = sqlExecuteToGetObject.execute(driverConnection, sqlQuery, VersionBean.class).getVersion();
         LOGGER.info("[DataBaseVersionReader] Version: " + version);
         return version;

@@ -23,9 +23,12 @@ public class Db2DataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
                 + " t.colname name, \n"
                 + " t.typename type, \n"
                 + " t.length, \n"
-                + " t.NULLS nullable, \n"
+                + " CASE WHEN t.NULLS = 'Y' THEN 'true' ELSE 'false' end nullable, \n"
                 + " t.scale, \n"
-                + " t.remarks \n"
+                + " t.remarks, \n"
+                + " CASE WHEN t.IDENTITY = 'Y' THEN 'true' ELSE 'false' end identity,  \n"
+                + " 1 startwith,  \n"
+                + " 1 incrementby  \n"
                 + "FROM syscat.columns t \n"
                 + "WHERE \n"
                 + filterByName(table)
@@ -34,7 +37,7 @@ public class Db2DataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
     }
 
     private String filterByName(final TableBase table) {
-        return " t.tabname = '" + table.getName() + "' \n";
+        return " LOWER(t.tabname) = '" + table.getName() + "' \n";
     }
 
     private String filterBySchema(final TableBase table) {
@@ -43,7 +46,7 @@ public class Db2DataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
             return StringUtils.EMPTY;
         }
 
-        return " AND t.tabschema = '" + table.getSchema() + "' \n";
+        return " AND LOWER(t.tabschema) = '" + table.getSchema() + "' \n";
     }
 
 }

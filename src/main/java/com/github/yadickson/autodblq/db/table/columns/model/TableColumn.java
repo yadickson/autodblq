@@ -18,14 +18,20 @@ public class TableColumn extends DataBaseTableProperty {
     private final String precision;
     private final String scale;
     private final String remarks;
+    private final Boolean identity;
+    private final Integer startWith;
+    private final Integer incrementBy;
 
-    public TableColumn(final String name, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable) {
-        super(name, type, length);
+    public TableColumn(final String name, String newName, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable, Boolean identity, Integer startWith, Integer incrementBy) {
+        super(name, newName, type, length);
         this.position = position;
         this.precision = precision;
         this.scale = scale;
         this.nullable = nullable;
         this.remarks = remarks;
+        this.identity = identity;
+        this.startWith = startWith;
+        this.incrementBy = incrementBy;
     }
 
     public Integer getPosition() {
@@ -46,5 +52,17 @@ public class TableColumn extends DataBaseTableProperty {
 
     public String getPrecision() {
         return precision;
+    }
+
+    public Boolean getIdentity() {
+        return identity;
+    }
+
+    public Integer getStartWith() {
+        return startWith;
+    }
+
+    public Integer getIncrementBy() {
+        return incrementBy;
     }
 }

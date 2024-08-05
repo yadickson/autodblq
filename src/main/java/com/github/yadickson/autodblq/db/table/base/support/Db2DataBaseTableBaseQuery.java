@@ -39,7 +39,7 @@ public class Db2DataBaseTableBaseQuery extends SupportType implements DataBaseTa
     }
 
     private String filterByNames(final List<String> filter) {
-        return " AND tabname in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
+        return " AND LOWER(tabname) in ('" + StringUtils.join(filter, SEPARATOR) + "') \n";
     }
 
 }

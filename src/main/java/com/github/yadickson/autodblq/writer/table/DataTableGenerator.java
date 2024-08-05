@@ -35,7 +35,7 @@ public class DataTableGenerator {
 
     private String outputDirectory;
 
-    private final String TABLE = "table";
+    private final String DATA = "data";
 
     @Inject
     public DataTableGenerator(
@@ -80,7 +80,7 @@ public class DataTableGenerator {
     private void makeDataTable(final Parameters parameters, final DriverConnection driverConnection, TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
         final String filename = String.format(type.getFilename(), table.getName());
-        final String path = outputDirectory + File.separatorChar + TABLE + File.separatorChar + filename;
+        final String path = outputDirectory + File.separatorChar + DATA + File.separatorChar + filename;
         readerTable(parameters, driverConnection, table, path);
     }
 

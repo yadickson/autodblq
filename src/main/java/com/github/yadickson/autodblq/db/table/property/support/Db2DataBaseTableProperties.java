@@ -6,24 +6,60 @@
 package com.github.yadickson.autodblq.db.table.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class Db2DataBaseTableProperties extends SupportType implements DataBaseTableProperties {
+public class Db2DataBaseTableProperties extends DataBaseTablePropertiesBase {
 
     public Db2DataBaseTableProperties() {
         super(Driver.DB2);
     }
 
     @Override
-    public TablePropertyType get(DataBaseTableProperty column) {
-        return null;
+    protected String getUuid() {
+        return "varchar(16)";
+    }
+
+    @Override
+    protected String getBoolean() {
+        return "boolean";
+    }
+
+    @Override
+    protected String getInteger() {
+        return "integer";
+    }
+
+    @Override
+    protected String getDatetime() {
+        return "timestamp(2)";
+    }
+
+    @Override
+    protected String getVarchar() {
+        return "varchar";
+    }
+
+    @Override
+    protected String getMaxString() {
+        return "";
+    }
+
+    @Override
+    protected String getDefaultBooleanTrueValue() {
+        return "true";
+    }
+
+    @Override
+    protected String getDefaultBooleanFalseValue() {
+        return "false";
+    }
+
+    @Override
+    protected String getDefaultUuidValue() {
+        return "";
     }
 
 }

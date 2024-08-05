@@ -18,7 +18,6 @@ public enum DefinitionGeneratorType {
     UNIQUES("/definition/changelog/unique.ftl", "%02d-unique.xml"),
     INDEXES("/definition/changelog/index.ftl", "%02d-index.xml"),
     DEFAULTS("/definition/changelog/default-value.ftl", "%02d-default-values.xml"),
-    INCREMENTS("/definition/changelog/auto-increment.ftl", "%02d-auto-increment.xml"),
     VIEWS("/definition/changelog/view.ftl", "%02d-views.xml"),
     FUNCTIONS("/definition/changelog/function.ftl", "%02d-functions.xml"),
     DATA_TABLES("/definition/changelog/load-data.ftl", "%02d-load-data.xml"),

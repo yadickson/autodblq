@@ -18,7 +18,6 @@ import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.DataBaseTableDefaultReader;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.DataBaseTableForeignKeyReader;
-import com.github.yadickson.autodblq.db.table.constraint.increments.DataBaseTableIncrementReader;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.DataBaseTableIndexReader;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.DataBaseTablePrimaryKeyReader;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.DataBaseTableUniqueReader;
@@ -39,15 +38,13 @@ public class DataBaseTableConstraintChain {
             final DataBaseTableForeignKeyReader dataBaseTableForeignKeyReader,
             final DataBaseTableUniqueReader dataBaseTableUniqueReader,
             final DataBaseTableIndexReader dataBaseTableIndexReader,
-            final DataBaseTableDefaultReader dataBaseTableDefaultReader,
-            final DataBaseTableIncrementReader dataBaseTableIncrementReader
+            final DataBaseTableDefaultReader dataBaseTableDefaultReader
     ) {
         this.handlers.add(dataBaseTablePrimaryKeyReader);
         this.handlers.add(dataBaseTableForeignKeyReader);
         this.handlers.add(dataBaseTableUniqueReader);
         this.handlers.add(dataBaseTableIndexReader);
         this.handlers.add(dataBaseTableDefaultReader);
-        this.handlers.add(dataBaseTableIncrementReader);
     }
 
     public Map<DataBaseGeneratorType, List<TableBase>> execute(final DriverConnection driverConnection, final List<TableBase> tables) {

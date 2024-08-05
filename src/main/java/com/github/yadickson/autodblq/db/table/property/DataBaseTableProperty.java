@@ -12,28 +12,34 @@ package com.github.yadickson.autodblq.db.table.property;
 public class DataBaseTableProperty {
 
     private final String name;
+    private final String newName;
     private final String type;
     private final Integer length;
     private String defaultType;
     private String defaultValue;
     private String propertyType;
 
-    public DataBaseTableProperty(final String name) {
-        this(name, null);
+    public DataBaseTableProperty(final String name, String newName) {
+        this(name, newName, null);
     }
 
-    public DataBaseTableProperty(final String name, final String type) {
-        this(name, type, 0);
+    public DataBaseTableProperty(final String name, String newName, final String type) {
+        this(name, newName, type, 0);
     }
 
-    public DataBaseTableProperty(final String name, final String type, final Integer length) {
+    public DataBaseTableProperty(final String name, String newName, final String type, final Integer length) {
         this.name = name;
+        this.newName = newName;
         this.type = type;
         this.length = length;
     }
 
     public String getName() {
         return name;
+    }
+
+    public String getNewName() {
+        return newName;
     }
 
     public String getType() {

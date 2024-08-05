@@ -12,6 +12,9 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.util.StringToContentUtil;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
+import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -27,11 +30,15 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseViewBaseMapper.class);
 
-    private final StringTrimUtil stringTrimUtil;
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
+    private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
+    private final StringToContentUtil stringToContentUtil;
 
     @Inject
-    public DataBaseViewBaseMapper(final StringTrimUtil stringTrimUtil) {
-        this.stringTrimUtil = stringTrimUtil;
+    public DataBaseViewBaseMapper(final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
+        this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
+        this.stringToContentUtil = stringToContentUtil;
     }
 
     @Override
@@ -47,15 +54,17 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
     }
 
     private ViewBase processView(final ViewBaseBean viewBean) {
-        final String schema = stringTrimUtil.apply(viewBean.getSchema());
-        final String name = stringTrimUtil.apply(viewBean.getName());
-        final String content = viewBean.getContent();
+        final String schema = stringToLowerCaseUtil.apply(viewBean.getSchema());
+        final String name = stringToLowerCaseUtil.apply(viewBean.getName());
+        final String content = stringToContentUtil.apply(viewBean.getContent());
+        final String newSchema = stringToSnakeCaseUtil.apply(viewBean.getSchema());
+        final String newName = stringToSnakeCaseUtil.apply(viewBean.getName());
 
         LOGGER.debug("[DataBaseViewBaseMapper] Schema: " + schema);
         LOGGER.debug("[DataBaseViewBaseMapper] Name: " + name);
         LOGGER.debug("[DataBaseViewBaseMapper] Content: " + content);
 
-        return new ViewBase(schema, name, content);
+        return new ViewBase(schema, name, content, newSchema, newName);
     }
 
 }

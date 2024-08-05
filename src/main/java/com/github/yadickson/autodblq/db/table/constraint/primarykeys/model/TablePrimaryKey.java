@@ -16,7 +16,7 @@ public final class TablePrimaryKey extends DataBaseTableProperty {
     private final String columns;
 
     public TablePrimaryKey(String name, String columns) {
-        super(name);
+        super(name, name);
         this.columns = columns;
     }
 

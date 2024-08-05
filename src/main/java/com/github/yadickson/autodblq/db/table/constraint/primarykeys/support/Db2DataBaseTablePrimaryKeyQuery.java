@@ -37,7 +37,7 @@ public class Db2DataBaseTablePrimaryKeyQuery implements DataBaseTableConstraintQ
     }
 
     private String filterByName(final TableBase table) {
-        return "  k.tabname = '" + table.getName() + "' \n";
+        return "  LOWER(k.tabname) = '" + table.getName() + "' \n";
     }
 
     private String filterBySchema(final TableBase table) {
@@ -45,7 +45,7 @@ public class Db2DataBaseTablePrimaryKeyQuery implements DataBaseTableConstraintQ
             return StringUtils.EMPTY;
         }
 
-        return "  AND k.tabschema = '" + table.getSchema() + "' \n";
+        return "  AND LOWER(k.tabschema) = '" + table.getSchema() + "' \n";
     }
 
 }

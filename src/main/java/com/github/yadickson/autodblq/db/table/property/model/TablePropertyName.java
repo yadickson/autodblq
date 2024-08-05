@@ -18,6 +18,7 @@ public enum TablePropertyName {
     BOOLEAN_FALSE("boolean_false"),
     INTEGER("integer"),
     DATETIME("datetime"),
+    STRING("string"),
     DATETIME_FUNCTION("datetime_function");
 
     private final String message;

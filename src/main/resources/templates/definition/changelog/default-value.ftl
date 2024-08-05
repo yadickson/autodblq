@@ -31,20 +31,20 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addDefaultValue
-<#if table.schema?? && addSchema?? && addSchema == true >
-            schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+            schemaName="${table.newSchema}"
 </#if>
-            tableName="${table.name}"
+            tableName="${table.newName}"
             columnName="${constraint.name}"
             defaultValueNumeric="<#if constraint.propertyType??>${r"${"}${constraint.propertyType?lower_case}${r"}"}<#else>${constraint.value}</#if>"
         />
 
         <rollback>
             <dropDefaultValue
-<#if table.schema?? && addSchema?? && addSchema == true >
-                schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+                schemaName="${table.newSchema}"
 </#if>
-                tableName="${table.name}"
+                tableName="${table.newName}"
                 columnName="${constraint.name}"
             />
         </rollback>

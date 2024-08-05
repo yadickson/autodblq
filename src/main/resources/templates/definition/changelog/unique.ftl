@@ -32,19 +32,19 @@
 
         <addUniqueConstraint
             constraintName="${constraint.name}"
-<#if table.schema?? && addSchema?? && addSchema == true >
-            schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+            schemaName="${table.newSchema}"
 </#if>
-            tableName="${table.name}"
+            tableName="${table.newName}"
             columnNames="${constraint.columns}"
         />
 
         <rollback>
             <dropUniqueConstraint
-<#if table.schema?? && addSchema?? && addSchema == true >
-                schemaName="${table.schema}"
+<#if table.newSchema?? && addSchema?? && addSchema == true >
+                schemaName="${table.newSchema}"
 </#if>
-                tableName="${table.name}"
+                tableName="${table.newName}"
                 constraintName="${constraint.name}"
             />
         </rollback>

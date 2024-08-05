@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefault;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
 import org.apache.log4j.Logger;
@@ -25,18 +26,21 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefaultConstraintMapper.class);
 
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableDefaultConstraintMapper(final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableDefaultConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringTrimUtil = stringTrimUtil;
     }
 
     @Override
     public DataBaseTableProperty apply(final TableDefaultBean tableBean) {
-        final String constraintColumn = stringToSnakeCaseUtil.apply(tableBean.getColumn());
+        final String constraintColumn = stringToLowerCaseUtil.apply(tableBean.getColumn());
+        final String constraintNewColumn = stringToSnakeCaseUtil.apply(tableBean.getColumn());
         final String constraintColumnType = stringToSnakeCaseUtil.apply(tableBean.getColumntype());
         final String constraintValue = stringTrimUtil.apply(tableBean.getValue());
 
@@ -44,6 +48,6 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint ColumnType: " + constraintColumnType);
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Value: " + constraintValue);
 
-        return new TableDefault(constraintColumn, constraintColumnType, constraintValue);
+        return new TableDefault(constraintColumn, constraintNewColumn, constraintColumnType, constraintValue);
     }
 }

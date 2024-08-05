@@ -68,7 +68,8 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
     }
 
     private TableColumn processTableColumn(TableColumnBean tableColumnBean) {
-        final String name = stringToSnakeCaseUtil.apply(tableColumnBean.getName());
+        final String name = stringToLowerCaseUtil.apply(tableColumnBean.getName());
+        final String newName = stringToSnakeCaseUtil.apply(tableColumnBean.getName());
         final String type = stringToLowerCaseUtil.apply(tableColumnBean.getType());
         final Integer position = stringToIntegerUtil.apply(tableColumnBean.getPosition());
         final Integer length = stringToIntegerUtil.apply(tableColumnBean.getLength());
@@ -76,6 +77,9 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         final String scale = stringTrimUtil.apply(tableColumnBean.getScale());
         final Boolean nullable = stringToBooleanUtil.apply(tableColumnBean.getNullable());
         final String remarks = stringTrimUtil.apply(tableColumnBean.getRemarks());
+        final Boolean identity = stringToBooleanUtil.apply(tableColumnBean.getIdentity());
+        final Integer startWith = stringToIntegerUtil.apply(tableColumnBean.getStartwith());
+        final Integer incrementBy = stringToIntegerUtil.apply(tableColumnBean.getIncrementby());
 
         LOGGER.debug("[DataBaseTableColumnMapper] Name: " + name);
         LOGGER.debug("[DataBaseTableColumnMapper] Type: " + type);
@@ -86,7 +90,7 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         LOGGER.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
         LOGGER.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
 
-        return new TableColumn(name, type, position, length, precision, scale, remarks, nullable);
+        return new TableColumn(name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
     }
 
 }

@@ -28,10 +28,10 @@
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <createTable tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
+        <createTable tableName="${table.newName}"<#if table.newSchema?? && addSchema?? && addSchema == true > schemaName="${table.newSchema}"</#if><#if table.remarks?? > remarks="${table.remarks}"</#if>>
 <#if table.columns?? >
 <#list table.columns as column >
-            <column name="${column.name}" type="<#if column.propertyType??>${r"${"}${column.propertyType?lower_case}${r"}"}<#else>${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if></#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if> <#if addNullable?? && addNullable == true><#else>/</#if>>
+            <column name="${column.newName}" type="<#if column.propertyType??>${r"${"}${column.propertyType?lower_case}${r"}"}<#else>${column.type}<#if typeUtil.isString(column.type) >(${column.length})</#if></#if>"<#if column.remarks?? > remarks="${column.remarks}"</#if><#if addIdentity?? && addIdentity == true && column.identity?? && column.identity == true > autoIncrement="true" startWith="${column.startWith}" incrementBy="${column.incrementBy}" </#if><#if addNullable?? && addNullable == true><#else>/</#if>>
 <#if column.nullable?? && addNullable?? && addNullable == true>
                 <constraints nullable="${column.nullable?c}"/>
             </column>
@@ -41,7 +41,7 @@
         </createTable>
 
         <rollback>
-            <dropTable tableName="${table.name}"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="${table.schema}"</#if>/>
+            <dropTable tableName="${table.newName}"<#if table.newSchema?? && addSchema?? && addSchema == true > schemaName="${table.newSchema}"</#if>/>
         </rollback>
 
     </changeSet>

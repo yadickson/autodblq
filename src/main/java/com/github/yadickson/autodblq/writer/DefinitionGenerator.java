@@ -44,7 +44,6 @@ public final class DefinitionGenerator {
     private String version;
     private List<TableBase> tables;
     private List<TableBase> defaults;
-    private List<TableBase> increments;
     private List<TableBase> indexes;
     private List<TableBase> uniques;
     private List<TableBase> primaryKeys;
@@ -63,6 +62,7 @@ public final class DefinitionGenerator {
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
     private final String TABLE = "table";
+    private final String DATA = "data";
     private final String FUNCTION = "function";
     private final String PROCEDURE = "procedure";
 
@@ -74,7 +74,6 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_TABLES = "tables";
     private static final String DATA_BASE_PROPERTIES = "properties";
     private static final String DATA_BASE_DEFAULTS = "defaults";
-    private static final String DATA_BASE_INCREMENTS = "increments";
     private static final String DATA_BASE_INDEXES = "indexes";
     private static final String DATA_BASE_UNIQUES = "uniques";
     private static final String DATA_BASE_PRIMARY_KEYS = "primaryKeys";
@@ -97,6 +96,7 @@ public final class DefinitionGenerator {
     private static final String ADD_SCHEMA = "addSchema";
     private static final String ADD_DBMS = "addDbms";
     private static final String ADD_NULLABLE = "addNullable";
+    private static final String ADD_IDENTITY = "addIdentity";
 
     @Inject
     public DefinitionGenerator(
@@ -131,7 +131,6 @@ public final class DefinitionGenerator {
         tables = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_DEFINITION);
         dataTables = (List) dataBaseGenerator.get(DataBaseGeneratorType.DATA_DEFINITION);
         defaults = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_DEFAULTS);
-        increments = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_INCREMENTS);
         indexes = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_INDEXES);
         uniques = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_UNIQUES);
         primaryKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PRIMARY_KEYS);
@@ -155,7 +154,6 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_TABLES, tables);
         values.put(DATA_BASE_DATA_TABLE, dataTables);
         values.put(DATA_BASE_DEFAULTS, defaults);
-        values.put(DATA_BASE_INCREMENTS, increments);
         values.put(DATA_BASE_INDEXES, indexes);
         values.put(DATA_BASE_UNIQUES, uniques);
         values.put(DATA_BASE_PRIMARY_KEYS, primaryKeys);
@@ -176,6 +174,7 @@ public final class DefinitionGenerator {
         values.put(ADD_SCHEMA, parameters.getAddSchema());
         values.put(ADD_DBMS, parameters.getAddDbms());
         values.put(ADD_NULLABLE, parameters.getAddNullable());
+        values.put(ADD_IDENTITY, parameters.getAddIdentity());
     }
 
     private void cleanOutputDirectory(final Parameters parameters) throws IOException {
@@ -187,14 +186,13 @@ public final class DefinitionGenerator {
         makeProperties();
         makeTables();
         makeDefaults();
-        makeIncrements();
         makeIndexes();
         makeUniques();
         makePrimaryKeys();
         makeForeignKeys();
-        makeDataTables();
         makeViews();
         makeFunctions();
+        makeDataTables();
     }
 
     private void makeProperties() {
@@ -212,12 +210,6 @@ public final class DefinitionGenerator {
     private void makeDefaults() {
         if (!defaults.isEmpty()) {
             addAndMakeFileBase(DefinitionGeneratorType.DEFAULTS);
-        }
-    }
-
-    private void makeIncrements() {
-        if (!increments.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.INCREMENTS);
         }
     }
 
@@ -309,28 +301,28 @@ public final class DefinitionGenerator {
 
     private void makeDataTableFile(final TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
-        final String filename = String.format(type.getFilename(), table.getName());
-        final String path = makeFilenamePath(TABLE, filename);
+        final String filename = String.format(type.getFilename(), table.getNewName());
+        final String path = makeFilenamePath(DATA, filename);
         makeTemplate(type, path);
     }
 
     private void makeViewFile(final ViewBase viewBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.VIEW;
-        final String filename = String.format(type.getFilename(), viewBase.getName());
+        final String filename = String.format(type.getFilename(), viewBase.getNewName());
         final String path = makeFilenamePath(VIEW, filename);
         makeTemplate(type, path);
     }
 
     private void makeFunctionFile(final FunctionBase functionBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.FUNCTION;
-        final String filename = String.format(type.getFilename(), functionBase.getName());
+        final String filename = String.format(type.getFilename(), functionBase.getNewName());
         final String path = makeFilenamePath(FUNCTION, filename);
         makeTemplate(type, path);
     }
 
     private void makeProcedureFile(final FunctionBase functionBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.PROCEDURE;
-        final String filename = String.format(type.getFilename(), functionBase.getName());
+        final String filename = String.format(type.getFilename(), functionBase.getNewName());
         final String path = makeFilenamePath(PROCEDURE, filename);
         makeTemplate(type, path);
     }
@@ -349,9 +341,9 @@ public final class DefinitionGenerator {
     }
 
     private String makeFilenamePath(final String directory, final String filename) {
-        final String fullpath = outputDirectory + File.separatorChar + directory + File.separatorChar;
-        directoryBuilder.execute(fullpath);
-        return fullpath + filename;
+        final String fullPath = outputDirectory + File.separatorChar + directory + File.separatorChar;
+        directoryBuilder.execute(fullPath);
+        return fullPath + filename;
     }
 
     private void makeTemplate(final DefinitionGeneratorType type, final String path) {
