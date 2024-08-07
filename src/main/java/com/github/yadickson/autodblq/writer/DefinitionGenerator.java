@@ -44,6 +44,7 @@ public final class DefinitionGenerator {
     private String version;
     private List<TableBase> tables;
     private List<TableBase> defaults;
+    private List<TableBase> checks;
     private List<TableBase> indexes;
     private List<TableBase> uniques;
     private List<TableBase> primaryKeys;
@@ -73,6 +74,7 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_VERSION = "dbversion";
     private static final String DATA_BASE_TABLES = "tables";
     private static final String DATA_BASE_PROPERTIES = "properties";
+    private static final String DATA_BASE_CHECKS = "checks";
     private static final String DATA_BASE_DEFAULTS = "defaults";
     private static final String DATA_BASE_INDEXES = "indexes";
     private static final String DATA_BASE_UNIQUES = "uniques";
@@ -97,6 +99,8 @@ public final class DefinitionGenerator {
     private static final String ADD_DBMS = "addDbms";
     private static final String ADD_NULLABLE = "addNullable";
     private static final String ADD_IDENTITY = "addIdentity";
+    private static final String KEEP_NAMES = "keepNames";
+    private Boolean keepNames = true;
 
     @Inject
     public DefinitionGenerator(
@@ -130,6 +134,7 @@ public final class DefinitionGenerator {
         version = (String) dataBaseGenerator.get(DataBaseGeneratorType.VERSION);
         tables = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_DEFINITION);
         dataTables = (List) dataBaseGenerator.get(DataBaseGeneratorType.DATA_DEFINITION);
+        checks = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_CHECKS);
         defaults = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_DEFAULTS);
         indexes = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_INDEXES);
         uniques = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_UNIQUES);
@@ -153,6 +158,7 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_VERSION, version);
         values.put(DATA_BASE_TABLES, tables);
         values.put(DATA_BASE_DATA_TABLE, dataTables);
+        values.put(DATA_BASE_CHECKS, checks);
         values.put(DATA_BASE_DEFAULTS, defaults);
         values.put(DATA_BASE_INDEXES, indexes);
         values.put(DATA_BASE_UNIQUES, uniques);
@@ -175,6 +181,9 @@ public final class DefinitionGenerator {
         values.put(ADD_DBMS, parameters.getAddDbms());
         values.put(ADD_NULLABLE, parameters.getAddNullable());
         values.put(ADD_IDENTITY, parameters.getAddIdentity());
+        values.put(KEEP_NAMES, parameters.getKeepNames());
+
+        keepNames = parameters.getKeepNames();
     }
 
     private void cleanOutputDirectory(final Parameters parameters) throws IOException {
@@ -301,28 +310,28 @@ public final class DefinitionGenerator {
 
     private void makeDataTableFile(final TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
-        final String filename = String.format(type.getFilename(), table.getNewName());
+        final String filename = String.format(type.getFilename(), keepNames ? table.getName() : table.getNewName());
         final String path = makeFilenamePath(DATA, filename);
         makeTemplate(type, path);
     }
 
     private void makeViewFile(final ViewBase viewBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.VIEW;
-        final String filename = String.format(type.getFilename(), viewBase.getNewName());
+        final String filename = String.format(type.getFilename(), keepNames ? viewBase.getName() : viewBase.getNewName());
         final String path = makeFilenamePath(VIEW, filename);
         makeTemplate(type, path);
     }
 
     private void makeFunctionFile(final FunctionBase functionBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.FUNCTION;
-        final String filename = String.format(type.getFilename(), functionBase.getNewName());
+        final String filename = String.format(type.getFilename(), keepNames ? functionBase.getName() : functionBase.getNewName());
         final String path = makeFilenamePath(FUNCTION, filename);
         makeTemplate(type, path);
     }
 
-    private void makeProcedureFile(final FunctionBase functionBase) {
+    private void makeProcedureFile(final FunctionBase procedureBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.PROCEDURE;
-        final String filename = String.format(type.getFilename(), functionBase.getNewName());
+        final String filename = String.format(type.getFilename(), keepNames ? procedureBase.getName() : procedureBase.getNewName());
         final String path = makeFilenamePath(PROCEDURE, filename);
         makeTemplate(type, path);
     }

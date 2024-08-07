@@ -17,6 +17,7 @@ public enum DataBaseGeneratorType {
     TABLE_DEFINITION("tables"),
     TABLE_PRIMARY_KEYS("primaryKeys"),
     TABLE_FOREIGN_KEYS("foreignKeys"),
+    TABLE_CHECKS("checks"),
     TABLE_UNIQUES("uniques"),
     TABLE_INDEXES("indexes"),
     TABLE_DEFAULTS("defaults"),

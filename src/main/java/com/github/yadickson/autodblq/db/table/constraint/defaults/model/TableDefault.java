@@ -15,9 +15,9 @@ public final class TableDefault extends DataBaseTableProperty {
 
     private final String value;
 
-    public TableDefault(String name, String newName, String defaultType, String columnValue)
+    public TableDefault(String realName, String name, String newName, String defaultType, String columnValue)
     {
-        super(name, newName);
+        super(realName, name, newName);
         this.setDefaultType(defaultType);
         this.setDefaultValue(columnValue);
         this.value = columnValue;

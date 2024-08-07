@@ -13,9 +13,12 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class FunctionBase {
 
+    private final String realSchema;
     private final String schema;
+    private final String realName;
     private final String name;
-    private final String content;
+    private final String realContent;
+    private final String newContent;
     private final Boolean isFunction;
     private final String newSchema;
     private final String newName;
@@ -24,19 +27,34 @@ public final class FunctionBase {
     private final String newFullName;
 
     public FunctionBase(FunctionBase functionBase) {
-        this(functionBase.getSchema(), functionBase.getName(), functionBase.getContent(), functionBase.getIsFunction(), functionBase.getNewSchema(), functionBase.getNewName());
+        this(functionBase.getRealSchema(), functionBase.getSchema(), functionBase.getRealName(), functionBase.getName(), functionBase.getRealContent(), functionBase.getNewContent(), functionBase.getIsFunction(), functionBase.getNewSchema(), functionBase.getNewName());
     }
 
-    public FunctionBase(String schema, String name, String content, Boolean isFunction, final String newSchema, final String newName) {
+    public FunctionBase(String realSchema, String schema, String realName, String name, String realContent, String newContent, Boolean isFunction, final String newSchema, final String newName) {
+        this.realSchema = realSchema;
         this.schema = schema;
+        this.realName = realName;
         this.name = name;
-        this.content = content;
+        this.realContent = realContent;
+        this.newContent = newContent;
         this.isFunction = isFunction;
         this.newSchema = newSchema;
         this.newName = newName;
 
-        this.fullName = org.apache.commons.lang3.StringUtils.isEmpty(schema) ? name : schema + "." + name;
+        this.fullName = org.apache.commons.lang3.StringUtils.isEmpty(realSchema) ? realName : realSchema + "." + realName;
         this.newFullName = StringUtils.isEmpty(newSchema) ? newName : newSchema + "." + newName;
+    }
+
+    public String getRealSchema() {
+        return realSchema;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public String getRealContent() {
+        return realContent;
     }
 
     public String getSchema() {
@@ -47,8 +65,8 @@ public final class FunctionBase {
         return name;
     }
 
-    public String getContent() {
-        return content;
+    public String getNewContent() {
+        return newContent;
     }
 
     public Boolean getIsFunction() {

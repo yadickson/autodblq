@@ -9,7 +9,9 @@ import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.Table
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -25,29 +27,39 @@ public class DataBaseTableForeignKeyConstraintMapper implements Function<TableFo
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableForeignKeyConstraintMapper.class);
 
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringJoinUtil stringJoinUtil;
+    private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableForeignKeyConstraintMapper(final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil) {
+    public DataBaseTableForeignKeyConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringJoinUtil = stringJoinUtil;
+        this.stringTrimUtil = stringTrimUtil;
     }
 
     @Override
     public DataBaseTableProperty apply(final TableForeignKeyBean tableBean) {
-        final String constraintName = stringToSnakeCaseUtil.apply(tableBean.getName());
+        final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
+        final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
+        final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
+        final String constraintRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getColumns()));
         final String constraintColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getColumns()));
+        final String constraintReferenceRealSchema = stringTrimUtil.apply(tableBean.getRefschema());
         final String constraintReferenceSchema = stringToSnakeCaseUtil.apply(tableBean.getRefschema());
+        final String constraintReferenceRealName = stringTrimUtil.apply(tableBean.getRefname());
         final String constraintReferenceName = stringToSnakeCaseUtil.apply(tableBean.getRefname());
+        final String constraintReferenceRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getRefcolumns()));
         final String constraintReferenceColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getRefcolumns()));
 
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Name: " + constraintName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Columns: " + constraintColumns);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Schema: " + constraintReferenceSchema);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceColumns);
+        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Name: " + constraintRealName);
+        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Columns: " + constraintRealColumns);
+        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Schema: " + constraintReferenceRealSchema);
+        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceRealName);
+        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceRealColumns);
 
-        return new TableForeignKey(constraintName, constraintColumns, constraintReferenceSchema, constraintReferenceName, constraintReferenceColumns);
+        return new TableForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns);
     }
 }

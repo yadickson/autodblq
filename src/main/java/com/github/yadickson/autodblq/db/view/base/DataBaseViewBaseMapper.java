@@ -30,12 +30,14 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseViewBaseMapper.class);
 
+    private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToContentUtil stringToContentUtil;
 
     @Inject
-    public DataBaseViewBaseMapper(final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+    public DataBaseViewBaseMapper(StringTrimUtil stringTrimUtil, final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+        this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringToContentUtil = stringToContentUtil;
@@ -54,17 +56,20 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
     }
 
     private ViewBase processView(final ViewBaseBean viewBean) {
+        final String realSchema = stringTrimUtil.apply(viewBean.getSchema());
         final String schema = stringToLowerCaseUtil.apply(viewBean.getSchema());
+        final String realName = stringTrimUtil.apply(viewBean.getName());
         final String name = stringToLowerCaseUtil.apply(viewBean.getName());
-        final String content = stringToContentUtil.apply(viewBean.getContent());
+        final String realContent = stringToContentUtil.apply(stringTrimUtil.apply(viewBean.getContent()));
+        final String newContent = stringToContentUtil.apply(stringToSnakeCaseUtil.apply(viewBean.getContent()));
         final String newSchema = stringToSnakeCaseUtil.apply(viewBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(viewBean.getName());
 
-        LOGGER.debug("[DataBaseViewBaseMapper] Schema: " + schema);
-        LOGGER.debug("[DataBaseViewBaseMapper] Name: " + name);
-        LOGGER.debug("[DataBaseViewBaseMapper] Content: " + content);
+        LOGGER.debug("[DataBaseViewBaseMapper] Schema: " + realSchema);
+        LOGGER.debug("[DataBaseViewBaseMapper] Name: " + realName);
+        LOGGER.debug("[DataBaseViewBaseMapper] Content: " + realContent);
 
-        return new ViewBase(schema, name, content, newSchema, newName);
+        return new ViewBase(realSchema, schema, realName, name, realContent, newContent, newSchema, newName);
     }
 
 }

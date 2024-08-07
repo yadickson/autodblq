@@ -1,4 +1,4 @@
--- Function: ${function.newName}
+-- Function: <#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>
 
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@
@@ -6,6 +6,6 @@
 -- ${dbversion}
 </#if>
 
-<#if function.content?? >
-${function.content}
+<#if function.realContent?? >
+<#if keepNames?? && keepNames == true>${function.realContent}<#else>${function.newContent}</#if>
 </#if>

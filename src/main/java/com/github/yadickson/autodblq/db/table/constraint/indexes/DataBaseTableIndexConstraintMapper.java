@@ -8,9 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.indexes;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndex;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import com.github.yadickson.autodblq.util.StringJoinUtil;
-import com.github.yadickson.autodblq.util.StringToBooleanUtil;
-import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
+import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
 import javax.inject.Inject;
@@ -26,27 +24,34 @@ public class DataBaseTableIndexConstraintMapper implements Function<TableIndexBe
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableIndexConstraintMapper.class);
 
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringJoinUtil stringJoinUtil;
     private final StringToBooleanUtil stringToBooleanUtil;
+    private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableIndexConstraintMapper(final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, final StringToBooleanUtil stringToBooleanUtil) {
+    public DataBaseTableIndexConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, final StringToBooleanUtil stringToBooleanUtil, StringTrimUtil stringTrimUtil) {
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringJoinUtil = stringJoinUtil;
         this.stringToBooleanUtil = stringToBooleanUtil;
+        this.stringTrimUtil = stringTrimUtil;
     }
 
     @Override
     public DataBaseTableProperty apply(final TableIndexBean tableBean) {
-        final String constraintName = stringToSnakeCaseUtil.apply(tableBean.getName());
+        final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
+        final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
+        final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
+        final String constraintRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getColumns()));
         final String constraintColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getColumns()));
         final Boolean constraintIsUnique = stringToBooleanUtil.apply(tableBean.getIsunique());
 
-        LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint Name: " + constraintName);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint Columns: " + constraintColumns);
+        LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint Name: " + constraintRealName);
+        LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint Columns: " + constraintRealColumns);
         LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint IsUnique: " + constraintIsUnique);
 
-        return new TableIndex(constraintName, constraintColumns, constraintIsUnique);
+        return new TableIndex(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintIsUnique);
     }
 }

@@ -68,6 +68,7 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
     }
 
     private TableColumn processTableColumn(TableColumnBean tableColumnBean) {
+        final String realName = stringTrimUtil.apply(tableColumnBean.getName());
         final String name = stringToLowerCaseUtil.apply(tableColumnBean.getName());
         final String newName = stringToSnakeCaseUtil.apply(tableColumnBean.getName());
         final String type = stringToLowerCaseUtil.apply(tableColumnBean.getType());
@@ -81,7 +82,7 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         final Integer startWith = stringToIntegerUtil.apply(tableColumnBean.getStartwith());
         final Integer incrementBy = stringToIntegerUtil.apply(tableColumnBean.getIncrementby());
 
-        LOGGER.debug("[DataBaseTableColumnMapper] Name: " + name);
+        LOGGER.debug("[DataBaseTableColumnMapper] Name: " + realName);
         LOGGER.debug("[DataBaseTableColumnMapper] Type: " + type);
         LOGGER.debug("[DataBaseTableColumnMapper] Position: " + position);
         LOGGER.debug("[DataBaseTableColumnMapper] Length: " + length);
@@ -90,7 +91,7 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         LOGGER.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
         LOGGER.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
 
-        return new TableColumn(name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
+        return new TableColumn(realName, name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
     }
 
 }

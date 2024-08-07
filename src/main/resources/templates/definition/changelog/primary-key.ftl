@@ -31,21 +31,21 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addPrimaryKey
-            constraintName="${constraint.name}"
-<#if table.newSchema?? && addSchema?? && addSchema == true >
-            schemaName="${table.newSchema}"
+            constraintName="<#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if>"
+<#if table.schema?? && addSchema?? && addSchema == true >
+            schemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
 </#if>
-            tableName="${table.newName}"
+            tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
             columnNames="${constraint.columns}"
         />
 
         <rollback>
             <dropPrimaryKey
-<#if table.newSchema?? && addSchema?? && addSchema == true >
-                schemaName="${table.newSchema}"
+<#if table.schema?? && addSchema?? && addSchema == true >
+                schemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
 </#if>
-                tableName="${table.newName}"
-                constraintName="${constraint.name}"
+                tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
+                constraintName="<#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if>"
             />
         </rollback>
 

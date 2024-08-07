@@ -38,14 +38,14 @@
 <#if lqpro?? && lqpro >
 <#if func.isFunction >
         <pro:createFunction
-            functionName="${func.name}"
-            path="../function/${func.name}.sql"
+            functionName="<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>"
+            path="../function/<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>.sql"
 <#else>
         <pro:createProcedure
-            procedureName="${func.name}"
-            path="../procedure/${func.name}.sql"
+            procedureName="<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>"
+            path="../procedure/<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>.sql"
 </#if>
-<#if func.schema?? >
+<#if func.schema?? && addSchema?? && addSchema == true >
             schemaName="${func.schema}"
 </#if>
             encoding="${encode}"
@@ -55,7 +55,7 @@
 <#else>
         <sqlFile
             encoding="${encode}"
-            path="../<#if func.isFunction >function<#else>procedure</#if>/${func.name}.sql"
+            path="../<#if func.isFunction >function<#else>procedure</#if>/<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>.sql"
             relativeToChangelogFile="true"
             splitStatements="false"
             stripComments="true"
@@ -64,9 +64,9 @@
 
         <rollback>
 <#if lqpro?? && lqpro >
-            <pro:drop<#if func.isFunction >Function function<#else>Prodecure procedure</#if>Name="${func.name}"<#if func.schema?? > schemaName="${func.schema}"</#if>/>
+            <pro:drop<#if func.isFunction >Function function<#else>Prodecure procedure</#if>Name="<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>"<#if func.schema?? && addSchema?? && addSchema == true> schemaName="<#if keepNames?? && keepNames == true>${func.realSchema}<#else>${func.newSchema}</#if>"</#if>/>
 <#else>
-            <sql><![CDATA[ DROP <#if func.isFunction >FUNCTION<#else>PROCEDURE</#if> <#if func.schema?? >"${func.schema}".</#if>"${func.name}" ]]></sql>
+            <sql><![CDATA[ DROP <#if func.isFunction >FUNCTION<#else>PROCEDURE</#if> <#if func.schema?? && addSchema?? && addSchema == true>"<#if keepNames?? && keepNames == true>${func.realSchema}<#else>${func.newSchema}</#if>".</#if>"<#if keepNames?? && keepNames == true>${func.realName}<#else>${func.newName}</#if>" ]]></sql>
 </#if>
         </rollback>
 

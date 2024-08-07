@@ -13,6 +13,8 @@ import org.apache.commons.lang3.StringUtils;
  */
 public class TableBase {
 
+    private final String realSchema;
+    private final String realName;
     private final String schema;
     private final String name;
     private final String remarks;
@@ -23,17 +25,27 @@ public class TableBase {
     private final String newFullName;
 
     public TableBase(final TableBase table) {
-        this(table.getSchema(), table.getName(), table.getRemarks(), table.getNewSchema(), table.getNewName());
+        this(table.getRealSchema(), table.getRealName(), table.getSchema(), table.getName(), table.getRemarks(), table.getNewSchema(), table.getNewName());
     }
 
-    public TableBase(final String schema, final String name, final String remarks, final String newSchema, final String newName) {
+    public TableBase(final String realSchema, final String realName, final String schema, final String name, final String remarks, final String newSchema, final String newName) {
+        this.realSchema = realSchema;
+        this.realName = realName;
         this.schema = schema;
         this.name = name;
         this.remarks = remarks;
         this.newSchema = newSchema;
         this.newName = newName;
-        this.fullName = StringUtils.isEmpty(schema) ? name : schema + "." + name;
+        this.fullName = StringUtils.isEmpty(realSchema) ? realName : realSchema + "." + realName;
         this.newFullName = StringUtils.isEmpty(newSchema) ? newName : newSchema + "." + newName;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public String getRealSchema() {
+        return realSchema;
     }
 
     public String getName() {

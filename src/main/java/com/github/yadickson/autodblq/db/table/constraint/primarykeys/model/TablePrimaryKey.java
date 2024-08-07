@@ -13,11 +13,17 @@ import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
  */
 public final class TablePrimaryKey extends DataBaseTableProperty {
 
+    private final String realColumns;
     private final String columns;
 
-    public TablePrimaryKey(String name, String columns) {
-        super(name, name);
+    public TablePrimaryKey(String realName, String name, String newName, String realColumns, String columns) {
+        super(realName, name, newName);
+        this.realColumns = realColumns;
         this.columns = columns;
+    }
+
+    public String getRealColumns() {
+        return realColumns;
     }
 
     public String getColumns() {

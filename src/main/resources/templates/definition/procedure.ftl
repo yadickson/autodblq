@@ -1,4 +1,4 @@
--- Procedure: ${procedure.newName}
+-- Procedure: <#if keepNames?? && keepNames == true>${procedure.realName}<#else>${procedure.newName}</#if>
 
 -- @GENERATOR.NAME@
 -- @GENERATOR.VERSION@
@@ -6,6 +6,6 @@
 -- ${dbversion}
 </#if>
 
-<#if procedure.content?? >
-${procedure.content}
+<#if procedure.realContent?? >
+<#if keepNames?? && keepNames == true>${procedure.realContent}<#else>${procedure.newContent}</#if>
 </#if>

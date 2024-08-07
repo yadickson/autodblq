@@ -13,16 +13,24 @@ import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
  */
 public final class TableForeignKey extends DataBaseTableProperty {
 
+    private final String realColumns;
     private final String columns;
+    private final String referenceRealSchema;
     private final String referenceSchema;
+    private final String referenceRealName;
     private final String referenceName;
+    private final String referenceRealColumns;
     private final String referenceColumns;
 
-    public TableForeignKey(String name, String columns, String referenceSchema, String referenceName, String referenceColumns) {
-        super(name, name);
+    public TableForeignKey(String realName, String name, String newName, String realColumns, String columns, String referenceRealSchema, String referenceSchema, String referenceRealName, String referenceName, String referenceRealColumns, String referenceColumns) {
+        super(realName, name, newName);
+        this.realColumns = realColumns;
         this.columns = columns;
+        this.referenceRealSchema = referenceRealSchema;
         this.referenceSchema = referenceSchema;
+        this.referenceRealName = referenceRealName;
         this.referenceName = referenceName;
+        this.referenceRealColumns = referenceRealColumns;
         this.referenceColumns = referenceColumns;
     }
 
@@ -40,5 +48,21 @@ public final class TableForeignKey extends DataBaseTableProperty {
 
     public String getReferenceColumns() {
         return referenceColumns;
+    }
+
+    public String getRealColumns() {
+        return realColumns;
+    }
+
+    public String getReferenceRealSchema() {
+        return referenceRealSchema;
+    }
+
+    public String getReferenceRealName() {
+        return referenceRealName;
+    }
+
+    public String getReferenceRealColumns() {
+        return referenceRealColumns;
     }
 }

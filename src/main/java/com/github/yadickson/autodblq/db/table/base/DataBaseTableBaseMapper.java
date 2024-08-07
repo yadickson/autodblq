@@ -53,17 +53,19 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
     }
 
     private TableBase processTable(final TableBaseBean tableBean) {
+        final String realSchema = stringTrimUtil.apply(tableBean.getSchema());
+        final String realName = stringTrimUtil.apply(tableBean.getName());
         final String schema = stringToLowerCaseUtil.apply(tableBean.getSchema());
         final String name = stringToLowerCaseUtil.apply(tableBean.getName());
         final String remarks = stringTrimUtil.apply(tableBean.getRemarks());
         final String newSchema = stringToSnakeCaseUtil.apply(tableBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(tableBean.getName());
 
-        LOGGER.debug("[DataBaseTableBaseMapper] Schema: " + schema);
-        LOGGER.debug("[DataBaseTableBaseMapper] Name: " + name);
+        LOGGER.debug("[DataBaseTableBaseMapper] Schema: " + realSchema);
+        LOGGER.debug("[DataBaseTableBaseMapper] Name: " + realName);
         LOGGER.debug("[DataBaseTableBaseMapper] Remarks: " + remarks);
         
-        return new TableBase(schema, name, remarks, newSchema, newName);
+        return new TableBase(realSchema, realName, schema, name, remarks, newSchema, newName);
     }
 
 }

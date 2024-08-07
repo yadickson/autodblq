@@ -47,8 +47,9 @@ public class Parameters {
     private final Boolean addDbms;
     private final Boolean addNullable;
     private final Boolean addIdentity;
+    private final Boolean keepNames;
 
-    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms, Boolean addNullable, Boolean addIdentity) {
+    public Parameters(String driver, String url, String username, String password, String author, String version, String encode, String csvQuotchar, String csvSeparator, String csvComment, String outputDirectory, String liquibaseVersion, Boolean liquibaseProductionEnabled, List<String> tables, List<String> dataTables, List<String> views, List<String> functions, Boolean addDbVersion, Boolean addSchema, Boolean addDbms, Boolean addNullable, Boolean addIdentity, Boolean keepNames) {
         this.driver = driver;
         this.url = url;
         this.username = username;
@@ -71,6 +72,7 @@ public class Parameters {
         this.addDbms = addDbms;
         this.addNullable = addNullable;
         this.addIdentity = addIdentity;
+        this.keepNames = keepNames;
     }
 
     private List<String> getNotNullList(List<String> list) {
@@ -163,5 +165,9 @@ public class Parameters {
 
     public Boolean getAddIdentity() {
         return addIdentity;
+    }
+
+    public Boolean getKeepNames() {
+        return keepNames;
     }
 }

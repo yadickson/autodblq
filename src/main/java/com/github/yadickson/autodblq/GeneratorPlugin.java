@@ -248,9 +248,19 @@ public class GeneratorPlugin extends AbstractMojo {
     @Parameter(
             property = "autodblq.addIdentity",
             defaultValue = "true",
-            alias = "addNullable",
+            alias = "addIdentity",
             required = false)
     private String addIdentity;
+
+    /**
+     * addDbms.
+     */
+    @Parameter(
+            property = "autodblq.keepNames",
+            defaultValue = "true",
+            alias = "keepNames",
+            required = true)
+    private String keepNames;
 
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
     private final DataBaseGenerator dataBaseGenerator;
@@ -288,7 +298,7 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void makeParameters() {
-        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms), stringToBooleanUtil.apply(addNullable), stringToBooleanUtil.apply(addIdentity)));
+        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms), stringToBooleanUtil.apply(addNullable), stringToBooleanUtil.apply(addIdentity), stringToBooleanUtil.apply(keepNames)));
     }
 
     private void printParameters() {
@@ -305,6 +315,7 @@ public class GeneratorPlugin extends AbstractMojo {
         getLog().info("[Generator] LiquibaseVersion: " + parameters.getLiquibaseVersion());
         getLog().info("[Generator] LiquibaseProductionEnabled: " + parameters.getLiquibaseProductionEnabled());
         getLog().info("[Generator] AddDbVersion: " + parameters.getAddDbVersion());
+        getLog().info("[Generator] KeepNames: " + parameters.getKeepNames());
         getLog().info("[Generator] AddSchema: " + parameters.getAddSchema());
         getLog().info("[Generator] AddDbms: " + parameters.getAddDbms());
         getLog().info("[Generator] AddNullable: " + parameters.getAddNullable());

@@ -29,10 +29,10 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <loadData
-<#if table.newSchema?? && addSchema?? && addSchema == true >
-            schemaName="${table.newSchema}"
+<#if table.schema?? && addSchema?? && addSchema == true >
+            schemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
 </#if>
-            tableName="${table.newName}"
+            tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
             encoding="${encode}"
             file="../data/${table.newName}.csv"
             relativeToChangelogFile="true"
@@ -42,7 +42,7 @@
         />
 
         <rollback>
-            <delete tableName="${table.newName}"<#if table.newSchema?? && addSchema?? && addSchema == true > schemaName="${table.newSchema}"</#if>/>
+            <delete tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"<#if table.schema?? && addSchema?? && addSchema == true > schemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"</#if>/>
         </rollback>
 
     </changeSet>

@@ -13,9 +13,13 @@ import org.apache.commons.lang3.StringUtils;
  */
 public final class ViewBase {
 
+    private final String realSchema;
+    private final String realName;
+    private final String realContent;
+
     private final String schema;
     private final String name;
-    private final String content;
+    private final String newContent;
 
     private final String newSchema;
     private final String newName;
@@ -24,17 +28,32 @@ public final class ViewBase {
     private final String newFullName;
 
     public ViewBase(ViewBase viewBase, String newSchema, String newName) {
-        this(viewBase.getSchema(), viewBase.getName(), viewBase.getContent(), newName, newSchema);
+        this(viewBase.getRealSchema(), viewBase.getSchema(), viewBase.getRealName(), viewBase.getName(), viewBase.getRealContent(), viewBase.getNewContent(), newName, newSchema);
     }
 
-    public ViewBase(String schema, String name, String content, String newSchema, String newName) {
+    public ViewBase(String realSchema, String schema, String realName, String name, String realContent, String newContent, String newSchema, String newName) {
+        this.realSchema = realSchema;
         this.schema = schema;
+        this.realName = realName;
         this.name = name;
-        this.content = content;
+        this.realContent = realContent;
+        this.newContent = newContent;
         this.newSchema = newSchema;
         this.newName = newName;
         this.fullName = StringUtils.isEmpty(schema) ? name : schema + "." + name;
         this.newFullName = StringUtils.isEmpty(newSchema) ? newName : newSchema + "." + newName;
+    }
+
+    public String getRealSchema() {
+        return realSchema;
+    }
+
+    public String getRealName() {
+        return realName;
+    }
+
+    public String getRealContent() {
+        return realContent;
     }
 
     public String getSchema() {
@@ -45,8 +64,8 @@ public final class ViewBase {
         return name;
     }
 
-    public String getContent() {
-        return content;
+    public String getNewContent() {
+        return newContent;
     }
 
     public String getNewSchema() {

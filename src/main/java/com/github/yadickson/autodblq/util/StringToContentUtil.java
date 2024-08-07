@@ -9,8 +9,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
+import org.apache.commons.lang3.RegExUtils;
+import org.apache.commons.lang3.StringUtils;
 
+import java.nio.ByteBuffer;
+import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
+import java.util.regex.Pattern;
 
 /**
  *
@@ -19,16 +24,18 @@ import java.util.function.Function;
 @Named
 public class StringToContentUtil implements Function<String, String> {
 
-    private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
+    private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public StringToContentUtil(final StringToSnakeCaseUtil stringToSnakeCaseUtil) {
-        this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
+    public StringToContentUtil(StringTrimUtil stringTrimUtil) {
+        this.stringTrimUtil = stringTrimUtil;
     }
 
     @Override
     public String apply(final String input) {
-        return SqlFormatter.format(stringToSnakeCaseUtil.apply(input),
+        String clearBlockComments = RegExUtils.removeAll(stringTrimUtil.apply(input), "/\\*.*?\\*/");
+        String clearInlineComments = RegExUtils.removeAll(clearBlockComments, Pattern.compile("(.*)--.*"));
+        return SqlFormatter.format(clearInlineComments,
                 FormatConfig.builder()
                         .indent("    ")
                         .linesBetweenQueries(2)

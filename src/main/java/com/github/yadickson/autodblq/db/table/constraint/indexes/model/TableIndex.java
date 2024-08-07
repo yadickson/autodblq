@@ -13,13 +13,19 @@ import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
  */
 public final class TableIndex extends DataBaseTableProperty {
 
+    private final String realColumns;
     private final String columns;
     private final Boolean isUnique;
 
-    public TableIndex(String name, String columns, Boolean isUnique) {
-        super(name, name);
+    public TableIndex(String realName, String name, String newName, String columns, String realColumns, Boolean isUnique) {
+        super(realName, name, newName);
+        this.realColumns = realColumns;
         this.columns = columns;
         this.isUnique = isUnique;
+    }
+
+    public String getRealColumns() {
+        return realColumns;
     }
 
     public String getColumns() {

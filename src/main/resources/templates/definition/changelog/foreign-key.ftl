@@ -32,11 +32,11 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <addForeignKeyConstraint
-            constraintName="${constraint.name}"
-<#if table.newSchema?? && addSchema?? && addSchema == true >
-            baseTableSchemaName="${table.newSchema}"
+            constraintName="<#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if>"
+<#if table.schema?? && addSchema?? && addSchema == true >
+            baseTableSchemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
 </#if>
-            baseTableName="${table.newName}"
+            baseTableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
             baseColumnNames="${constraint.columns}"
 <#if constraint.referenceSchema?? && addSchema?? && addSchema == true >
             referencedTableSchemaName="${constraint.referenceSchema}"
@@ -49,11 +49,11 @@
 
         <rollback>
             <dropForeignKeyConstraint
-<#if table.newSchema?? && addSchema?? && addSchema == true >
-                baseTableSchemaName="${table.newSchema}"
+<#if table.schema?? && addSchema?? && addSchema == true >
+                baseTableSchemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
 </#if>
-                baseTableName="${table.newName}"
-                constraintName="${constraint.name}"
+                baseTableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
+                constraintName="<#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if>"
             />
         </rollback>
 

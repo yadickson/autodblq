@@ -29,19 +29,19 @@
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <createView
-            viewName="${view.newName}"
-<#if view.newSchema?? && addSchema?? && addSchema == true >
-            schemaName="${view.newSchema}"
+            viewName="<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>"
+<#if view.schema?? && addSchema?? && addSchema == true >
+            schemaName="<#if keepNames?? && keepNames == true>${view.realSchema}<#else>${view.newSchema}</#if>"
 </#if>
             encoding="${encode}"
             replaceIfExists="true"
             fullDefinition="true"
-            path="../view/${view.newName}.sql"
+            path="../view/<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>.sql"
             relativeToChangelogFile="true"
         />
 
         <rollback>
-            <dropView viewName="${view.newName}"<#if view.newSchema?? && addSchema?? && addSchema == true > schemaName="${view.newSchema}"</#if>/>
+            <dropView viewName="<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>"<#if view.schema?? && addSchema?? && addSchema == true > schemaName="<#if keepNames?? && keepNames == true>${view.realSchema}<#else>${view.newSchema}</#if>"</#if>/>
         </rollback>
 
     </changeSet>

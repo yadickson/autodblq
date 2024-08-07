@@ -22,8 +22,8 @@ public class TableColumn extends DataBaseTableProperty {
     private final Integer startWith;
     private final Integer incrementBy;
 
-    public TableColumn(final String name, String newName, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable, Boolean identity, Integer startWith, Integer incrementBy) {
-        super(name, newName, type, length);
+    public TableColumn(final String realName, final String name, String newName, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable, Boolean identity, Integer startWith, Integer incrementBy) {
+        super(realName, name, newName, type, length);
         this.position = position;
         this.precision = precision;
         this.scale = scale;
