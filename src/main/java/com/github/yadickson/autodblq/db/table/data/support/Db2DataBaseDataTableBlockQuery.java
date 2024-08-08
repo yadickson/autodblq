@@ -5,16 +5,6 @@
  */
 package com.github.yadickson.autodblq.db.table.data.support;
 
-import java.util.ArrayList;
-import java.util.List;
-
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import org.apache.commons.lang.StringUtils;
-
-import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
-import com.github.yadickson.autodblq.db.table.columns.model.TableColumn;
-import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
-
 /**
  *
  * @author Yadickson Soto
