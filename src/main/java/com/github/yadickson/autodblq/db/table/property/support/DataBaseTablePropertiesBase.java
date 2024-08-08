@@ -13,6 +13,8 @@ import com.github.yadickson.autodblq.db.table.property.model.TablePropertyName;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import org.apache.commons.lang.StringUtils;
 
+import java.util.Locale;
+
 /**
  *
  * @author Yadickson Soto
@@ -59,9 +61,14 @@ public abstract class DataBaseTablePropertiesBase extends SupportType implements
                     ok ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage(),
                     ok ? getDefaultBooleanTrueValue() : getDefaultBooleanFalseValue());
         }
-        else if (isUuid(defaultType) && (StringUtils.containsIgnoreCase(defaultValue, "newid") || StringUtils.containsIgnoreCase(defaultValue, "gen_random_uuid")))
+        else if (isUuid(defaultType))
         {
-            response = new TablePropertyType(TablePropertyName.UUID_FUNCTION.getMessage(), getDefaultUuidValue());
+            column.setDefaultValue(defaultValue.toUpperCase(Locale.US));
+
+            if (StringUtils.containsIgnoreCase(defaultValue, "newid") || StringUtils.containsIgnoreCase(defaultValue, "gen_random_uuid"))
+                response = new TablePropertyType(TablePropertyName.UUID_FUNCTION.getMessage(), getDefaultUuidValue());
+            else
+                return null;
         }
         else
         {

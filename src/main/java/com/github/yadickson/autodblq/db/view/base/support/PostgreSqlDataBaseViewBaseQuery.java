@@ -23,7 +23,7 @@ public class PostgreSqlDataBaseViewBaseQuery implements DataBaseViewBaseQuery {
         return "SELECT \n"
                 + " v.table_schema AS schema, \n"
                 + " v.table_name AS name, \n"
-                + " v.view_definition as content \n"
+                + " 'create view ' || v.table_name || ' as ' || v.view_definition as content \n"
                 + "FROM information_schema.views v \n"
                 + "WHERE \n"
                 + filterByNames(filter)
