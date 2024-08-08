@@ -29,7 +29,8 @@ public class CleanStringValueUtil implements Function<String, String> {
     @Override
     public String apply(final String input) {
         String fullInput = stringTrimUtil.apply(input);
-        return RegExUtils.removeAll(fullInput, Pattern.compile("[()\\[\\]]"));
+        String clean = RegExUtils.removeAll(fullInput, Pattern.compile("[()\\[\\]]"));
+        return RegExUtils.removeAll(clean, Pattern.compile("::text"));
     }
 
 }

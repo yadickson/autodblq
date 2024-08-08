@@ -25,7 +25,7 @@ public class PostgreSqlDataBaseTableColumnsQuery implements DataBaseTableColumns
                 + " case when c.is_nullable = 'YES' then 'true' else 'false' end as nullable, \n"
                 + " c.numeric_precision as precision, \n"
                 + " c.numeric_scale as scale, \n"
-                + " d.description as remarks \n"
+                + " d.description as remarks, \n"
                 + " case when c.identity_generation is not null then 'true' else 'false' end as identity, \n"
                 + " c.identity_start as startwith, \n"
                 + " c.identity_increment incrementby \n"
