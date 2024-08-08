@@ -146,7 +146,7 @@ public class DataBaseDataTableReaderIterator {
                 String realColumnName = stringTrimUtil.apply(metadata.getColumnName(j + 1));
                 String newColumnName = stringToSnakeCaseUtil.apply(realColumnName);
                 String columnType = stringToLowerCaseUtil.apply(metadata.getColumnTypeName(j + 1));
-                String columnValue = resultSet.getString(j + 1);
+                String columnValue = StringUtils.containsIgnoreCase(columnType, "bool") ? Boolean.toString(resultSet.getBoolean(j + 1)) : resultSet.getString(j + 1);
 
                 DataBaseTableProperty column = new DataBaseTableProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
                 TablePropertyType response = dataTablePropertyManager.process(column);
