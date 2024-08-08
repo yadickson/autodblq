@@ -12,7 +12,7 @@ package com.github.yadickson.autodblq.db.table.constraint.checks.model;
 public final class TableCheckBean {
 
     private String name;
-    private String column;
+    private String columns;
     private String value;
 
     public String getName() {
@@ -23,12 +23,12 @@ public final class TableCheckBean {
         this.name = name;
     }
 
-    public String getColumn() {
-        return column;
+    public String getColumns() {
+        return columns;
     }
 
-    public void setColumn(String column) {
-        this.column = column;
+    public void setColumns(String columns) {
+        this.columns = columns;
     }
 
     public String getValue() {

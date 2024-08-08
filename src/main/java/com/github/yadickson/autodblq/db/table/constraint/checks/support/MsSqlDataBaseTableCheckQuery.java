@@ -19,21 +19,20 @@ public class MsSqlDataBaseTableCheckQuery implements DataBaseTableConstraintQuer
     public String get(final TableBase table) {
         return "SELECT "
                 + " chk.name, \n"
-                + " col.name as 'column', \n"
-                + " chk.definition as 'value' \n"
+                + " chk.definition as 'value', \n"
+                + " (SELECT ' ' + c.name FROM sys.columns c WHERE t.object_id = c.object_id order by LEN(c.name) desc FOR XML PATH('')) as 'columns' \n"
                 + "FROM sys.check_constraints chk \n"
-                + "inner join sys.columns col on chk.parent_object_id = col.object_id \n"
-                + "inner join sys.tables t on t.object_id = col.object_id \n"
-                + "inner join sys.tables st on chk.parent_object_id = st.object_id \n"
+                + "inner join sys.tables t on chk.parent_object_id = t.object_id \n"
+                + "inner join sys.schemas AS s ON s.schema_id = t.schema_id \n"
                 + "WHERE \n"
-                + "col.column_id = chk.parent_column_id \n"
                 + filterByName(table)
                 + filterBySchema(table)
-                + "ORDER BY col.column_id ";
+                + "GROUP BY chk.name, chk.definition, t.object_id \n"
+                + "ORDER BY chk.name ";
     }
 
     private String filterByName(final TableBase table) {
-        return " AND t.name = '" + table.getName() + "' \n";
+        return " t.name = '" + table.getName() + "' \n";
     }
 
     private String filterBySchema(final TableBase table) {

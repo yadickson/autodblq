@@ -13,24 +13,24 @@ import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
  */
 public final class TableCheck extends DataBaseTableProperty {
 
-    private final String realColumnName;
-    private final String newColumnName;
+    private final String realColumnNames;
+    private final String newColumnNames;
     private final String value;
 
-    public TableCheck(String realName, String name, String newName, String realColumnName, String newColumnName, String columnValue)
+    public TableCheck(String realName, String name, String newName, String realColumnNames, String newColumnNames, String columnValue)
     {
         super(realName, name, newName);
-        this.realColumnName = realColumnName;
-        this.newColumnName = newColumnName;
+        this.realColumnNames = realColumnNames;
+        this.newColumnNames = newColumnNames;
         this.value = columnValue;
     }
 
-    public String getRealColumnName() {
-        return realColumnName;
+    public String getRealColumnNames() {
+        return realColumnNames;
     }
 
-    public String getNewColumnName() {
-        return newColumnName;
+    public String getNewColumnNames() {
+        return newColumnNames;
     }
 
     public String getValue() {

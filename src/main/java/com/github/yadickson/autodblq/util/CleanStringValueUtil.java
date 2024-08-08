@@ -30,7 +30,8 @@ public class CleanStringValueUtil implements Function<String, String> {
     public String apply(final String input) {
         String fullInput = stringTrimUtil.apply(input);
         String clean = RegExUtils.removeAll(fullInput, Pattern.compile("[()\\[\\]]"));
-        return RegExUtils.removeAll(clean, Pattern.compile("::text"));
+        String removeEndLine = RegExUtils.replaceAll(clean, Pattern.compile("[\n\r]"), " ");
+        return RegExUtils.removeAll(removeEndLine, Pattern.compile("::text"));
     }
 
 }

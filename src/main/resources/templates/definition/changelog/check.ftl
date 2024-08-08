@@ -32,17 +32,23 @@
 <#list table.constraints as constraint >
 
 <#assign step++ >
-<#assign columnName = "${constraint.realColumnName}" >
+<#assign columnNames = constraint.realColumnNames?split(" ") >
 <#if keepNames?? && keepNames == true>
-<#assign newColumnName = "${constraint.realColumnName}" >
+<#assign newColumnNames = constraint.realColumnNames?split(" ") >
 <#else>
-<#assign newColumnName = "${constraint.newColumnName}" >
+<#assign newColumnNames = constraint.newColumnNames?split(" ") >
 </#if>
+<#assign constraintValue = "${constraint.value}" >
+<#list 0..columnNames?size-1 as index>
+<#assign columnName = "${columnNames[index]}" >
+<#assign newColumnName = "${newColumnNames[index]}" >
+<#assign constraintValue = "${constraintValue?replace(columnName, newColumnName)}" >
+</#list>
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
         <sql>
-            <![CDATA[ ALTER TABLE <#if table.schema?? && addSchema?? && addSchema == true ><#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>.</#if><#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if> ADD CONSTRAINT <#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if> CHECK (${constraint.value?replace(columnName, newColumnName)}); ]]>
+            <![CDATA[ ALTER TABLE <#if table.schema?? && addSchema?? && addSchema == true ><#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>.</#if><#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if> ADD CONSTRAINT <#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if> CHECK (${constraintValue}); ]]>
         </sql>
 
         <rollback>
