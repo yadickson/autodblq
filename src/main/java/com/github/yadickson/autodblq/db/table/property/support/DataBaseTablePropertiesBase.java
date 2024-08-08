@@ -63,7 +63,8 @@ public abstract class DataBaseTablePropertiesBase extends SupportType implements
         }
         else if (isUuid(defaultType))
         {
-            column.setDefaultValue(defaultValue.toUpperCase(Locale.US));
+            if (defaultValue != null)
+                column.setDefaultValue(defaultValue.toUpperCase(Locale.US));
 
             if (StringUtils.containsIgnoreCase(defaultValue, "newid") || StringUtils.containsIgnoreCase(defaultValue, "gen_random_uuid"))
                 response = new TablePropertyType(TablePropertyName.UUID_FUNCTION.getMessage(), getDefaultUuidValue());
