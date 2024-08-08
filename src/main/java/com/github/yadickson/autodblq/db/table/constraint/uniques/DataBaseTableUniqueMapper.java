@@ -20,7 +20,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableUniqueMapper extends DataBaseTableConstraintMapper<TableUniqueBean> {
+public class DataBaseTableUniqueMapper implements DataBaseTableConstraintMapper<TableUniqueBean> {
 
     private final DataBaseTableUniqueConstraintsMapper mapper;
 

@@ -5,20 +5,19 @@
  */
 package com.github.yadickson.autodblq.db.view.base;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseSort;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 
@@ -36,16 +35,16 @@ public class DataBaseViewBaseReader {
     private final DataBaseViewBaseMapper dataBaseViewMapper;
 
     private String sqlQuery;
-    private List<ViewBaseBean> views;
+    private List<ViewBaseBean> allViews;
 
     @Inject
     public DataBaseViewBaseReader(
             final DataBaseViewBaseQueryFactory dataBaseViewQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseViewBaseMapper dataBaseViewMapper
     ) {
         this.dataBaseViewQueryFactory = dataBaseViewQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.VIEW_DEFINITION);
+        this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseViewMapper = dataBaseViewMapper;
     }
 
@@ -57,12 +56,12 @@ public class DataBaseViewBaseReader {
         try {
 
             if (CollectionUtils.isEmpty(filter)) {
-                return Collections.EMPTY_LIST;
+                return new ArrayList<>();
             }
 
             findSqlQuery(filter, driverConnection);
             findViews(driverConnection);
-            return processViews();
+            return processViews(filter);
 
         } catch (RuntimeException ex) {
             throw new DataBaseViewBaseReaderException(ex);
@@ -81,12 +80,14 @@ public class DataBaseViewBaseReader {
 
     private void findViews(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseViewReader] Starting");
-        views = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
-        LOGGER.info("[DataBaseViewReader] Total: " + views.size());
+        allViews = sqlExecuteToGetList.execute(driverConnection, sqlQuery, ViewBaseBean.class);
+        LOGGER.info("[DataBaseViewReader] Total: " + allViews.size());
     }
 
-    private List<ViewBase> processViews() {
-        return dataBaseViewMapper.apply(views);
+    private List<ViewBase> processViews(final List<String> filter) {
+        List<ViewBase> views = dataBaseViewMapper.apply(allViews);
+        views.sort(new DataBaseViewBaseSort(filter));
+        return views;
     }
 
 }

@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.sqlquery;
 
 import java.sql.SQLException;
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import org.apache.commons.dbutils.QueryRunner;
@@ -16,27 +16,25 @@ import org.apache.commons.lang.StringUtils;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 
+import javax.inject.Named;
+
 /**
  *
  * @author Yadickson Soto
  */
-public class SqlExecuteToGetList<T> {
+@Named
+public class SqlExecuteToGetList {
 
-    private final Class<? extends T> type;
-
-    public SqlExecuteToGetList(final Class<? extends T> type) {
-        this.type = type;
-    }
-
-    public List<T> execute(
+    public <T> List<T> execute(
             final DriverConnection driverConnection,
-            final String sql
+            final String sql,
+            final Class<T> type
     ) {
 
         try {
 
             if (StringUtils.isEmpty(sql)) {
-                return Collections.EMPTY_LIST;
+                return new ArrayList<T>();
             }
             
             QueryRunner run = new QueryRunner();

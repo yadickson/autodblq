@@ -14,6 +14,7 @@ import javax.inject.Named;
 
 import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import org.apache.commons.io.FileUtils;
 
@@ -38,6 +39,7 @@ public final class DefinitionGenerator {
     private final TemplateGenerator templateGenerator;
     private final DataTableGenerator dataTableGenerator;
     private final DirectoryBuilder directoryBuilder;
+    private final DataTablePropertyManager dataTablePropertyManager;
 
     private String version;
     private List<TableBase> tables;
@@ -50,7 +52,6 @@ public final class DefinitionGenerator {
     private List<TableBase> dataTables;
     private List<ViewBase> views;
     private List<FunctionBase> functions;
-    private Map<Driver, List<TablePropertyType>> properties;
 
     private final Map<String, Object> values = new HashMap<>();
     private final List<String> filesGenerated = new ArrayList<>();
@@ -101,12 +102,13 @@ public final class DefinitionGenerator {
             final ParametersPlugin parametersPlugin,
             final TemplateGenerator templateGenerator,
             final DataTableGenerator dataTableGenerator,
-            final DirectoryBuilder directoryBuilder
+            final DirectoryBuilder directoryBuilder, DataTablePropertyManager dataTablePropertyManager
     ) {
         this.parametersPlugin = parametersPlugin;
         this.templateGenerator = templateGenerator;
         this.dataTableGenerator = dataTableGenerator;
         this.directoryBuilder = directoryBuilder;
+        this.dataTablePropertyManager = dataTablePropertyManager;
     }
 
     public void execute(final DriverConnection driverConnection, final Map<DataBaseGeneratorType, Object> dataBaseGenerator) {
@@ -117,8 +119,8 @@ public final class DefinitionGenerator {
             makeInputValues(driverConnection);
             cleanOutputDirectory();
 
-            makeDefinitions();
             makeDataTables(driverConnection);
+            makeDefinitions();
             makeMasterChangelog();
 
         } catch (IOException | RuntimeException ex) {
@@ -138,7 +140,6 @@ public final class DefinitionGenerator {
         foreignKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_FOREIGN_KEYS);
         views = (List) dataBaseGenerator.get(DataBaseGeneratorType.VIEW_DEFINITION);
         functions = (List) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION);
-        properties = (Map) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PROPERTIES);
     }
 
     private void makeInputValues(final DriverConnection driverConnection) {
@@ -158,7 +159,6 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_FOREIGN_KEYS, foreignKeys);
         values.put(DATA_BASE_VIEWS, views);
         values.put(DATA_BASE_FUNCTIONS, functions);
-        values.put(DATA_BASE_PROPERTIES, properties);
 
         values.put(LQ_PRO, parametersPlugin.getLiquibaseProductionEnabled());
 
@@ -197,7 +197,10 @@ public final class DefinitionGenerator {
     }
 
     private void makeProperties() {
-        if (!tables.isEmpty()) {
+        Map<String, List<TablePropertyType>> properties = dataTablePropertyManager.getProperties();
+
+        if (!properties.isEmpty()) {
+            values.put(DATA_BASE_PROPERTIES, properties);
             addAndMakeFileBase(DefinitionGeneratorType.PROPERTIES);
         }
     }
@@ -251,11 +254,6 @@ public final class DefinitionGenerator {
         }
 
         addAndMakeFileBase(DefinitionGeneratorType.DATA_TABLES);
-
-        for (TableBase table : dataTables) {
-            values.put(TABLE, table);
-            makeDataTableFile(table);
-        }
     }
 
     private void makeViews() {
@@ -358,6 +356,12 @@ public final class DefinitionGenerator {
     }
 
     private void makeDataTables(final DriverConnection driverConnection) {
+
+        for (TableBase table : dataTables) {
+            values.put(TABLE, table);
+            makeDataTableFile(table);
+        }
+
         dataTableGenerator.execute(driverConnection, dataTables);
     }
 

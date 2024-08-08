@@ -19,7 +19,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableCheckMapper extends DataBaseTableConstraintMapper<TableCheckBean> {
+public class DataBaseTableCheckMapper implements DataBaseTableConstraintMapper<TableCheckBean> {
 
     private final DataBaseTableCheckConstraintsMapper mapper;
 

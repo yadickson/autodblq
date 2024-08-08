@@ -21,7 +21,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableIndexMapper extends DataBaseTableConstraintMapper<TableIndexBean> {
+public class DataBaseTableIndexMapper implements DataBaseTableConstraintMapper<TableIndexBean> {
 
     private final DataBaseTableIndexConstraintsMapper mapper;
 

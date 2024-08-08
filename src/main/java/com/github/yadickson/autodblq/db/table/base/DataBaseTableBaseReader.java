@@ -5,7 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.table.base;
 
-import java.util.Collections;
+import java.util.ArrayList;
 import java.util.List;
 
 import javax.inject.Inject;
@@ -14,11 +14,9 @@ import javax.inject.Named;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsReader;
@@ -38,17 +36,17 @@ public class DataBaseTableBaseReader {
     private final DataBaseTableColumnsReader dataBaseTableColumnsReader;
 
     private String sqlQuery;
-    private List<TableBaseBean> tables;
+    private List<TableBaseBean> allTables;
 
     @Inject
     public DataBaseTableBaseReader(
             final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableBaseMapper dataBaseTableMapper,
             final DataBaseTableColumnsReader dataBaseTableColumnsReader
     ) {
         this.dataBaseTableQueryFactory = dataBaseTableQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_BASE);
+        this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseTableMapper = dataBaseTableMapper;
         this.dataBaseTableColumnsReader = dataBaseTableColumnsReader;
     }
@@ -61,12 +59,12 @@ public class DataBaseTableBaseReader {
         try {
 
             if (CollectionUtils.isEmpty(filter)) {
-                return Collections.EMPTY_LIST;
+                return new ArrayList<>();
             }
 
             findSqlQuery(filter, driverConnection);
             findTables(driverConnection);
-            return processTables(driverConnection);
+            return processTables(driverConnection, filter);
 
         } catch (RuntimeException ex) {
             LOGGER.error(ex);
@@ -86,13 +84,15 @@ public class DataBaseTableBaseReader {
 
     private void findTables(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseTableBaseReader] Starting");
-        tables = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
-        LOGGER.info("[DataBaseTableBaseReader] Total: " + tables.size());
+        allTables = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableBaseBean.class);
+        LOGGER.info("[DataBaseTableBaseReader] Total: " + allTables.size());
     }
 
-    private List<TableBase> processTables(final DriverConnection driverConnection) {
-        List<TableBase> result = dataBaseTableMapper.apply(tables);
-        return dataBaseTableColumnsReader.execute(driverConnection, result);
+    private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {
+        List<TableBase> result = dataBaseTableMapper.apply(allTables);
+        List<TableBase> tables = dataBaseTableColumnsReader.execute(driverConnection, result);
+        tables.sort(new DataBaseTableBaseSort(filter));
+        return tables;
     }
 
 }

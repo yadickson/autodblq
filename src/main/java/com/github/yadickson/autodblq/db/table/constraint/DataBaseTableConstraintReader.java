@@ -5,6 +5,7 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint;
 
+import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,33 +17,32 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 
 /**
  *
  * @author Yadickson Soto
  */
-public abstract class DataBaseTableConstraintReader {
+public abstract class DataBaseTableConstraintReader<T> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableConstraintReader.class);
 
     private final DataBaseGeneratorType type;
     private final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
-    private final DataBaseTableConstraintMapper constraintMapper;
+    private final DataBaseTableConstraintMapper<T> constraintMapper;
 
     private String sqlQuery;
 
     public DataBaseTableConstraintReader(
             final DataBaseGeneratorType type,
             final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQuery,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
-            final DataBaseTableConstraintMapper constraintMapper
+            final SqlExecuteToGetList sqlExecuteToGetList,
+            final DataBaseTableConstraintMapper<T> constraintMapper
     ) {
         this.type = type;
         this.dataBaseTableConstraintQueryFactory = dataBaseTableConstraintQuery;
-        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(type);
+        this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.constraintMapper = constraintMapper;
     }
 
@@ -94,9 +94,10 @@ public abstract class DataBaseTableConstraintReader {
             final TableBase table
     ) {
         LOGGER.debug("[DataBaseTableConstraintReader] Starting " + type.getMessage());
-        List<?> elements = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
+        List<T> elements = sqlExecuteToGetList.execute(driverConnection, sqlQuery, getTypeClass());
         LOGGER.debug("[DataBaseTableConstraintReader] Total " + type.getMessage() + ": " + elements.size());
         return constraintMapper.apply(table, elements);
     }
 
+    protected abstract Class<T> getTypeClass();
 }

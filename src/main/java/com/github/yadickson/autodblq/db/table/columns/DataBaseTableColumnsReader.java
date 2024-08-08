@@ -13,11 +13,9 @@ import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
@@ -41,11 +39,11 @@ public class DataBaseTableColumnsReader {
     @Inject
     public DataBaseTableColumnsReader(
             final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableColumnsMapper dataBaseTableColumnsMapper
     ) {
         this.dataBaseTableColumnsQueryFactory = dataBaseTableColumnsQueryFactory;
-        this.sqlExecuteToGetList = sqlExecuteToGetListFactory.apply(DataBaseGeneratorType.TABLE_DEFINITION);
+        this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseTableColumnsMapper = dataBaseTableColumnsMapper;
     }
 
@@ -96,7 +94,7 @@ public class DataBaseTableColumnsReader {
 
     private void findDefinitions(final DriverConnection driverConnection) {
         LOGGER.info("[DataBaseTableDefinitionReader] Starting");
-        columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery);
+        columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableColumnBean.class);
         LOGGER.info("[DataBaseTableDefinitionReader] Total: " + columns.size());
     }
 

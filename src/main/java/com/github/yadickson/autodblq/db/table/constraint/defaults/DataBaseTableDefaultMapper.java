@@ -21,7 +21,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableDefaultMapper extends DataBaseTableConstraintMapper<TableDefaultBean> {
+public class DataBaseTableDefaultMapper implements DataBaseTableConstraintMapper<TableDefaultBean> {
 
     private final DataBaseTableDefaultConstraintsMapper mapper;
 

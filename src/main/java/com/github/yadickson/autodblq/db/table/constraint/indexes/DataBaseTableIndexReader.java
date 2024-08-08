@@ -9,23 +9,28 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
+import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableIndexReader extends DataBaseTableConstraintReader {
+public class DataBaseTableIndexReader extends DataBaseTableConstraintReader<TableIndexBean> {
 
     @Inject
     public DataBaseTableIndexReader(
             final DataBaseTableIndexQueryFactory dataBaseTableIndexQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableIndexMapper dataBaseTableIndexMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_INDEXES, dataBaseTableIndexQueryFactory, sqlExecuteToGetListFactory, dataBaseTableIndexMapper);
+        super(DataBaseGeneratorType.TABLE_INDEXES, dataBaseTableIndexQueryFactory, sqlExecuteToGetList, dataBaseTableIndexMapper);
     }
 
+    @Override
+    protected Class<TableIndexBean> getTypeClass() {
+        return TableIndexBean.class;
+    }
 }

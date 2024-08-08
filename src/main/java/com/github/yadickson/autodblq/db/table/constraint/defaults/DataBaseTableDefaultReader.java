@@ -9,23 +9,28 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
+import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableDefaultReader extends DataBaseTableConstraintReader {
+public class DataBaseTableDefaultReader extends DataBaseTableConstraintReader<TableDefaultBean> {
 
     @Inject
     public DataBaseTableDefaultReader(
             final DataBaseTableDefaultQueryFactory dataBaseTableDefaultQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableDefaultMapper dataBaseTableDefaultMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_DEFAULTS, dataBaseTableDefaultQueryFactory, sqlExecuteToGetListFactory, dataBaseTableDefaultMapper);
+        super(DataBaseGeneratorType.TABLE_DEFAULTS, dataBaseTableDefaultQueryFactory, sqlExecuteToGetList, dataBaseTableDefaultMapper);
     }
 
+    @Override
+    protected Class<TableDefaultBean> getTypeClass() {
+        return TableDefaultBean.class;
+    }
 }

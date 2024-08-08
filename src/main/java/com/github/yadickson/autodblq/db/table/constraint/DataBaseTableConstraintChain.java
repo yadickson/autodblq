@@ -31,7 +31,7 @@ import org.apache.commons.lang3.tuple.Pair;
 @Named
 public class DataBaseTableConstraintChain {
 
-    private final List<DataBaseTableConstraintReader> handlers = new ArrayList<>();
+    private final List<DataBaseTableConstraintReader<?>> handlers = new ArrayList<>();
 
     @Inject
     public DataBaseTableConstraintChain(
@@ -66,7 +66,7 @@ public class DataBaseTableConstraintChain {
 
         Map<DataBaseGeneratorType, List<TableBase>> result = new HashMap<>();
 
-        for (DataBaseTableConstraintReader reader : handlers) {
+        for (DataBaseTableConstraintReader<?> reader : handlers) {
             Pair<DataBaseGeneratorType, List<TableBase>> response = reader.execute(driverConnection, tables);
             result.put(response.getKey(), response.getValue());
         }

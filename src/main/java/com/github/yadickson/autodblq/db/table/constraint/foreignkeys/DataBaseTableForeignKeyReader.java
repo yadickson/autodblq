@@ -9,23 +9,28 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
+import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableForeignKeyReader extends DataBaseTableConstraintReader {
+public class DataBaseTableForeignKeyReader extends DataBaseTableConstraintReader<TableForeignKeyBean> {
 
     @Inject
     public DataBaseTableForeignKeyReader(
             final DataBaseTableForeignKeyQueryFactory dataBaseTableForeignKeyQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableForeignKeyMapper dataBaseTableForeignKeyMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetListFactory, dataBaseTableForeignKeyMapper);
+        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetList, dataBaseTableForeignKeyMapper);
     }
 
+    @Override
+    protected Class<TableForeignKeyBean> getTypeClass() {
+        return TableForeignKeyBean.class;
+    }
 }

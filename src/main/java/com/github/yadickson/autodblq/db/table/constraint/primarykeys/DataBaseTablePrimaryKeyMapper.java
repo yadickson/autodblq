@@ -21,7 +21,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTablePrimaryKeyMapper extends DataBaseTableConstraintMapper<TablePrimaryKeyBean> {
+public class DataBaseTablePrimaryKeyMapper implements DataBaseTableConstraintMapper<TablePrimaryKeyBean> {
 
     private final DataBaseTablePrimaryKeyConstraintsMapper mapper;
 

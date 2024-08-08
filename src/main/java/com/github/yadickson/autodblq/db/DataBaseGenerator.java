@@ -70,7 +70,6 @@ public class DataBaseGenerator {
             findDataTables(driverConnection);
             findViews(driverConnection);
             findFunctions(driverConnection);
-            findProperties();
 
             return result;
 
@@ -123,12 +122,6 @@ public class DataBaseGenerator {
         final DataBaseGeneratorType key = DataBaseGeneratorType.FUNCTION_DEFINITION;
         final List<FunctionBase> functions = dataBaseFunctionBaseReader.execute(parametersPlugin.getFunctions(), driverConnection);
         result.put(key, functions);
-    }
-
-    private void findProperties() {
-        final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_PROPERTIES;
-        Map<String, List<TablePropertyType>> properties = dataTablePropertyManager.getProperties();
-        result.put(key, properties);
     }
 
 }

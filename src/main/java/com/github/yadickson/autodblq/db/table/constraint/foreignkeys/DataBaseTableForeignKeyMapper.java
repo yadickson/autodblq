@@ -20,7 +20,7 @@ import java.util.List;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableForeignKeyMapper extends DataBaseTableConstraintMapper<TableForeignKeyBean> {
+public class DataBaseTableForeignKeyMapper implements DataBaseTableConstraintMapper<TableForeignKeyBean> {
 
     private final DataBaseTableForeignKeyConstraintsMapper mapper;
 

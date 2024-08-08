@@ -9,23 +9,28 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
-import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetListFactory;
+import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
+import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
 
 /**
  *
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableUniqueReader extends DataBaseTableConstraintReader {
+public class DataBaseTableUniqueReader extends DataBaseTableConstraintReader<TableUniqueBean> {
 
     @Inject
     public DataBaseTableUniqueReader(
             final DataBaseTableUniqueQueryFactory dataBaseTableUniqueQueryFactory,
-            final SqlExecuteToGetListFactory sqlExecuteToGetListFactory,
+            final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableUniqueMapper dataBaseTableUniqueMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_UNIQUES, dataBaseTableUniqueQueryFactory, sqlExecuteToGetListFactory, dataBaseTableUniqueMapper);
+        super(DataBaseGeneratorType.TABLE_UNIQUES, dataBaseTableUniqueQueryFactory, sqlExecuteToGetList, dataBaseTableUniqueMapper);
     }
 
+    @Override
+    protected Class<TableUniqueBean> getTypeClass() {
+        return TableUniqueBean.class;
+    }
 }
