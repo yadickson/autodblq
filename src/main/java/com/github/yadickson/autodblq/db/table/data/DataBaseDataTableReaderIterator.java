@@ -17,10 +17,12 @@ import java.util.List;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
+import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
@@ -36,26 +38,32 @@ public class DataBaseDataTableReaderIterator {
 
     private final DataTablePropertyManager dataTablePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
+    private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
+    private final StringToLowerCaseUtil stringToLowerCaseUtil;
+    private final StringTrimUtil stringTrimUtil;
     private final DriverConnection driverConnection;
     private final TableBase table;
-    private final String separator;
 
     private Long pageCount;
     private String sqlQuery;
-    private List<String> current;
+    private List<TableBase> current;
 
     private static final Long BLOCK = 20L;
 
     public DataBaseDataTableReaderIterator(
             final DataTablePropertyManager dataTablePropertyManager,
             final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory,
-            final Parameters parameters,
+            final StringToSnakeCaseUtil stringToSnakeCaseUtil,
+            final StringToLowerCaseUtil stringToLowerCaseUtil,
+            final StringTrimUtil stringTrimUtil,
             final DriverConnection driverConnection,
             final TableBase table
     ) {
         this.dataTablePropertyManager = dataTablePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
-        this.separator = parameters.getCsvSeparator();
+        this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
+        this.stringToLowerCaseUtil = stringToLowerCaseUtil;
+        this.stringTrimUtil = stringTrimUtil;
         this.driverConnection = driverConnection;
         this.table = table;
         this.pageCount = 0L;
@@ -76,7 +84,7 @@ public class DataBaseDataTableReaderIterator {
         return !current.isEmpty();
     }
 
-    public List<String> getBlock() {
+    public List<TableBase> getBlock() {
         return current;
     }
 
@@ -118,7 +126,7 @@ public class DataBaseDataTableReaderIterator {
 
     private void processResultSet(final ResultSet resultSet) throws SQLException {
 
-        List<String> lines = new ArrayList<>();
+        List<TableBase> tables = new ArrayList<>();
 
         ResultSetMetaData metadata = resultSet.getMetaData();
         int columnCount = metadata.getColumnCount();
@@ -131,27 +139,28 @@ public class DataBaseDataTableReaderIterator {
         }
 
         while (resultSet.next()) {
-            List<String> objs = new ArrayList<>(columnCount);
+            List<DataBaseTableProperty> rows = new ArrayList<>(columnCount);
 
             for (int j = 0; j < columnCount; j++) {
 
-//                String columnName = metadata.getColumnName(j + 1);
-//                String columnType = metadata.getColumnTypeName(j + 1);
+                String realColumnName = stringTrimUtil.apply(metadata.getColumnName(j + 1));
+                String newColumnName = stringToSnakeCaseUtil.apply(realColumnName);
+                String columnType = stringToLowerCaseUtil.apply(metadata.getColumnTypeName(j + 1));
                 String columnValue = resultSet.getString(j + 1);
 
-//                TablePropertyType result = dataTablePropertyManager.process(new DataBaseTableProperty(columnName, columnName).setDefaultType(columnType).setDefaultValue(columnValue));
-//
-//                if (result != null)
-//                    objs.add(String.format("${%s}", result.getName()));
-//                else
-                    objs.add(columnValue);
+                DataBaseTableProperty column = new DataBaseTableProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
+                TablePropertyType response = dataTablePropertyManager.process(column);
+
+                if (response != null)
+                    column.setPropertyType(response.getName());
+
+                rows.add(column);
             }
 
-            String line = StringUtils.join(objs, separator);
-            lines.add(line);
+            tables.add(new DataBaseTableColumnsWrapper(table, rows));
         }
 
-        current = lines;
+        current = tables;
     }
 
 }

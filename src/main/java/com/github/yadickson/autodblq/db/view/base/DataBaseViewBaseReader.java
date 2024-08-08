@@ -62,7 +62,7 @@ public class DataBaseViewBaseReader {
 
             findSqlQuery(filter, driverConnection);
             findViews(driverConnection);
-            return processViews(filter);
+            return processViews();
 
         } catch (RuntimeException ex) {
             throw new DataBaseViewBaseReaderException(ex);
@@ -85,10 +85,8 @@ public class DataBaseViewBaseReader {
         LOGGER.info("[DataBaseViewReader] Total: " + views.size());
     }
 
-    private List<ViewBase> processViews(final List<String> filter) {
-        List<ViewBase> definitions = dataBaseViewMapper.apply(views);
-        Collections.sort(definitions, new DataBaseViewBaseSort(filter));
-        return definitions;
+    private List<ViewBase> processViews() {
+        return dataBaseViewMapper.apply(views);
     }
 
 }

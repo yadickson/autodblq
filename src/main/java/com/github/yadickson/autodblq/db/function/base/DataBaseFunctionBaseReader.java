@@ -66,7 +66,7 @@ public class DataBaseFunctionBaseReader {
             findAndAddFunctions(filter, driverConnection);
             findAndAddProcedures(filter, driverConnection);
 
-            return processFunctions(filter);
+            return processFunctions();
 
         } catch (RuntimeException ex) {
             throw new DataBaseFunctionBaseReaderException(ex);
@@ -123,10 +123,8 @@ public class DataBaseFunctionBaseReader {
         return procedures;
     }
 
-    private List<FunctionBase> processFunctions(final List<String> filter) {
-        List<FunctionBase> definitions = dataBaseFunctionMapper.apply(allFunctions);
-        Collections.sort(definitions, new DataBaseFunctionBaseSort(filter));
-        return definitions;
+    private List<FunctionBase> processFunctions() {
+        return dataBaseFunctionMapper.apply(allFunctions);
     }
 
 }

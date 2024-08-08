@@ -13,7 +13,7 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.Parameters;
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseReader;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
@@ -33,6 +33,7 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 @Named
 public class DataBaseGenerator {
 
+    private final ParametersPlugin parametersPlugin;
     private final DataBaseVersionReader dataBaseVersionReader;
     private final DataBaseTableBaseReader dataBaseTableBaseReader;
     private final DataBaseTableConstraintChain dataBaseTableConstraintReader;
@@ -44,13 +45,14 @@ public class DataBaseGenerator {
 
     @Inject
     public DataBaseGenerator(
-            final DataBaseVersionReader dataBaseVersionReader,
+            ParametersPlugin parametersPlugin, final DataBaseVersionReader dataBaseVersionReader,
             final DataBaseTableBaseReader dataBaseTableBaseReader,
             final DataBaseTableConstraintChain dataBaseTableConstraintReader,
             final DataBaseViewBaseReader dataBaseViewBaseReader,
             final DataBaseFunctionBaseReader dataBaseFunctionBaseReader,
             final DataTablePropertyManager dataTablePropertyManager
     ) {
+        this.parametersPlugin = parametersPlugin;
         this.dataBaseVersionReader = dataBaseVersionReader;
         this.dataBaseTableBaseReader = dataBaseTableBaseReader;
         this.dataBaseTableConstraintReader = dataBaseTableConstraintReader;
@@ -59,15 +61,15 @@ public class DataBaseGenerator {
         this.dataTablePropertyManager = dataTablePropertyManager;
     }
 
-    public Map<DataBaseGeneratorType, Object> execute(final Parameters parameters, final DriverConnection driverConnection) {
+    public Map<DataBaseGeneratorType, Object> execute(final DriverConnection driverConnection) {
 
         try {
 
             findVersion(driverConnection);
-            findTables(parameters, driverConnection);
-            findDataTables(parameters, driverConnection);
-            findViews(parameters, driverConnection);
-            findFunctions(parameters, driverConnection);
+            findTables(driverConnection);
+            findDataTables(driverConnection);
+            findViews(driverConnection);
+            findFunctions(driverConnection);
             findProperties();
 
             return result;
@@ -84,9 +86,9 @@ public class DataBaseGenerator {
         result.put(key, version);
     }
 
-    private void findTables(final Parameters parameters, final DriverConnection driverConnection) {
+    private void findTables(final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.TABLE_DEFINITION;
-        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getTables(), driverConnection);
+        final List<TableBase> tables = dataBaseTableBaseReader.execute(parametersPlugin.getTables(), driverConnection);
         dataTablePropertyManager.accept(tables);
         result.put(key, tables);
         findConstraints(driverConnection, tables);
@@ -105,21 +107,21 @@ public class DataBaseGenerator {
         dataTablePropertyManager.accept(allTables);
     }
 
-    private void findDataTables(final Parameters parameters, final DriverConnection driverConnection) {
+    private void findDataTables(final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.DATA_DEFINITION;
-        final List<TableBase> tables = dataBaseTableBaseReader.execute(parameters.getDataTables(), driverConnection);
+        final List<TableBase> tables = dataBaseTableBaseReader.execute(parametersPlugin.getDataTables(), driverConnection);
         result.put(key, tables);
     }
 
-    private void findViews(final Parameters parameters, final DriverConnection driverConnection) {
+    private void findViews(final DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.VIEW_DEFINITION;
-        final List<ViewBase> views = dataBaseViewBaseReader.execute(parameters.getViews(), driverConnection);
+        final List<ViewBase> views = dataBaseViewBaseReader.execute(parametersPlugin.getViews(), driverConnection);
         result.put(key, views);
     }
 
-    private void findFunctions(Parameters parameters, DriverConnection driverConnection) {
+    private void findFunctions(DriverConnection driverConnection) {
         final DataBaseGeneratorType key = DataBaseGeneratorType.FUNCTION_DEFINITION;
-        final List<FunctionBase> functions = dataBaseFunctionBaseReader.execute(parameters.getFunctions(), driverConnection);
+        final List<FunctionBase> functions = dataBaseFunctionBaseReader.execute(parametersPlugin.getFunctions(), driverConnection);
         result.put(key, functions);
     }
 

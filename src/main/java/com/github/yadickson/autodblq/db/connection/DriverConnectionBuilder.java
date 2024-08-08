@@ -9,7 +9,7 @@ import java.sql.Connection;
 import java.sql.DriverManager;
 import java.sql.SQLException;
 
-import com.github.yadickson.autodblq.Parameters;
+import com.github.yadickson.autodblq.ParametersPlugin;
 
 /**
  *
@@ -17,15 +17,15 @@ import com.github.yadickson.autodblq.Parameters;
  */
 public class DriverConnectionBuilder {
 
-    public Connection build(final Parameters parameters) {
+    public Connection build(final ParametersPlugin parametersPlugin) {
         try {
 
-            Class.forName(parameters.getDriver());
+            Class.forName(parametersPlugin.getDriver());
 
             return DriverManager.getConnection(
-                    parameters.getUrl(),
-                    parameters.getUsername(),
-                    parameters.getPassword()
+                    parametersPlugin.getUrl(),
+                    parametersPlugin.getUsername(),
+                    parametersPlugin.getPassword()
             );
 
         } catch (SQLException | ClassNotFoundException | RuntimeException ex) {

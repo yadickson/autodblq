@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.constraint.defaults.support;
+package com.github.yadickson.autodblq.db.table.constraint.checks.support;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
@@ -13,26 +13,27 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Yadickson Soto
  */
-public class MsSqlDataBaseTableDefaultQuery implements DataBaseTableConstraintQuery {
+public class MsSqlDataBaseTableCheckQuery implements DataBaseTableConstraintQuery {
 
     @Override
     public String get(final TableBase table) {
         return "SELECT "
-                + " c.name as 'column', \n"
-                + " ct.name as 'columntype', \n"
-                + " dc.definition as 'value' \n"
-                + "FROM sys.tables t \n"
-                + "INNER JOIN sys.default_constraints dc on t.object_id = dc.parent_object_id \n"
-                + "INNER JOIN sys.columns c on dc.parent_object_id = c.object_id and c.column_id = dc.parent_column_id \n"
-                + "inner join sys.types ct ON ct.user_type_id = c.user_type_id \n"
+                + " chk.name, \n"
+                + " col.name as 'column', \n"
+                + " chk.definition as 'value' \n"
+                + "FROM sys.check_constraints chk \n"
+                + "inner join sys.columns col on chk.parent_object_id = col.object_id \n"
+                + "inner join sys.tables t on t.object_id = col.object_id \n"
+                + "inner join sys.tables st on chk.parent_object_id = st.object_id \n"
                 + "WHERE \n"
+                + "col.column_id = chk.parent_column_id \n"
                 + filterByName(table)
                 + filterBySchema(table)
-                + "ORDER BY c.column_id ";
+                + "ORDER BY col.column_id ";
     }
 
     private String filterByName(final TableBase table) {
-        return " t.name = '" + table.getName() + "' \n";
+        return " AND t.name = '" + table.getName() + "' \n";
     }
 
     private String filterBySchema(final TableBase table) {

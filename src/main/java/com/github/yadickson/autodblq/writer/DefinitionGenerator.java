@@ -7,19 +7,16 @@ package com.github.yadickson.autodblq.writer;
 
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
 import org.apache.commons.io.FileUtils;
 
-import com.github.yadickson.autodblq.Parameters;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
@@ -37,6 +34,7 @@ import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
 @Named
 public final class DefinitionGenerator {
 
+    private final ParametersPlugin parametersPlugin;
     private final TemplateGenerator templateGenerator;
     private final DataTableGenerator dataTableGenerator;
     private final DirectoryBuilder directoryBuilder;
@@ -54,7 +52,7 @@ public final class DefinitionGenerator {
     private List<FunctionBase> functions;
     private Map<Driver, List<TablePropertyType>> properties;
 
-    private final Map<String, Object> values = new HashMap();
+    private final Map<String, Object> values = new HashMap<>();
     private final List<String> filesGenerated = new ArrayList<>();
 
     private String outputDirectory;
@@ -85,15 +83,11 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_FUNCTIONS = "functions";
 
     private static final String DRIVER_NAME = "driverName";
-    private static final String LQ_VERSION = "lqversion";
     private static final String LQ_PRO = "lqpro";
     private static final String CHANGELOG_PATH = "changelogpath";
     private static final String FILES_GENERATED = "files";
     private static final String TYPE_UTIL = "typeUtil";
     private static final String ENCODE = "encode";
-    private static final String CSV_QUOTCHAR = "csvQuotchar";
-    private static final String CSV_SEPARATOR = "csvSeparator";
-    private static final String CSV_COMMENT = "csvComment";
     private static final String ADD_DB_VERSION = "addDbVersion";
     private static final String ADD_SCHEMA = "addSchema";
     private static final String ADD_DBMS = "addDbms";
@@ -104,25 +98,27 @@ public final class DefinitionGenerator {
 
     @Inject
     public DefinitionGenerator(
+            final ParametersPlugin parametersPlugin,
             final TemplateGenerator templateGenerator,
             final DataTableGenerator dataTableGenerator,
             final DirectoryBuilder directoryBuilder
     ) {
+        this.parametersPlugin = parametersPlugin;
         this.templateGenerator = templateGenerator;
         this.dataTableGenerator = dataTableGenerator;
         this.directoryBuilder = directoryBuilder;
     }
 
-    public void execute(final Parameters parameters, final DriverConnection driverConnection, final Map<DataBaseGeneratorType, Object> dataBaseGenerator) {
+    public void execute(final DriverConnection driverConnection, final Map<DataBaseGeneratorType, Object> dataBaseGenerator) {
 
         try {
 
             processInputs(dataBaseGenerator);
-            makeInputValues(parameters, driverConnection);
-            cleanOutputDirectory(parameters);
+            makeInputValues(driverConnection);
+            cleanOutputDirectory();
 
             makeDefinitions();
-            makeDataTables(parameters, driverConnection);
+            makeDataTables(driverConnection);
             makeMasterChangelog();
 
         } catch (IOException | RuntimeException ex) {
@@ -145,15 +141,11 @@ public final class DefinitionGenerator {
         properties = (Map) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PROPERTIES);
     }
 
-    private void makeInputValues(final Parameters parameters, final DriverConnection driverConnection) {
+    private void makeInputValues(final DriverConnection driverConnection) {
 
-        values.put(VERSION, parameters.getVersion());
-        values.put(AUTHOR, parameters.getAuthor());
-
-        values.put(ENCODE, parameters.getEncode());
-        values.put(CSV_QUOTCHAR, parameters.getCsvQuotchar());
-        values.put(CSV_SEPARATOR, parameters.getCsvSeparator());
-        values.put(CSV_COMMENT, parameters.getCsvComment());
+        values.put(VERSION, parametersPlugin.getVersion());
+        values.put(AUTHOR, parametersPlugin.getAuthor());
+        values.put(ENCODE, parametersPlugin.getEncode());
 
         values.put(DATA_BASE_VERSION, version);
         values.put(DATA_BASE_TABLES, tables);
@@ -168,32 +160,32 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_FUNCTIONS, functions);
         values.put(DATA_BASE_PROPERTIES, properties);
 
-        values.put(LQ_VERSION, parameters.getLiquibaseVersion());
-        values.put(LQ_PRO, parameters.getLiquibaseProductionEnabled());
+        values.put(LQ_PRO, parametersPlugin.getLiquibaseProductionEnabled());
 
         values.put(DRIVER_NAME, driverConnection.getDriver().getMessage());
 
         values.put(CHANGELOG_PATH, CHANGELOG);
         values.put(TYPE_UTIL, new TableColumnTypeUtil());
 
-        values.put(ADD_DB_VERSION, parameters.getAddDbVersion());
-        values.put(ADD_SCHEMA, parameters.getAddSchema());
-        values.put(ADD_DBMS, parameters.getAddDbms());
-        values.put(ADD_NULLABLE, parameters.getAddNullable());
-        values.put(ADD_IDENTITY, parameters.getAddIdentity());
-        values.put(KEEP_NAMES, parameters.getKeepNames());
+        values.put(ADD_DB_VERSION, parametersPlugin.getAddDbVersion());
+        values.put(ADD_SCHEMA, parametersPlugin.getAddSchema());
+        values.put(ADD_DBMS, parametersPlugin.getAddDbms());
+        values.put(ADD_NULLABLE, parametersPlugin.getAddNullable());
+        values.put(ADD_IDENTITY, parametersPlugin.getAddIdentity());
+        values.put(KEEP_NAMES, parametersPlugin.getKeepNames());
 
-        keepNames = parameters.getKeepNames();
+        keepNames = parametersPlugin.getKeepNames();
     }
 
-    private void cleanOutputDirectory(final Parameters parameters) throws IOException {
-        outputDirectory = parameters.getOutputDirectory() + File.separatorChar + parameters.getVersion() + File.separatorChar;
+    private void cleanOutputDirectory() throws IOException {
+        outputDirectory = parametersPlugin.getOutputDirectory() + File.separatorChar + parametersPlugin.getVersion() + File.separatorChar;
         FileUtils.deleteDirectory(new File(outputDirectory));
     }
 
     private void makeDefinitions() {
         makeProperties();
         makeTables();
+        makeChecks();
         makeDefaults();
         makeIndexes();
         makeUniques();
@@ -213,6 +205,12 @@ public final class DefinitionGenerator {
     private void makeTables() {
         if (!tables.isEmpty()) {
             addAndMakeFileBase(DefinitionGeneratorType.TABLES);
+        }
+    }
+
+    private void makeChecks() {
+        if (!checks.isEmpty()) {
+            addAndMakeFileBase(DefinitionGeneratorType.CHECKS);
         }
     }
 
@@ -342,7 +340,7 @@ public final class DefinitionGenerator {
             return;
         }
 
-        final DefinitionGeneratorType type = DefinitionGeneratorType.MASTER_CHANGLE_LOG;
+        final DefinitionGeneratorType type = DefinitionGeneratorType.MASTER_CHANGELOG;
         final String filename = type.getFilename();
         final String path = makeFilenamePath(".", filename);
         values.put(FILES_GENERATED, filesGenerated);
@@ -356,11 +354,11 @@ public final class DefinitionGenerator {
     }
 
     private void makeTemplate(final DefinitionGeneratorType type, final String path) {
-        templateGenerator.execute(type, values, path);
+        templateGenerator.execute(type, values, path, false);
     }
 
-    private void makeDataTables(final Parameters parameters, final DriverConnection driverConnection) {
-        dataTableGenerator.execute(parameters, driverConnection, dataTables);
+    private void makeDataTables(final DriverConnection driverConnection) {
+        dataTableGenerator.execute(driverConnection, dataTables);
     }
 
 }

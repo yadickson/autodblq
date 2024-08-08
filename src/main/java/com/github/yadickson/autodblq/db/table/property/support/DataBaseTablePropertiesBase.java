@@ -11,6 +11,7 @@ import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperties;
 import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyName;
 import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
+import org.apache.commons.lang.StringUtils;
 
 /**
  *
@@ -29,36 +30,36 @@ public abstract class DataBaseTablePropertiesBase extends SupportType implements
         String defaultValue = column.getDefaultValue() == null ? "" : column.getDefaultValue();
         TablePropertyType response;
 
-        if ("uniqueidentifier".compareTo(type) == 0 || "uuid".compareTo(type) == 0)
+        if (isUuid(type))
         {
             response = new TablePropertyType(TablePropertyName.UUID.getMessage(), getUuid());
         }
-        else if ("bit".compareTo(type) == 0 || "bool".compareTo(type) == 0)
+        else if (isBoolean(type))
         {
             response = new TablePropertyType(TablePropertyName.BOOLEAN.getMessage(), getBoolean());
         }
-        else if ("int".compareTo(type) == 0 || "int4".compareTo(type) == 0)
+        else if (isInteger(type))
         {
             response = new TablePropertyType(TablePropertyName.INTEGER.getMessage(), getInteger());
         }
-        else if (type.contains("date") || type.contains("timestamp"))
+        else if (StringUtils.containsIgnoreCase(type, "date") || StringUtils.containsIgnoreCase(type, "timestamp"))
         {
             response = new TablePropertyType(TablePropertyName.DATETIME.getMessage(), getDatetime());
         }
-        else if (type.contains("char"))
+        else if (StringUtils.containsIgnoreCase(type, "char"))
         {
             String size = column.getLength() > 0 ? "_" + column.getLength() : "";
             String maxSize = !size.isEmpty() ? "(" + column.getLength() + ")" : getMaxString();
             response = new TablePropertyType(TablePropertyName.STRING.getMessage() + size, getVarchar() + maxSize);
         }
-        else if ("bit".compareTo(defaultType) == 0 || "bool".compareTo(defaultType) == 0)
+        else if (isBoolean(defaultType))
         {
-            boolean ok = "1".compareTo(defaultValue) == 0 || "true".compareTo(defaultValue) == 0;
-            return new TablePropertyType(
+            boolean ok = StringUtils.containsIgnoreCase(defaultValue, "1") || StringUtils.containsIgnoreCase(defaultValue, "true");
+            response = new TablePropertyType(
                     ok ? TablePropertyName.BOOLEAN_TRUE.getMessage() : TablePropertyName.BOOLEAN_FALSE.getMessage(),
                     ok ? getDefaultBooleanTrueValue() : getDefaultBooleanFalseValue());
         }
-        else if (defaultValue.contains("newid") || defaultValue.contains("gen_random_uuid"))
+        else if (isUuid(defaultType) && (StringUtils.containsIgnoreCase(defaultValue, "newid") || StringUtils.containsIgnoreCase(defaultValue, "gen_random_uuid")))
         {
             response = new TablePropertyType(TablePropertyName.UUID_FUNCTION.getMessage(), getDefaultUuidValue());
         }
@@ -70,6 +71,18 @@ public abstract class DataBaseTablePropertiesBase extends SupportType implements
         column.setPropertyType(response.getName());
 
         return response;
+    }
+
+    private Boolean isUuid(String input) {
+        return "uniqueidentifier".compareTo(input) == 0 || "uuid".compareTo(input) == 0;
+    }
+
+    private Boolean isBoolean(String input) {
+        return "bit".compareTo(input) == 0 || "bool".compareTo(input) == 0;
+    }
+
+    private Boolean isInteger(String input) {
+        return "int".compareTo(input) == 0 || "int4".compareTo(input) == 0;
     }
 
     protected abstract String getUuid();

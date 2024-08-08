@@ -11,7 +11,7 @@ import java.sql.SQLException;
 
 import org.apache.commons.dbutils.DbUtils;
 
-import com.github.yadickson.autodblq.Parameters;
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.driver.DriverMapper;
 
 /**
@@ -20,8 +20,8 @@ import com.github.yadickson.autodblq.db.connection.driver.DriverMapper;
  */
 public class DriverConnectionDecorator extends DriverConnection implements Closeable {
 
-    public DriverConnectionDecorator(final Parameters parameters) throws SQLException {
-        super(new DriverMapper().apply(parameters.getDriver()), new DriverConnectionBuilder().build(parameters));
+    public DriverConnectionDecorator(final ParametersPlugin parametersPlugin) throws SQLException {
+        super(new DriverMapper().apply(parametersPlugin.getDriver()), new DriverConnectionBuilder().build(parametersPlugin));
     }
 
     @Override

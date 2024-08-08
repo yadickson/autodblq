@@ -16,6 +16,7 @@ import javax.inject.Named;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.constraint.checks.DataBaseTableCheckReader;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.DataBaseTableDefaultReader;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.DataBaseTableForeignKeyReader;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.DataBaseTableIndexReader;
@@ -38,13 +39,15 @@ public class DataBaseTableConstraintChain {
             final DataBaseTableForeignKeyReader dataBaseTableForeignKeyReader,
             final DataBaseTableUniqueReader dataBaseTableUniqueReader,
             final DataBaseTableIndexReader dataBaseTableIndexReader,
-            final DataBaseTableDefaultReader dataBaseTableDefaultReader
+            final DataBaseTableDefaultReader dataBaseTableDefaultReader,
+            final DataBaseTableCheckReader dataBaseTableCheckReader
     ) {
         this.handlers.add(dataBaseTablePrimaryKeyReader);
         this.handlers.add(dataBaseTableForeignKeyReader);
         this.handlers.add(dataBaseTableUniqueReader);
         this.handlers.add(dataBaseTableIndexReader);
         this.handlers.add(dataBaseTableDefaultReader);
+        this.handlers.add(dataBaseTableCheckReader);
     }
 
     public Map<DataBaseGeneratorType, List<TableBase>> execute(final DriverConnection driverConnection, final List<TableBase> tables) {

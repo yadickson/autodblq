@@ -6,9 +6,7 @@
 package com.github.yadickson.autodblq.db.table.base;
 
 import java.util.Collections;
-import java.util.Comparator;
 import java.util.List;
-import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -68,7 +66,7 @@ public class DataBaseTableBaseReader {
 
             findSqlQuery(filter, driverConnection);
             findTables(driverConnection);
-            return processTables(driverConnection, filter);
+            return processTables(driverConnection);
 
         } catch (RuntimeException ex) {
             LOGGER.error(ex);
@@ -92,15 +90,9 @@ public class DataBaseTableBaseReader {
         LOGGER.info("[DataBaseTableBaseReader] Total: " + tables.size());
     }
 
-    private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {
+    private List<TableBase> processTables(final DriverConnection driverConnection) {
         List<TableBase> result = dataBaseTableMapper.apply(tables);
-        return sortTables(driverConnection, result, filter);
-    }
-
-    private List<TableBase> sortTables(final DriverConnection driverConnection, final List<TableBase> result, final List<String> filter) {
-        List<TableBase> definitions = dataBaseTableColumnsReader.execute(driverConnection, result);
-        Collections.sort(definitions, new DataBaseTableBaseSort(filter));
-        return definitions;
+        return dataBaseTableColumnsReader.execute(driverConnection, result);
     }
 
 }

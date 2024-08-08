@@ -5,6 +5,8 @@
  */
 package com.github.yadickson.autodblq.writer.util;
 
+import org.apache.commons.lang.StringUtils;
+
 /**
  *
  * @author Yadickson Soto
@@ -12,15 +14,15 @@ package com.github.yadickson.autodblq.writer.util;
 public final class TableColumnTypeUtil {
     
     public Boolean isString(final String string) {
-        return string.contains("CHAR");
+        return StringUtils.containsIgnoreCase(string, "char") || StringUtils.containsIgnoreCase(string, "uuid") || StringUtils.containsIgnoreCase(string, "uniqueidentifier") || StringUtils.containsIgnoreCase(string, "text");
     }
 
     public Boolean isNumeric(final String string) {
-        return string.contains("INT") || string.contains("FLOAT") || string.contains("REAL");
+        return StringUtils.containsIgnoreCase(string, "INT") || StringUtils.containsIgnoreCase(string, "FLOAT") || StringUtils.containsIgnoreCase(string, "REAL");
     }
 
     public Boolean isDate(final String string) {
-        return string.contains("DATE") || string.contains("TIMESTAMP");
+        return StringUtils.containsIgnoreCase(string, "DATE") || StringUtils.containsIgnoreCase(string, "TIMESTAMP");
     }
 
 }

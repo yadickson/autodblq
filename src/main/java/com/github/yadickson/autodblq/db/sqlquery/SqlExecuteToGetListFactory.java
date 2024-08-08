@@ -12,6 +12,7 @@ import javax.inject.Named;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
+import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
@@ -43,6 +44,8 @@ public class SqlExecuteToGetListFactory implements Function<DataBaseGeneratorTyp
                 return new SqlExecuteToGetList<>(TableUniqueBean.class);
             case TABLE_INDEXES:
                 return new SqlExecuteToGetList<>(TableIndexBean.class);
+            case TABLE_CHECKS:
+                return new SqlExecuteToGetList<>(TableCheckBean.class);
             case TABLE_DEFAULTS:
                 return new SqlExecuteToGetList<>(TableDefaultBean.class);
             case VIEW_DEFINITION:

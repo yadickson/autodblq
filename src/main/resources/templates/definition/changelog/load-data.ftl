@@ -8,12 +8,17 @@
 
 <databaseChangeLog
     xmlns="http://www.liquibase.org/xml/ns/dbchangelog"
-    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
     xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
-    xsi:schemaLocation="http://www.liquibase.org/xml/ns/dbchangelog
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-${lqversion}.xsd
-    http://www.liquibase.org/xml/ns/dbchangelog-ext
-    http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
+<#if lqpro?? && lqpro >
+    xmlns:pro="http://www.liquibase.org/xml/ns/pro"
+</#if>
+    xmlns:ext="http://www.liquibase.org/xml/ns/dbchangelog-ext"
+    xsi:schemaLocation="
+        http://www.liquibase.org/xml/ns/dbchangelog http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-latest.xsd
+<#if lqpro?? && lqpro >
+        http://www.liquibase.org/xml/ns/pro http://www.liquibase.org/xml/ns/pro/liquibase-pro-latest.xsd
+</#if>
+        http://www.liquibase.org/xml/ns/dbchangelog-ext http://www.liquibase.org/xml/ns/dbchangelog/dbchangelog-ext.xsd">
 <#assign step = 1>
 
     <!-- Load Data Tables definitions -->
@@ -28,17 +33,12 @@
     <changeSet id="${step?string["0000"]}" author="${author}" <#if addDbms?? && addDbms == true>dbms="${driverName}" </#if>runOnChange="false">
         <ext:tagDatabase tag="${version}-${file?string["00"]}.${step?string["0000"]}"/>
 
-        <loadData
-<#if table.schema?? && addSchema?? && addSchema == true >
-            schemaName="<#if keepNames?? && keepNames == true>${table.realSchema}<#else>${table.newSchema}</#if>"
-</#if>
-            tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
+        <sqlFile
             encoding="${encode}"
-            file="../data/${table.newName}.csv"
+            path="../data/<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>.sql"
             relativeToChangelogFile="true"
-            commentLineStartsWith= "${csvComment}"
-            quotchar=<#if csvQuotchar == "\"">'<#else>"</#if>${csvQuotchar}<#if csvQuotchar == "\"">'<#else>"</#if>
-            separator=<#if csvSeparator == "\"">'<#else>"</#if>${csvSeparator}<#if csvSeparator == "\"">'<#else>"</#if>
+            splitStatements="false"
+            stripComments="true"
         />
 
         <rollback>

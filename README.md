@@ -14,7 +14,7 @@ Maven plugin to generate xml liquibase files from database
 - Oracle DataBase 11g and 12c (not yet)
 - Basic PostgresSQL (not yet)
 - Basic SQL Server (Tested 2017, Driver jTDS) (not yet)
-- Command line for driver, user, pass and connectionString parameters
+- Command line for driver, user, pass and connectionString parametersPlugin
 
 ## DB2
 

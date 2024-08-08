@@ -107,16 +107,6 @@ public class GeneratorPlugin extends AbstractMojo {
     private String version;
 
     /**
-     * Liquibase version definition file name.
-     */
-    @Parameter(
-            property = "autodblq.lqVersion",
-            defaultValue = "3.6",
-            alias = "lqVersion",
-            required = true)
-    private String lqVersion;
-
-    /**
      * Liquibase production definition enabled.
      */
     @Parameter(
@@ -135,36 +125,6 @@ public class GeneratorPlugin extends AbstractMojo {
             alias = "encode",
             required = true)
     private String encode;
-
-    /**
-     * csvQuotchar.
-     */
-    @Parameter(
-            property = "autodblq.csvQuotchar",
-            defaultValue = "\"",
-            alias = "csvQuotchar",
-            required = true)
-    private String csvQuotchar;
-
-    /**
-     * csvSeparator.
-     */
-    @Parameter(
-            property = "autodblq.csvSeparator",
-            defaultValue = ",",
-            alias = "csvSeparator",
-            required = true)
-    private String csvSeparator;
-
-    /**
-     * csvComment.
-     */
-    @Parameter(
-            property = "autodblq.csvComment",
-            defaultValue = "#",
-            alias = "csvComment",
-            required = true)
-    private String csvComment;
 
     /**
      * Tables to build.
@@ -263,21 +223,23 @@ public class GeneratorPlugin extends AbstractMojo {
     private String keepNames;
 
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
+    private final ParametersPlugin parametersPlugin;
     private final DataBaseGenerator dataBaseGenerator;
     private final DefinitionGenerator definitionGenerator;
     private final StringToBooleanUtil stringToBooleanUtil;
 
-    private Parameters parameters;
     private Map<DataBaseGeneratorType, Object> dataBaseGeneratorResult;
 
     @Inject
     public GeneratorPlugin(
             final MavenLoggerConfiguration mavenLoggerConfiguration,
+            final ParametersPlugin parametersPlugin,
             final DataBaseGenerator dataBaseGenerator,
             final DefinitionGenerator definitionGenerator,
             final StringToBooleanUtil stringToBooleanUtil
     ) {
         this.mavenLoggerConfiguration = mavenLoggerConfiguration;
+        this.parametersPlugin = parametersPlugin;
         this.dataBaseGenerator = dataBaseGenerator;
         this.definitionGenerator = definitionGenerator;
         this.stringToBooleanUtil = stringToBooleanUtil;
@@ -298,33 +260,49 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void makeParameters() {
-        parameters = Optional.ofNullable(parameters).orElse(new Parameters(driver, url, username, password, author, version, encode, csvQuotchar, csvSeparator, csvComment, outputDirectory, lqVersion, stringToBooleanUtil.apply(lqProductionEnabled), tables, dataTables, views, functions, stringToBooleanUtil.apply(addDbVersion), stringToBooleanUtil.apply(addSchema), stringToBooleanUtil.apply(addDbms), stringToBooleanUtil.apply(addNullable), stringToBooleanUtil.apply(addIdentity), stringToBooleanUtil.apply(keepNames)));
+        parametersPlugin
+                .setDriver(driver)
+                .setUrl(url)
+                .setUsername(username)
+                .setPassword(password)
+                .setAuthor(author)
+                .setVersion(version)
+                .setEncode(encode)
+                .setOutputDirectory(outputDirectory)
+                .setTables(tables)
+                .setDataTables(dataTables)
+                .setViews(views)
+                .setFunctions(functions)
+                .setLiquibaseProductionEnabled(stringToBooleanUtil.apply(lqProductionEnabled))
+                .setAddDbVersion(stringToBooleanUtil.apply(addDbVersion))
+                .setAddSchema(stringToBooleanUtil.apply(addSchema))
+                .setAddDbms(stringToBooleanUtil.apply(addDbms))
+                .setAddNullable(stringToBooleanUtil.apply(addNullable))
+                .setAddIdentity(stringToBooleanUtil.apply(addIdentity))
+                .setKeepNames(stringToBooleanUtil.apply(keepNames));
     }
 
     private void printParameters() {
-        getLog().info("[Generator] Driver: " + parameters.getDriver());
-        getLog().info("[Generator] URL: " + parameters.getUrl());
-        getLog().info("[Generator] User: " + parameters.getUsername());
+        getLog().info("[Generator] Driver: " + parametersPlugin.getDriver());
+        getLog().info("[Generator] URL: " + parametersPlugin.getUrl());
+        getLog().info("[Generator] User: " + parametersPlugin.getUsername());
         getLog().info("[Generator] Pass: ****");
-        getLog().info("[Generator] Author: " + parameters.getAuthor());
-        getLog().info("[Generator] Version: " + parameters.getVersion());
-        getLog().info("[Generator] Encode: " + parameters.getEncode());
-        getLog().info("[Generator] CSV Quotchar: " + parameters.getCsvQuotchar());
-        getLog().info("[Generator] CSV Separator: " + parameters.getCsvSeparator());
-        getLog().info("[Generator] OutputDirectory: " + parameters.getOutputDirectory());
-        getLog().info("[Generator] LiquibaseVersion: " + parameters.getLiquibaseVersion());
-        getLog().info("[Generator] LiquibaseProductionEnabled: " + parameters.getLiquibaseProductionEnabled());
-        getLog().info("[Generator] AddDbVersion: " + parameters.getAddDbVersion());
-        getLog().info("[Generator] KeepNames: " + parameters.getKeepNames());
-        getLog().info("[Generator] AddSchema: " + parameters.getAddSchema());
-        getLog().info("[Generator] AddDbms: " + parameters.getAddDbms());
-        getLog().info("[Generator] AddNullable: " + parameters.getAddNullable());
-        getLog().info("[Generator] AddIdentity: " + parameters.getAddIdentity());
+        getLog().info("[Generator] Author: " + parametersPlugin.getAuthor());
+        getLog().info("[Generator] Version: " + parametersPlugin.getVersion());
+        getLog().info("[Generator] Encode: " + parametersPlugin.getEncode());
+        getLog().info("[Generator] OutputDirectory: " + parametersPlugin.getOutputDirectory());
+        getLog().info("[Generator] LiquibaseProductionEnabled: " + parametersPlugin.getLiquibaseProductionEnabled());
+        getLog().info("[Generator] AddDbVersion: " + parametersPlugin.getAddDbVersion());
+        getLog().info("[Generator] KeepNames: " + parametersPlugin.getKeepNames());
+        getLog().info("[Generator] AddSchema: " + parametersPlugin.getAddSchema());
+        getLog().info("[Generator] AddDbms: " + parametersPlugin.getAddDbms());
+        getLog().info("[Generator] AddNullable: " + parametersPlugin.getAddNullable());
+        getLog().info("[Generator] AddIdentity: " + parametersPlugin.getAddIdentity());
     }
 
     private void generate() throws MojoExecutionException {
 
-        try (DriverConnectionDecorator driverConnection = new DriverConnectionDecorator(parameters)) {
+        try (DriverConnectionDecorator driverConnection = new DriverConnectionDecorator(parametersPlugin)) {
 
             runDataBaseGenerator(driverConnection);
             runDefinitionGenerator(driverConnection);
@@ -336,20 +314,11 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void runDataBaseGenerator(final DriverConnection driverConnection) {
-        dataBaseGeneratorResult = dataBaseGenerator.execute(parameters, driverConnection);
+        dataBaseGeneratorResult = dataBaseGenerator.execute(driverConnection);
     }
 
     private void runDefinitionGenerator(final DriverConnection driverConnection) {
-        definitionGenerator.execute(parameters, driverConnection, dataBaseGeneratorResult);
-    }
-
-    /**
-     * Setter parameters only for test.
-     *
-     * @param pparameters the parameters of the project to set
-     */
-    public void setParameters(final Parameters pparameters) {
-        this.parameters = pparameters;
+        definitionGenerator.execute(driverConnection, dataBaseGeneratorResult);
     }
 
 }

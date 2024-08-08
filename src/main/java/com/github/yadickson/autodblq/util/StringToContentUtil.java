@@ -10,10 +10,6 @@ import javax.inject.Named;
 import com.github.vertical_blank.sqlformatter.SqlFormatter;
 import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 import org.apache.commons.lang3.RegExUtils;
-import org.apache.commons.lang3.StringUtils;
-
-import java.nio.ByteBuffer;
-import java.nio.charset.StandardCharsets;
 import java.util.function.Function;
 import java.util.regex.Pattern;
 
@@ -33,7 +29,8 @@ public class StringToContentUtil implements Function<String, String> {
 
     @Override
     public String apply(final String input) {
-        String clearBlockComments = RegExUtils.removeAll(stringTrimUtil.apply(input), "/\\*.*?\\*/");
+        String fullContent = stringTrimUtil.apply(input);
+        String clearBlockComments = RegExUtils.removeAll(fullContent, "/\\*.*?\\*/");
         String clearInlineComments = RegExUtils.removeAll(clearBlockComments, Pattern.compile("(.*)--.*"));
         return SqlFormatter.format(clearInlineComments,
                 FormatConfig.builder()

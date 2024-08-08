@@ -10,18 +10,23 @@ import java.io.FileWriter;
 import java.io.IOException;
 import java.io.PrintWriter;
 import java.io.Writer;
+import java.util.HashMap;
 import java.util.List;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.Parameters;
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableCountReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReaderIterator;
 import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
+import com.github.yadickson.autodblq.writer.template.TemplateGenerator;
+import com.github.yadickson.autodblq.writer.template.TemplateGeneratorManager;
+import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
 
 /**
  *
@@ -30,23 +35,30 @@ import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
 @Named
 public class DataTableGenerator {
 
+    private final ParametersPlugin parametersPlugin;
     private final DataBaseDataTableCountReader dataBaseDataTableCountReader;
     private final DataBaseDataTableReader dataBaseDataTableReader;
+    private final TemplateGenerator templateGenerator;
 
     private String outputDirectory;
 
     private final String DATA = "data";
+    private final String TABLES = "tables";
+    private static final String TYPE_UTIL = "typeUtil";
 
     @Inject
     public DataTableGenerator(
-            final DataBaseDataTableCountReader dataBaseDataTableCountReader,
-            final DataBaseDataTableReader dataBaseDataTableBlockReader
+            ParametersPlugin parametersPlugin, final DataBaseDataTableCountReader dataBaseDataTableCountReader,
+            final DataBaseDataTableReader dataBaseDataTableBlockReader,
+            final TemplateGenerator templateGenerator
     ) {
+        this.parametersPlugin = parametersPlugin;
         this.dataBaseDataTableCountReader = dataBaseDataTableCountReader;
         this.dataBaseDataTableReader = dataBaseDataTableBlockReader;
+        this.templateGenerator = templateGenerator;
     }
 
-    public void execute(final Parameters parameters, final DriverConnection driverConnection, final List<TableBase> tables) {
+    public void execute(final DriverConnection driverConnection, final List<TableBase> tables) {
 
         try {
 
@@ -54,22 +66,22 @@ public class DataTableGenerator {
                 return;
             }
 
-            makeOutputDirectory(parameters);
-            makeDataTables(parameters, driverConnection, tables);
+            makeOutputDirectory();
+            makeDataTables(driverConnection, tables);
 
         } catch (RuntimeException ex) {
             throw new DataTableGeneratorException(ex);
         }
     }
 
-    private void makeOutputDirectory(final Parameters parameters) {
-        outputDirectory = parameters.getOutputDirectory() + File.separatorChar + parameters.getVersion() + File.separatorChar;
+    private void makeOutputDirectory() {
+        outputDirectory = parametersPlugin.getOutputDirectory() + File.separatorChar + parametersPlugin.getVersion() + File.separatorChar;
     }
 
-    private void makeDataTables(final Parameters parameters, final DriverConnection driverConnection, final List<TableBase> tables) {
+    private void makeDataTables(final DriverConnection driverConnection, final List<TableBase> tables) {
         for (TableBase table : tables) {
             readTotalCount(driverConnection, table);
-            makeDataTable(parameters, driverConnection, table);
+            makeDataTable(driverConnection, table);
         }
     }
 
@@ -77,33 +89,30 @@ public class DataTableGenerator {
         dataBaseDataTableCountReader.execute(driverConnection, table);
     }
 
-    private void makeDataTable(final Parameters parameters, final DriverConnection driverConnection, TableBase table) {
-        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
+    private void makeDataTable(final DriverConnection driverConnection, TableBase table) {
+        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_INSERT_TABLE;
         final String filename = String.format(type.getFilename(), table.getName());
         final String path = outputDirectory + File.separatorChar + DATA + File.separatorChar + filename;
-        readerTable(parameters, driverConnection, table, path);
+        readerTable(driverConnection, table, path);
     }
 
-    private void readerTable(final Parameters parameters, final DriverConnection driverConnection, final TableBase table, final String path) {
-        DataBaseDataTableReaderIterator iterator = dataBaseDataTableReader.execute(parameters, driverConnection, table);
+    private void readerTable(final DriverConnection driverConnection, final TableBase table, final String path) {
+        DataBaseDataTableReaderIterator iterator = dataBaseDataTableReader.execute(driverConnection, table);
 
         while (iterator.nextBlock()) {
-            List<String> lines = iterator.getBlock();
-            writeFile(path, lines);
+            List<TableBase> tables = iterator.getBlock();
+            writeFile(path, tables);
         }
     }
 
-    private void writeFile(final String path, final List<String> lines) {
+    private void writeFile(final String path, final List<TableBase> tables) {
 
-        try (Writer writer = new FileWriter(path, true); PrintWriter output = new PrintWriter(writer)) {
+        Map<String, Object> values = new HashMap<>();
 
-            for (String line : lines) {
-                output.println(line);
-            }
+        values.put(TABLES, tables);
+        values.put(TYPE_UTIL, new TableColumnTypeUtil());
 
-        } catch (IOException | RuntimeException ex) {
-            throw new DataTableGeneratorException(ex);
-        }
+        templateGenerator.execute(DefinitionGeneratorType.DATA_INSERT_TABLE, values, path, true);
     }
 
 }
