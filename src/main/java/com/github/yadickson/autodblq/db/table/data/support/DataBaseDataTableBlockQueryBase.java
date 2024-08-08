@@ -60,6 +60,8 @@ public abstract class DataBaseDataTableBlockQueryBase implements DataBaseDataTab
         sql.append(rowName);
         sql.append(" < ");
         sql.append(init + blocks + 1);
+        sql.append(" order by ");
+        sql.append(ilist.get(0));
 
         return sql.toString();
     }
