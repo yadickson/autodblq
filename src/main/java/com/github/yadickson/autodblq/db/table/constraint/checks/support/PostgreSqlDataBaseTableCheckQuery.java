@@ -17,7 +17,7 @@ public class PostgreSqlDataBaseTableCheckQuery implements DataBaseTableConstrain
 
     @Override
     public String get(final TableBase table) {
-        return "SELECT "
+        return "(SELECT "
                 + " tc.constraint_name as name, \n"
                 + " col.column_name as column, \n"
                 + " cc.check_clause as value \n"
@@ -29,7 +29,21 @@ public class PostgreSqlDataBaseTableCheckQuery implements DataBaseTableConstrain
                 + "WHERE \n"
                 + filterByName(table)
                 + filterBySchema(table)
-                + "ORDER BY col.ordinal_position ";
+                + "ORDER BY col.ordinal_position) \n"
+                + "UNION \n"
+                + "(select \n"
+                + "t.typname as name, \n"
+                + "tc.column_name as column, \n"
+                + "tc.column_name || ' in (''' || string_agg(e.enumlabel, ''', ''') || ''')' as value \n"
+                + "FROM pg_type t \n"
+                + "inner join pg_enum e ON e.enumtypid = t.oid \n"
+                + "inner join pg_namespace n on t.typnamespace = n.oid \n"
+                + "inner join information_schema.columns tc ON (tc.udt_name = t.typname AND tc.udt_schema = n.nspname) \n"
+                + "WHERE \n"
+                + filterByName(table)
+                + filterBySchema(table)
+                + "AND t.typtype = 'e' \n"
+                + "group by t.typname, tc.column_name )";
     }
 
     private String filterByName(final TableBase table) {

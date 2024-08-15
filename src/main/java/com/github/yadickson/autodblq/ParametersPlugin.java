@@ -28,13 +28,16 @@ public class ParametersPlugin {
     private String encode;
 
     private String outputDirectory;
+    private String outputDatasetsDirectory;
+    private String outputViewsDirectory;
+    private String outputFunctionsDirectory;
+    private String outputProceduresDirectory;
 
     private List<String> tables;
     private List<String> dataTables;
     private List<String> views;
     private List<String> functions;
 
-    private Boolean liquibaseProductionEnabled;
     private Boolean addDbVersion;
     private Boolean addSchema;
     private Boolean addDbms;
@@ -111,15 +114,6 @@ public class ParametersPlugin {
 
     public ParametersPlugin setOutputDirectory(String outputDirectory) {
         this.outputDirectory = outputDirectory;
-        return this;
-    }
-
-    public Boolean getLiquibaseProductionEnabled() {
-        return liquibaseProductionEnabled;
-    }
-
-    public ParametersPlugin setLiquibaseProductionEnabled(Boolean liquibaseProductionEnabled) {
-        this.liquibaseProductionEnabled = liquibaseProductionEnabled;
         return this;
     }
 
@@ -215,5 +209,41 @@ public class ParametersPlugin {
 
     private List<String> getNotNullList(List<String> list) {
         return list == null ? new ArrayList<>() : list.stream().map(value -> value.toLowerCase(Locale.US)).collect(Collectors.toList());
+    }
+
+    public String getOutputDatasetsDirectory() {
+        return outputDatasetsDirectory;
+    }
+
+    public ParametersPlugin setOutputDatasetsDirectory(String outputDatasetsDirectory) {
+        this.outputDatasetsDirectory = outputDatasetsDirectory;
+        return this;
+    }
+
+    public String getOutputViewsDirectory() {
+        return outputViewsDirectory;
+    }
+
+    public ParametersPlugin setOutputViewsDirectory(String outputViewsDirectory) {
+        this.outputViewsDirectory = outputViewsDirectory;
+        return this;
+    }
+
+    public String getOutputFunctionsDirectory() {
+        return outputFunctionsDirectory;
+    }
+
+    public ParametersPlugin setOutputFunctionsDirectory(String outputFunctionsDirectory) {
+        this.outputFunctionsDirectory = outputFunctionsDirectory;
+        return this;
+    }
+
+    public String getOutputProceduresDirectory() {
+        return outputProceduresDirectory;
+    }
+
+    public ParametersPlugin setOutputProceduresDirectory(String outputProceduresDirectory) {
+        this.outputProceduresDirectory = outputProceduresDirectory;
+        return this;
     }
 }

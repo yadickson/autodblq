@@ -11,23 +11,23 @@ package com.github.yadickson.autodblq.writer;
  */
 public enum DefinitionGeneratorType {
 
-    PROPERTIES("/definition/changelog/properties.ftl", "%02d-properties.xml"),
-    TABLES("/definition/changelog/table.ftl", "%02d-tables.xml"),
-    PRIMARY_KEYS("/definition/changelog/primary-key.ftl", "%02d-primary-key-constraints.xml"),
-    FOREIGN_KEYS("/definition/changelog/foreign-key.ftl", "%02d-foreign-key-constraints.xml"),
-    UNIQUES("/definition/changelog/unique.ftl", "%02d-unique-constraints.xml"),
-    INDEXES("/definition/changelog/index.ftl", "%02d-index-constraints.xml"),
-    DEFAULTS("/definition/changelog/default-value.ftl", "%02d-default-constraints.xml"),
-    CHECKS("/definition/changelog/check.ftl", "%02d-check-constraints.xml"),
-    VIEWS("/definition/changelog/view.ftl", "%02d-views.xml"),
-    FUNCTIONS("/definition/changelog/function.ftl", "%02d-functions.xml"),
-    DATA_TABLES("/definition/changelog/load-data.ftl", "%02d-load-data.xml"),
-    MASTER_CHANGELOG("/definition/masterchangelog.ftl", "masterchangelog.xml"),
-    VIEW("/definition/sql/view.ftl", "%s.sql"),
-    FUNCTION("/definition/sql/function.ftl", "%s.sql"),
-    PROCEDURE("/definition/sql/procedure.ftl", "%s.sql"),
-    DATA_TABLE("/definition/sql/data.ftl", "%s.sql"),
-    DATA_INSERT_TABLE("/definition/sql/data-insert.ftl", "%s.sql");
+    PROPERTIES("/changelog/properties.ftl", "%02d-properties.xml"),
+    TABLES("/changelog/tables.ftl", "%02d-tables.xml"),
+    PRIMARY_KEYS("/changelog/primaries.ftl", "%02d-primary-key-constraints.xml"),
+    FOREIGN_KEYS("/changelog/foreigns.ftl", "%02d-foreign-key-constraints.xml"),
+    UNIQUES("/changelog/uniques.ftl", "%02d-unique-constraints.xml"),
+    INDEXES("/changelog/indexes.ftl", "%02d-index-constraints.xml"),
+    DEFAULTS("/changelog/defaults.ftl", "%02d-default-constraints.xml"),
+    CHECKS("/changelog/checks.ftl", "%02d-check-constraints.xml"),
+    VIEWS("/changelog/views.ftl", "%02d-views.xml"),
+    FUNCTIONS("/changelog/functions.ftl", "%02d-functions.xml"),
+    DATA_TABLES("/changelog/datasets.ftl", "%02d-datasets.xml"),
+    MASTER_CHANGELOG("/masterchangelog.ftl", "masterchangelog.xml"),
+    VIEW("/sql/view.ftl", "%s.sql"),
+    FUNCTION("/sql/function.ftl", "%s.sql"),
+    PROCEDURE("/sql/procedure.ftl", "%s.sql"),
+    DATA_TABLE("/sql/data.ftl", "%s.sql"),
+    DATA_INSERT_TABLE("/sql/data-insert.ftl", "%s.sql");
 
     private final String template;
     private final String filename;

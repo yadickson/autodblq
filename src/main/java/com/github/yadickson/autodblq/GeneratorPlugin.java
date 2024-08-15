@@ -107,16 +107,6 @@ public class GeneratorPlugin extends AbstractMojo {
     private String version;
 
     /**
-     * Liquibase production definition enabled.
-     */
-    @Parameter(
-            property = "autodblq.lqProductionEnabled",
-            defaultValue = "false",
-            alias = "lqProductionEnabled",
-            required = true)
-    private String lqProductionEnabled;
-
-    /**
      * Encode.
      */
     @Parameter(
@@ -193,7 +183,7 @@ public class GeneratorPlugin extends AbstractMojo {
     private String addDbms;
 
     /**
-     * addDbms.
+     * addNullable.
      */
     @Parameter(
             property = "autodblq.addNullable",
@@ -203,7 +193,7 @@ public class GeneratorPlugin extends AbstractMojo {
     private String addNullable;
 
     /**
-     * addDbms.
+     * addIdentity.
      */
     @Parameter(
             property = "autodblq.addIdentity",
@@ -213,7 +203,7 @@ public class GeneratorPlugin extends AbstractMojo {
     private String addIdentity;
 
     /**
-     * addDbms.
+     * keepNames.
      */
     @Parameter(
             property = "autodblq.keepNames",
@@ -221,6 +211,46 @@ public class GeneratorPlugin extends AbstractMojo {
             alias = "keepNames",
             required = true)
     private String keepNames;
+
+    /**
+     * Output views directory.
+     */
+    @Parameter(
+            property = "autodblq.outputViewsDirectory",
+            defaultValue = "views",
+            alias = "outputViewsDirectory",
+            required = true)
+    private String outputViewsDirectory;
+
+    /**
+     * Output datasets directory.
+     */
+    @Parameter(
+            property = "autodblq.outputDatasetsDirectory",
+            defaultValue = "datasets",
+            alias = "outputDatasetsDirectory",
+            required = true)
+    private String outputDatasetsDirectory;
+
+    /**
+     * Output functions directory.
+     */
+    @Parameter(
+            property = "autodblq.outputFunctionsDirectory",
+            defaultValue = "functions",
+            alias = "outputFunctionsDirectory",
+            required = true)
+    private String outputFunctionsDirectory;
+
+    /**
+     * Output procedures directory.
+     */
+    @Parameter(
+            property = "autodblq.outputProceduresDirectory",
+            defaultValue = "procedures",
+            alias = "outputProceduresDirectory",
+            required = true)
+    private String outputProceduresDirectory;
 
     private final MavenLoggerConfiguration mavenLoggerConfiguration;
     private final ParametersPlugin parametersPlugin;
@@ -269,11 +299,14 @@ public class GeneratorPlugin extends AbstractMojo {
                 .setVersion(version)
                 .setEncode(encode)
                 .setOutputDirectory(outputDirectory)
+                .setOutputDatasetsDirectory(outputDatasetsDirectory)
+                .setOutputViewsDirectory(outputViewsDirectory)
+                .setOutputFunctionsDirectory(outputFunctionsDirectory)
+                .setOutputProceduresDirectory(outputProceduresDirectory)
                 .setTables(tables)
                 .setDataTables(dataTables)
                 .setViews(views)
                 .setFunctions(functions)
-                .setLiquibaseProductionEnabled(stringToBooleanUtil.apply(lqProductionEnabled))
                 .setAddDbVersion(stringToBooleanUtil.apply(addDbVersion))
                 .setAddSchema(stringToBooleanUtil.apply(addSchema))
                 .setAddDbms(stringToBooleanUtil.apply(addDbms))
@@ -291,7 +324,10 @@ public class GeneratorPlugin extends AbstractMojo {
         getLog().info("[Generator] Version: " + parametersPlugin.getVersion());
         getLog().info("[Generator] Encode: " + parametersPlugin.getEncode());
         getLog().info("[Generator] OutputDirectory: " + parametersPlugin.getOutputDirectory());
-        getLog().info("[Generator] LiquibaseProductionEnabled: " + parametersPlugin.getLiquibaseProductionEnabled());
+        getLog().info("[Generator] OutputDatasetsDirectory: " + parametersPlugin.getOutputDatasetsDirectory());
+        getLog().info("[Generator] OutputViewsDirectory: " + parametersPlugin.getOutputViewsDirectory());
+        getLog().info("[Generator] OutputFunctionsDirectory: " + parametersPlugin.getOutputFunctionsDirectory());
+        getLog().info("[Generator] OutputProceduresDirectory: " + parametersPlugin.getOutputProceduresDirectory());
         getLog().info("[Generator] AddDbVersion: " + parametersPlugin.getAddDbVersion());
         getLog().info("[Generator] KeepNames: " + parametersPlugin.getKeepNames());
         getLog().info("[Generator] AddSchema: " + parametersPlugin.getAddSchema());

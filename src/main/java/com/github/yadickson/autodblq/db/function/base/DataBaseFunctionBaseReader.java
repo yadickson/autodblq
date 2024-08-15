@@ -60,9 +60,7 @@ public class DataBaseFunctionBaseReader {
                 return new ArrayList<>();
             }
 
-            findAndAddFunctions(filter, driverConnection);
-            findAndAddProcedures(filter, driverConnection);
-
+            findFunctions(filter, driverConnection);
             return processFunctions(filter);
 
         } catch (RuntimeException ex) {
@@ -70,20 +68,12 @@ public class DataBaseFunctionBaseReader {
         }
     }
 
-    private void findAndAddFunctions(
+    private void findFunctions(
             final List<String> filter,
             final DriverConnection driverConnection
     ) {
         findSqlFunctionsQuery(filter, driverConnection);
         allFunctions.addAll(findFunctions(driverConnection));
-    }
-
-    private void findAndAddProcedures(
-            final List<String> filter,
-            final DriverConnection driverConnection
-    ) {
-        findSqlProceduresQuery(filter, driverConnection);
-        allFunctions.addAll(findProcedures(driverConnection));
     }
 
     private void findSqlFunctionsQuery(
@@ -101,23 +91,6 @@ public class DataBaseFunctionBaseReader {
         final List<FunctionBaseBean> functions = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
         LOGGER.info("[DataBaseFunctionBaseReader] Total Functions: " + functions.size());
         return functions;
-    }
-
-    private void findSqlProceduresQuery(
-            final List<String> filter,
-            final DriverConnection driverConnection
-    ) {
-        final Driver driver = driverConnection.getDriver();
-        final DataBaseFunctionBaseQuery query = dataBaseFunctionQueryFactory.apply(driver);
-        sqlQuery = query.getProcedures(filter);
-        LOGGER.debug("[DataBaseFunctionBaseReader] SQL: " + sqlQuery);
-    }
-
-    private List<FunctionBaseBean> findProcedures(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseFunctionBaseReader] Starting");
-        List<FunctionBaseBean> procedures = sqlExecuteToGetList.execute(driverConnection, sqlQuery, FunctionBaseBean.class);
-        LOGGER.info("[DataBaseFunctionBaseReader] Total Procedures: " + procedures.size());
-        return procedures;
     }
 
     private List<FunctionBase> processFunctions(final List<String> filter) {

@@ -15,6 +15,4 @@ public interface DataBaseFunctionBaseQuery {
 
     String getFunctions(List<String> filter);
 
-    String getProcedures(List<String> filter);
-
 }

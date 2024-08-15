@@ -62,7 +62,6 @@ public final class DefinitionGenerator {
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
     private final String TABLE = "table";
-    private final String DATA = "data";
     private final String FUNCTION = "function";
     private final String PROCEDURE = "procedure";
 
@@ -84,7 +83,6 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_FUNCTIONS = "functions";
 
     private static final String DRIVER_NAME = "driverName";
-    private static final String LQ_PRO = "lqpro";
     private static final String CHANGELOG_PATH = "changelogpath";
     private static final String FILES_GENERATED = "files";
     private static final String TYPE_UTIL = "typeUtil";
@@ -95,6 +93,13 @@ public final class DefinitionGenerator {
     private static final String ADD_NULLABLE = "addNullable";
     private static final String ADD_IDENTITY = "addIdentity";
     private static final String KEEP_NAMES = "keepNames";
+
+    private static final String DATASETS_DIRECTORY = "datasetsDirectory";
+    private static final String VIEWS_DIRECTORY = "viewsDirectory";
+    private static final String FUNCTIONS_DIRECTORY = "functionsDirectory";
+    private static final String PROCEDURES_DIRECTORY = "proceduresDirectory";
+
+
     private Boolean keepNames = true;
 
     @Inject
@@ -160,8 +165,6 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_VIEWS, views);
         values.put(DATA_BASE_FUNCTIONS, functions);
 
-        values.put(LQ_PRO, parametersPlugin.getLiquibaseProductionEnabled());
-
         values.put(DRIVER_NAME, driverConnection.getDriver().getMessage());
 
         values.put(CHANGELOG_PATH, CHANGELOG);
@@ -173,6 +176,11 @@ public final class DefinitionGenerator {
         values.put(ADD_NULLABLE, parametersPlugin.getAddNullable());
         values.put(ADD_IDENTITY, parametersPlugin.getAddIdentity());
         values.put(KEEP_NAMES, parametersPlugin.getKeepNames());
+
+        values.put(DATASETS_DIRECTORY, parametersPlugin.getOutputDatasetsDirectory());
+        values.put(VIEWS_DIRECTORY, parametersPlugin.getOutputViewsDirectory());
+        values.put(FUNCTIONS_DIRECTORY, parametersPlugin.getOutputFunctionsDirectory());
+        values.put(PROCEDURES_DIRECTORY, parametersPlugin.getOutputProceduresDirectory());
 
         keepNames = parametersPlugin.getKeepNames();
     }
@@ -307,28 +315,28 @@ public final class DefinitionGenerator {
     private void makeDataTableFile(final TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
         final String filename = String.format(type.getFilename(), keepNames ? table.getName() : table.getNewName());
-        final String path = makeFilenamePath(DATA, filename);
+        final String path = makeFilenamePath(parametersPlugin.getOutputDatasetsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeViewFile(final ViewBase viewBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.VIEW;
         final String filename = String.format(type.getFilename(), keepNames ? viewBase.getName() : viewBase.getNewName());
-        final String path = makeFilenamePath(VIEW, filename);
+        final String path = makeFilenamePath(parametersPlugin.getOutputViewsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeFunctionFile(final FunctionBase functionBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.FUNCTION;
         final String filename = String.format(type.getFilename(), keepNames ? functionBase.getName() : functionBase.getNewName());
-        final String path = makeFilenamePath(FUNCTION, filename);
+        final String path = makeFilenamePath(parametersPlugin.getOutputFunctionsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeProcedureFile(final FunctionBase procedureBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.PROCEDURE;
         final String filename = String.format(type.getFilename(), keepNames ? procedureBase.getName() : procedureBase.getNewName());
-        final String path = makeFilenamePath(PROCEDURE, filename);
+        final String path = makeFilenamePath(parametersPlugin.getOutputProceduresDirectory(), filename);
         makeTemplate(type, path);
     }
 

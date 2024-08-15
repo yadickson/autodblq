@@ -42,7 +42,6 @@ public class DataTableGenerator {
 
     private String outputDirectory;
 
-    private final String DATA = "data";
     private final String TABLES = "tables";
     private static final String TYPE_UTIL = "typeUtil";
 
@@ -92,7 +91,7 @@ public class DataTableGenerator {
     private void makeDataTable(final DriverConnection driverConnection, TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_INSERT_TABLE;
         final String filename = String.format(type.getFilename(), table.getName());
-        final String path = outputDirectory + File.separatorChar + DATA + File.separatorChar + filename;
+        final String path = outputDirectory + File.separatorChar + parametersPlugin.getOutputDatasetsDirectory() + File.separatorChar + filename;
         readerTable(driverConnection, table, path);
     }
 

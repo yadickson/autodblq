@@ -21,7 +21,7 @@ public class Db2DataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery {
 
     @Override
     public String getFunctions(final List<String> filter) {
-        return "SELECT \n"
+        return "(SELECT \n"
                 + " FUNCSCHEMA schema, \n"
                 + " FUNCNAME name, \n"
                 + " BODY content,"
@@ -29,12 +29,9 @@ public class Db2DataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery {
                 + "FROM syscat.FUNCTIONS \n"
                 + "WHERE \n"
                 + filterFunctionByNames(filter)
-                + "ORDER BY FUNCSCHEMA ASC, FUNCNAME asc";
-    }
-
-    @Override
-    public String getProcedures(final List<String> filter) {
-        return "select \n"
+                + "ORDER BY FUNCSCHEMA ASC, FUNCNAME asc) \n"
+                + "union \n"
+                + "(select \n"
                 + " PROCSCHEMA schema, \n"
                 + " PROCNAME name, \n"
                 + " TEXT content, \n"
@@ -42,7 +39,7 @@ public class Db2DataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery {
                 + "from SYSCAT.PROCEDURES \n"
                 + "WHERE \n"
                 + filterProceduresByNames(filter)
-                + "ORDER BY PROCSCHEMA ASC, PROCNAME asc";
+                + "ORDER BY PROCSCHEMA ASC, PROCNAME asc)";
     }
 
     private String filterFunctionByNames(final List<String> filter) {

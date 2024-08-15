@@ -20,9 +20,4 @@ public class OracleDataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuer
         return null;
     }
 
-    @Override
-    public String getProcedures(final List<String> filter) {
-        return null;
-    }
-
 }

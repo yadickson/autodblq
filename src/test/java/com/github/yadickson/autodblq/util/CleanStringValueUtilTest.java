@@ -12,23 +12,23 @@ class CleanStringValueUtilTest {
     @Test
     void should_clear_all_parentheses_from_input_number() {
 
-        String name = faker.number().digits(2);
-        String input = String.format("([(%s)])()", name);
+        String number = faker.number().digits(2);
+        String input = String.format("([(%s)])", number);
 
         String response = util.apply(input);
 
-        Assertions.assertEquals(name, response);
+        Assertions.assertEquals(String.format("((%s))", number), response);
     }
 
     @Test
     void should_clear_all_parentheses_from_input_text() {
 
         String name = faker.name().name();
-        String input = String.format("([(%s)])()", name);
+        String input = String.format("([(%s)])", name);
 
         String response = util.apply(input);
 
-        Assertions.assertEquals(name, response);
+        Assertions.assertEquals(String.format("((%s))", name), response);
     }
 
 }

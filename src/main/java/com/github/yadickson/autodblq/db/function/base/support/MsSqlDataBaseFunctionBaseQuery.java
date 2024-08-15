@@ -20,9 +20,4 @@ public class MsSqlDataBaseFunctionBaseQuery implements DataBaseFunctionBaseQuery
         return null;
     }
 
-    @Override
-    public String getProcedures(final List<String> filter) {
-        return null;
-    }
-
 }
