@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.uniques;
 
-import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUnique;
+import com.github.yadickson.autodblq.db.table.constraint.uniques.model.Unique;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableUniqueConstraintMapper implements Function<TableUniqueBean, DataBaseTableProperty> {
+public class DataBaseTableUniqueConstraintMapper implements Function<TableUniqueBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableUniqueConstraintMapper.class);
 
@@ -41,7 +41,7 @@ public class DataBaseTableUniqueConstraintMapper implements Function<TableUnique
     }
 
     @Override
-    public DataBaseTableProperty apply(final TableUniqueBean tableBean) {
+    public DataBaseProperty apply(final TableUniqueBean tableBean) {
         final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
         final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
         final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
@@ -51,6 +51,6 @@ public class DataBaseTableUniqueConstraintMapper implements Function<TableUnique
         LOGGER.debug("[DataBaseTableDefaultMapper] Unique Constraint Name: " + constraintRealName);
         LOGGER.debug("[DataBaseTableDefaultMapper] Unique Constraint Columns: " + constraintRealColumns);
 
-        return new TableUnique(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
+        return new Unique(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
     }
 }

@@ -14,11 +14,11 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
-import com.github.yadickson.autodblq.db.table.columns.model.TableColumn;
+import com.github.yadickson.autodblq.db.table.columns.model.Column;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 
 /**
@@ -26,7 +26,7 @@ import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean>, List<DataBaseTableProperty>> {
+public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean>, List<DataBaseProperty>> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsMapper.class);
 
@@ -52,22 +52,22 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(List<TableColumnBean> tableColumnBeans) {
+    public List<DataBaseProperty> apply(List<TableColumnBean> tableColumnBeans) {
 
-        final List<TableColumn> tableColumns = new ArrayList<>();
+        final List<Column> tableColumns = new ArrayList<>();
 
         for (TableColumnBean tableColumnBean : tableColumnBeans) {
-            TableColumn tableColumn = processTableColumn(tableColumnBean);
+            Column tableColumn = processTableColumn(tableColumnBean);
             tableColumns.add(tableColumn);
         }
 
         return tableColumns
                 .stream()
-                .sorted(Comparator.comparing(TableColumn::getPosition))
+                .sorted(Comparator.comparing(Column::getPosition))
                 .collect(Collectors.toList());
     }
 
-    private TableColumn processTableColumn(TableColumnBean tableColumnBean) {
+    private Column processTableColumn(TableColumnBean tableColumnBean) {
         final String realName = stringTrimUtil.apply(tableColumnBean.getName());
         final String name = stringToLowerCaseUtil.apply(tableColumnBean.getName());
         final String newName = stringToSnakeCaseUtil.apply(tableColumnBean.getName());
@@ -91,7 +91,7 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         LOGGER.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
         LOGGER.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
 
-        return new TableColumn(realName, name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
+        return new Column(realName, name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
     }
 
 }

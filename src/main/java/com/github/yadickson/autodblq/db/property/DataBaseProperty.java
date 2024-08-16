@@ -3,13 +3,13 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.property;
+package com.github.yadickson.autodblq.db.property;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class DataBaseTableProperty {
+public class DataBaseProperty {
 
     private final String realName;
     private final String name;
@@ -20,15 +20,15 @@ public class DataBaseTableProperty {
     private String defaultValue;
     private String propertyType;
 
-    public DataBaseTableProperty(final String realName, final String name, String newName) {
+    public DataBaseProperty(final String realName, final String name, String newName) {
         this(realName, name, newName, null);
     }
 
-    public DataBaseTableProperty(final String realName, final String name, String newName, final String type) {
+    public DataBaseProperty(final String realName, final String name, String newName, final String type) {
         this(realName, name, newName, type, 0);
     }
 
-    public DataBaseTableProperty(final String realName, final String name, String newName, final String type, final Integer length) {
+    public DataBaseProperty(final String realName, final String name, String newName, final String type, final Integer length) {
         this.realName = realName;
         this.name = name;
         this.newName = newName;
@@ -60,7 +60,7 @@ public class DataBaseTableProperty {
         return defaultType;
     }
 
-    public DataBaseTableProperty setDefaultType(String defaultType) {
+    public DataBaseProperty setDefaultType(String defaultType) {
         this.defaultType = defaultType;
         return this;
     }
@@ -69,7 +69,7 @@ public class DataBaseTableProperty {
         return defaultValue;
     }
 
-    public DataBaseTableProperty setDefaultValue(String defaultValue) {
+    public DataBaseProperty setDefaultValue(String defaultValue) {
         this.defaultValue = defaultValue;
         return this;
     }
@@ -78,7 +78,7 @@ public class DataBaseTableProperty {
         return propertyType;
     }
 
-    public DataBaseTableProperty setPropertyType(String propertyType) {
+    public DataBaseProperty setPropertyType(String propertyType) {
         this.propertyType = propertyType;
         return this;
     }

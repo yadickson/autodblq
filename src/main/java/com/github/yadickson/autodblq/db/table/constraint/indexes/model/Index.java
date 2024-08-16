@@ -5,19 +5,19 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.indexes.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TableIndex extends DataBaseTableProperty {
+public final class Index extends DataBaseProperty {
 
     private final String realColumns;
     private final String columns;
     private final Boolean isUnique;
 
-    public TableIndex(String realName, String name, String newName, String columns, String realColumns, Boolean isUnique) {
+    public Index(String realName, String name, String newName, String columns, String realColumns, Boolean isUnique) {
         super(realName, name, newName);
         this.realColumns = realColumns;
         this.columns = columns;

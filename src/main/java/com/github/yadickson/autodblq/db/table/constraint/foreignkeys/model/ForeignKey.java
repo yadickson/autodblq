@@ -5,13 +5,13 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TableForeignKey extends DataBaseTableProperty {
+public final class ForeignKey extends DataBaseProperty {
 
     private final String realColumns;
     private final String columns;
@@ -22,7 +22,7 @@ public final class TableForeignKey extends DataBaseTableProperty {
     private final String referenceRealColumns;
     private final String referenceColumns;
 
-    public TableForeignKey(String realName, String name, String newName, String realColumns, String columns, String referenceRealSchema, String referenceSchema, String referenceRealName, String referenceName, String referenceRealColumns, String referenceColumns) {
+    public ForeignKey(String realName, String name, String newName, String realColumns, String columns, String referenceRealSchema, String referenceSchema, String referenceRealName, String referenceName, String referenceRealColumns, String referenceColumns) {
         super(realName, name, newName);
         this.realColumns = realColumns;
         this.columns = columns;

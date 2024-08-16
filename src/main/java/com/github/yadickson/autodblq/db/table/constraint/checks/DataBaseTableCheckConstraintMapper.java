@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
-import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheck;
+import com.github.yadickson.autodblq.db.table.constraint.checks.model.Check;
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBean, DataBaseTableProperty> {
+public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableCheckConstraintMapper.class);
 
@@ -40,7 +40,7 @@ public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBe
     }
 
     @Override
-    public DataBaseTableProperty apply(final TableCheckBean tableBean) {
+    public DataBaseProperty apply(final TableCheckBean tableBean) {
         final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
         final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
         final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
@@ -52,6 +52,6 @@ public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBe
         LOGGER.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Column: " + constraintRealColumns);
         LOGGER.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Value: " + constraintValue);
 
-        return new TableCheck(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintNewColumns, constraintValue);
+        return new Check(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintNewColumns, constraintValue);
     }
 }

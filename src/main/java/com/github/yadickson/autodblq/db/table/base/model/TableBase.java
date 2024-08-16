@@ -5,21 +5,19 @@
  */
 package com.github.yadickson.autodblq.db.table.base.model;
 
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class TableBase {
+public class TableBase extends DataBaseProperty {
 
     private final String realSchema;
-    private final String realName;
     private final String schema;
-    private final String name;
     private final String remarks;
     private final String newSchema;
-    private final String newName;
 
     private final String fullName;
     private final String newFullName;
@@ -29,27 +27,17 @@ public class TableBase {
     }
 
     public TableBase(final String realSchema, final String realName, final String schema, final String name, final String remarks, final String newSchema, final String newName) {
+        super(realName, name, newName);
         this.realSchema = realSchema;
-        this.realName = realName;
         this.schema = schema;
-        this.name = name;
         this.remarks = remarks;
         this.newSchema = newSchema;
-        this.newName = newName;
         this.fullName = StringUtils.isEmpty(realSchema) ? realName : realSchema + "." + realName;
         this.newFullName = StringUtils.isEmpty(newSchema) ? newName : newSchema + "." + newName;
     }
 
-    public String getRealName() {
-        return realName;
-    }
-
     public String getRealSchema() {
         return realSchema;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getSchema() {
@@ -58,10 +46,6 @@ public class TableBase {
 
     public String getRemarks() {
         return remarks;
-    }
-
-    public String getNewName() {
-        return newName;
     }
 
     public String getNewSchema() {

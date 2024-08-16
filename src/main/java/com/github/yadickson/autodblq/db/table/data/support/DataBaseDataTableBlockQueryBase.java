@@ -7,7 +7,7 @@ package com.github.yadickson.autodblq.db.table.data.support;
 
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import org.apache.commons.lang.StringUtils;
 
 import java.util.ArrayList;
@@ -29,7 +29,7 @@ public abstract class DataBaseDataTableBlockQueryBase implements DataBaseDataTab
         List<String> mlist = new ArrayList<>();
         List<String> ilist = new ArrayList<>();
 
-        for (DataBaseTableProperty field : table.getColumns()) {
+        for (DataBaseProperty field : table.getColumns()) {
             mlist.add("m." + field.getName());
             ilist.add(field.getName());
         }

@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.foreignkeys;
 
-import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKey;
+import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.ForeignKey;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableForeignKeyConstraintMapper implements Function<TableForeignKeyBean, DataBaseTableProperty> {
+public class DataBaseTableForeignKeyConstraintMapper implements Function<TableForeignKeyBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableForeignKeyConstraintMapper.class);
 
@@ -41,7 +41,7 @@ public class DataBaseTableForeignKeyConstraintMapper implements Function<TableFo
     }
 
     @Override
-    public DataBaseTableProperty apply(final TableForeignKeyBean tableBean) {
+    public DataBaseProperty apply(final TableForeignKeyBean tableBean) {
         final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
         final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
         final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
@@ -60,6 +60,6 @@ public class DataBaseTableForeignKeyConstraintMapper implements Function<TableFo
         LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceRealName);
         LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceRealColumns);
 
-        return new TableForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns);
+        return new ForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns);
     }
 }

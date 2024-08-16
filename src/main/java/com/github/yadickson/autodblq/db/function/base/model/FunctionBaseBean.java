@@ -15,6 +15,7 @@ public final class FunctionBaseBean {
     private String schema;
     private String content;
     private String isfunction;
+    private String returntype;
 
     public String getName() {
         return name;
@@ -48,4 +49,11 @@ public final class FunctionBaseBean {
         this.isfunction = isfunction;
     }
 
+    public String getReturntype() {
+        return returntype;
+    }
+
+    public void setReturntype(String returntype) {
+        this.returntype = returntype;
+    }
 }

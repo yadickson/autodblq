@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint.uniques;
 
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableUniqueConstraintsMapper implements Function<List<TableUniqueBean>, List<DataBaseTableProperty>> {
+public class DataBaseTableUniqueConstraintsMapper implements Function<List<TableUniqueBean>, List<DataBaseProperty>> {
 
     private final DataBaseTableUniqueConstraintMapper mapper;
 
@@ -29,7 +29,7 @@ public class DataBaseTableUniqueConstraintsMapper implements Function<List<Table
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(final List<TableUniqueBean> tables) {
+    public List<DataBaseProperty> apply(final List<TableUniqueBean> tables) {
         return tables.stream().map(mapper).collect(Collectors.toList());
     }
 

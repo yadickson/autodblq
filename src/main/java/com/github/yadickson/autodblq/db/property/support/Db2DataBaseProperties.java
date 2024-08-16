@@ -3,18 +3,19 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.property.support;
+package com.github.yadickson.autodblq.db.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class OracleDataBaseTableProperties extends DataBaseTablePropertiesBase {
+public class Db2DataBaseProperties extends DataBasePropertiesBase {
 
-    public OracleDataBaseTableProperties() {
-        super(Driver.ORACLE);
+    public Db2DataBaseProperties() {
+        super(Driver.DB2);
     }
 
     @Override
@@ -62,4 +63,48 @@ public class OracleDataBaseTableProperties extends DataBaseTablePropertiesBase {
         return "";
     }
 
+    @Override
+    protected String getInitFunctionValue() {
+        return "";
+    }
+
+    @Override
+    protected String getEndFunctionValue() {
+        return "";
+    }
+
+    @Override
+    protected String getPreInMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPreOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPreInOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPostInMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPostOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPostInOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPreValue() {
+        return "";
+    }
 }

@@ -5,19 +5,19 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TableCheck extends DataBaseTableProperty {
+public final class Check extends DataBaseProperty {
 
     private final String realColumnNames;
     private final String newColumnNames;
     private final String value;
 
-    public TableCheck(String realName, String name, String newName, String realColumnNames, String newColumnNames, String columnValue)
+    public Check(String realName, String name, String newName, String realColumnNames, String newColumnNames, String columnValue)
     {
         super(realName, name, newName);
         this.realColumnNames = realColumnNames;

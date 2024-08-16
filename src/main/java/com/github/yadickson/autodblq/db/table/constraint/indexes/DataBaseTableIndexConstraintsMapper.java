@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint.indexes;
 
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableIndexConstraintsMapper implements Function<List<TableIndexBean>, List<DataBaseTableProperty>> {
+public class DataBaseTableIndexConstraintsMapper implements Function<List<TableIndexBean>, List<DataBaseProperty>> {
 
     private final DataBaseTableIndexConstraintMapper mapper;
 
@@ -29,7 +29,7 @@ public class DataBaseTableIndexConstraintsMapper implements Function<List<TableI
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(final List<TableIndexBean> tables) {
+    public List<DataBaseProperty> apply(final List<TableIndexBean> tables) {
         return tables.stream().map(mapper).collect(Collectors.toList());
     }
 

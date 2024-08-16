@@ -5,17 +5,17 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.defaults.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TableDefault extends DataBaseTableProperty {
+public final class Default extends DataBaseProperty {
 
     private final String value;
 
-    public TableDefault(String realName, String name, String newName, String defaultType, String columnValue)
+    public Default(String realName, String name, String newName, String defaultType, String columnValue)
     {
         super(realName, name, newName);
         this.setDefaultType(defaultType);

@@ -11,7 +11,7 @@ import javax.inject.Named;
 import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
+import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -23,15 +23,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseDataTableReader {
 
-    private final DataTablePropertyManager dataTablePropertyManager;
+    private final DataBasePropertyManager dataBasePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseDataTableReader(DataTablePropertyManager dataTablePropertyManager, DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory, ParametersPlugin parametersPlugin, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringTrimUtil stringTrimUtil) {
-        this.dataTablePropertyManager = dataTablePropertyManager;
+    public DataBaseDataTableReader(DataBasePropertyManager dataBasePropertyManager, DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory, ParametersPlugin parametersPlugin, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringTrimUtil stringTrimUtil) {
+        this.dataBasePropertyManager = dataBasePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
@@ -39,7 +39,7 @@ public class DataBaseDataTableReader {
     }
 
     public DataBaseDataTableReaderIterator execute(final DriverConnection driverConnection, final TableBase table) {
-        return new DataBaseDataTableReaderIterator(dataTablePropertyManager, dataBaseDataTableBlockQueryFactory, stringToSnakeCaseUtil, stringToLowerCaseUtil, stringTrimUtil, driverConnection, table);
+        return new DataBaseDataTableReaderIterator(dataBasePropertyManager, dataBaseDataTableBlockQueryFactory, stringToSnakeCaseUtil, stringToLowerCaseUtil, stringTrimUtil, driverConnection, table);
     }
 
 }

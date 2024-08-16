@@ -21,6 +21,7 @@ public enum DefinitionGeneratorType {
     CHECKS("/changelog/checks.ftl", "%02d-check-constraints.xml"),
     VIEWS("/changelog/views.ftl", "%02d-views.xml"),
     FUNCTIONS("/changelog/functions.ftl", "%02d-functions.xml"),
+    PROCEDURES("/changelog/procedures.ftl", "%02d-procedures.xml"),
     DATA_TABLES("/changelog/datasets.ftl", "%02d-datasets.xml"),
     MASTER_CHANGELOG("/masterchangelog.ftl", "masterchangelog.xml"),
     VIEW("/sql/view.ftl", "%s.sql"),

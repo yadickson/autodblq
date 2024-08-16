@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint.primarykeys;
 
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTablePrimaryKeyConstraintsMapper implements Function<List<TablePrimaryKeyBean>, List<DataBaseTableProperty>> {
+public class DataBaseTablePrimaryKeyConstraintsMapper implements Function<List<TablePrimaryKeyBean>, List<DataBaseProperty>> {
 
     private final DataBaseTablePrimaryKeyConstraintMapper mapper;
 
@@ -29,7 +29,7 @@ public class DataBaseTablePrimaryKeyConstraintsMapper implements Function<List<T
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(final List<TablePrimaryKeyBean> tables) {
+    public List<DataBaseProperty> apply(final List<TablePrimaryKeyBean> tables) {
         return tables.stream().map(mapper).collect(Collectors.toList());
     }
 

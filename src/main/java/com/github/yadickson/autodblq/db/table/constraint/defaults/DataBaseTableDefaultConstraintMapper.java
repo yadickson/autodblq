@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.defaults;
 
-import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefault;
+import com.github.yadickson.autodblq.db.table.constraint.defaults.model.Default;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.CleanStringValueUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableDefaultConstraintMapper implements Function<TableDefaultBean, DataBaseTableProperty> {
+public class DataBaseTableDefaultConstraintMapper implements Function<TableDefaultBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefaultConstraintMapper.class);
 
@@ -41,7 +41,7 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
     }
 
     @Override
-    public DataBaseTableProperty apply(final TableDefaultBean tableBean) {
+    public DataBaseProperty apply(final TableDefaultBean tableBean) {
         final String constraintRealColumn = stringTrimUtil.apply(tableBean.getColumn());
         final String constraintColumn = stringToLowerCaseUtil.apply(tableBean.getColumn());
         final String constraintNewColumn = stringToSnakeCaseUtil.apply(tableBean.getColumn());
@@ -52,6 +52,6 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint ColumnType: " + constraintColumnType);
         LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Value: " + constraintValue);
 
-        return new TableDefault(constraintRealColumn, constraintColumn, constraintNewColumn, constraintColumnType, constraintValue);
+        return new Default(constraintRealColumn, constraintColumn, constraintNewColumn, constraintColumnType, constraintValue);
     }
 }

@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableCheckConstraintsMapper implements Function<List<TableCheckBean>, List<DataBaseTableProperty>> {
+public class DataBaseTableCheckConstraintsMapper implements Function<List<TableCheckBean>, List<DataBaseProperty>> {
 
     private final DataBaseTableCheckConstraintMapper mapper;
 
@@ -29,7 +29,7 @@ public class DataBaseTableCheckConstraintsMapper implements Function<List<TableC
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(final List<TableCheckBean> tables) {
+    public List<DataBaseProperty> apply(final List<TableCheckBean> tables) {
         return tables.stream().map(mapper).collect(Collectors.toList());
     }
 

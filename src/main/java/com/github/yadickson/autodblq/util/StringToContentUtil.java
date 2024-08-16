@@ -30,8 +30,8 @@ public class StringToContentUtil implements Function<String, String> {
     @Override
     public String apply(final String input) {
         String fullContent = stringTrimUtil.apply(input);
-        String clearBlockComments = RegExUtils.removeAll(fullContent, "/\\*.*?\\*/");
-        String clearInlineComments = RegExUtils.removeAll(clearBlockComments, Pattern.compile("(.*)--.*"));
+        String clearBlockComments = RegExUtils.replaceAll(fullContent, "/\\*.*?\\*/", " ");
+        String clearInlineComments = RegExUtils.replaceAll(clearBlockComments, Pattern.compile("(.*)--.*"), " ");
         return SqlFormatter.format(clearInlineComments,
                 FormatConfig.builder()
                         .indent("    ")

@@ -11,6 +11,7 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.db.function.parameters.DataBaseFunctionParametersReader;
 import org.apache.commons.collections.CollectionUtils;
 import org.apache.log4j.Logger;
 
@@ -32,6 +33,7 @@ public class DataBaseFunctionBaseReader {
     private final DataBaseFunctionBaseQueryFactory dataBaseFunctionQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseFunctionBaseMapper dataBaseFunctionMapper;
+    private final DataBaseFunctionParametersReader dataBaseFunctionParametersReader;
 
     private String sqlQuery;
     private final List<FunctionBaseBean> allFunctions = new ArrayList<>();
@@ -40,11 +42,13 @@ public class DataBaseFunctionBaseReader {
     public DataBaseFunctionBaseReader(
             final DataBaseFunctionBaseQueryFactory dataBaseFunctionQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
-            final DataBaseFunctionBaseMapper dataBaseFunctionMapper
+            final DataBaseFunctionBaseMapper dataBaseFunctionMapper,
+            final DataBaseFunctionParametersReader dataBaseFunctionParametersReader
     ) {
         this.dataBaseFunctionQueryFactory = dataBaseFunctionQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseFunctionMapper = dataBaseFunctionMapper;
+        this.dataBaseFunctionParametersReader = dataBaseFunctionParametersReader;
     }
 
     public List<FunctionBase> execute(
@@ -61,7 +65,7 @@ public class DataBaseFunctionBaseReader {
             }
 
             findFunctions(filter, driverConnection);
-            return processFunctions(filter);
+            return processFunctions(driverConnection, filter);
 
         } catch (RuntimeException ex) {
             throw new DataBaseFunctionBaseReaderException(ex);
@@ -93,8 +97,9 @@ public class DataBaseFunctionBaseReader {
         return functions;
     }
 
-    private List<FunctionBase> processFunctions(final List<String> filter) {
-        List<FunctionBase> functions = dataBaseFunctionMapper.apply(allFunctions);
+    private List<FunctionBase> processFunctions(final DriverConnection driverConnection, final List<String> filter) {
+        List<FunctionBase> results = dataBaseFunctionMapper.apply(allFunctions);
+        List<FunctionBase> functions = dataBaseFunctionParametersReader.execute(driverConnection, results);
         functions.sort(new DataBaseFunctionBaseSort(filter));
         return functions;
     }

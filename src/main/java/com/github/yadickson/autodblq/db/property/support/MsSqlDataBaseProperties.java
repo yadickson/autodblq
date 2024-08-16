@@ -3,7 +3,7 @@
  *
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
-package com.github.yadickson.autodblq.db.table.property.support;
+package com.github.yadickson.autodblq.db.property.support;
 
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 
@@ -11,9 +11,9 @@ import com.github.yadickson.autodblq.db.connection.driver.Driver;
  *
  * @author Yadickson Soto
  */
-public class MsSqlDataBaseTableProperties extends DataBaseTablePropertiesBase {
+public class MsSqlDataBaseProperties extends DataBasePropertiesBase {
 
-    public MsSqlDataBaseTableProperties() {
+    public MsSqlDataBaseProperties() {
         super(Driver.MSSQL);
     }
 
@@ -60,5 +60,50 @@ public class MsSqlDataBaseTableProperties extends DataBaseTablePropertiesBase {
     @Override
     protected String getDefaultUuidValue() {
         return "newid()";
+    }
+
+    @Override
+    protected String getInitFunctionValue() {
+        return "";
+    }
+
+    @Override
+    protected String getEndFunctionValue() {
+        return "";
+    }
+
+    @Override
+    protected String getPreInMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPreOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPreInOutMode() {
+        return "";
+    }
+
+    @Override
+    protected String getPostInMode() {
+        return " in";
+    }
+
+    @Override
+    protected String getPostOutMode() {
+        return " out";
+    }
+
+    @Override
+    protected String getPostInOutMode() {
+        return " inout";
+    }
+
+    @Override
+    protected String getPreValue() {
+        return "@";
     }
 }

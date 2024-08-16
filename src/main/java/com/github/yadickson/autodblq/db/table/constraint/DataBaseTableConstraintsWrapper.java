@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint;
 
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import java.util.List;
 
@@ -16,14 +16,14 @@ import java.util.List;
  */
 public final class DataBaseTableConstraintsWrapper extends TableBase {
 
-    private final List<DataBaseTableProperty> constraints;
+    private final List<DataBaseProperty> constraints;
 
-    public DataBaseTableConstraintsWrapper(final TableBase table, final List<DataBaseTableProperty> constraints) {
+    public DataBaseTableConstraintsWrapper(final TableBase table, final List<DataBaseProperty> constraints) {
         super(table);
         this.constraints = constraints;
     }
 
-    public List<DataBaseTableProperty> getConstraints() {
+    public List<DataBaseProperty> getConstraints() {
         return constraints;
     }
 

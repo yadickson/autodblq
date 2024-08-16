@@ -14,9 +14,9 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
-import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -36,7 +36,7 @@ public class DataBaseDataTableReaderIterator {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableReaderIterator.class);
 
-    private final DataTablePropertyManager dataTablePropertyManager;
+    private final DataBasePropertyManager dataBasePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
@@ -51,7 +51,7 @@ public class DataBaseDataTableReaderIterator {
     private static final Long BLOCK = 20L;
 
     public DataBaseDataTableReaderIterator(
-            final DataTablePropertyManager dataTablePropertyManager,
+            final DataBasePropertyManager dataBasePropertyManager,
             final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
@@ -59,7 +59,7 @@ public class DataBaseDataTableReaderIterator {
             final DriverConnection driverConnection,
             final TableBase table
     ) {
-        this.dataTablePropertyManager = dataTablePropertyManager;
+        this.dataBasePropertyManager = dataBasePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
@@ -139,7 +139,7 @@ public class DataBaseDataTableReaderIterator {
         }
 
         while (resultSet.next()) {
-            List<DataBaseTableProperty> rows = new ArrayList<>(columnCount);
+            List<DataBaseProperty> rows = new ArrayList<>(columnCount);
 
             for (int j = 0; j < columnCount; j++) {
 
@@ -148,8 +148,8 @@ public class DataBaseDataTableReaderIterator {
                 String columnType = stringToLowerCaseUtil.apply(metadata.getColumnTypeName(j + 1));
                 String columnValue = StringUtils.containsIgnoreCase(columnType, "bool") ? Boolean.toString(resultSet.getBoolean(j + 1)) : resultSet.getString(j + 1);
 
-                DataBaseTableProperty column = new DataBaseTableProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
-                TablePropertyType response = dataTablePropertyManager.process(column);
+                DataBaseProperty column = new DataBaseProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
+                TablePropertyType response = dataBasePropertyManager.process(column);
 
                 if (response != null)
                     column.setPropertyType(response.getName());

@@ -5,13 +5,13 @@
  */
 package com.github.yadickson.autodblq.db.table.columns.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public class TableColumn extends DataBaseTableProperty {
+public class Column extends DataBaseProperty {
 
     private final Integer position;
     private final Boolean nullable;
@@ -22,7 +22,7 @@ public class TableColumn extends DataBaseTableProperty {
     private final Integer startWith;
     private final Integer incrementBy;
 
-    public TableColumn(final String realName, final String name, String newName, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable, Boolean identity, Integer startWith, Integer incrementBy) {
+    public Column(final String realName, final String name, String newName, final String type, final Integer position, final Integer length, final String precision, final String scale, final String remarks, final Boolean nullable, Boolean identity, Integer startWith, Integer incrementBy) {
         super(realName, name, newName, type, length);
         this.position = position;
         this.precision = precision;

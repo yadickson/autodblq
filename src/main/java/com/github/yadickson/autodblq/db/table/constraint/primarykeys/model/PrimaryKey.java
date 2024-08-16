@@ -5,18 +5,18 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.primarykeys.model;
 
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class TablePrimaryKey extends DataBaseTableProperty {
+public final class PrimaryKey extends DataBaseProperty {
 
     private final String realColumns;
     private final String columns;
 
-    public TablePrimaryKey(String realName, String name, String newName, String realColumns, String columns) {
+    public PrimaryKey(String realName, String name, String newName, String realColumns, String columns) {
         super(realName, name, newName);
         this.realColumns = realColumns;
         this.columns = columns;

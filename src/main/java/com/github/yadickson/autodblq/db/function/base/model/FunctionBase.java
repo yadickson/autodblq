@@ -5,41 +5,36 @@
  */
 package com.github.yadickson.autodblq.db.function.base.model;
 
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import org.apache.commons.lang3.StringUtils;
 
 /**
  *
  * @author Yadickson Soto
  */
-public final class FunctionBase {
+public class FunctionBase extends DataBaseProperty {
 
     private final String realSchema;
     private final String schema;
-    private final String realName;
-    private final String name;
     private final String realContent;
     private final String newContent;
     private final Boolean isFunction;
     private final String newSchema;
-    private final String newName;
-
     private final String fullName;
     private final String newFullName;
 
     public FunctionBase(FunctionBase functionBase) {
-        this(functionBase.getRealSchema(), functionBase.getSchema(), functionBase.getRealName(), functionBase.getName(), functionBase.getRealContent(), functionBase.getNewContent(), functionBase.getIsFunction(), functionBase.getNewSchema(), functionBase.getNewName());
+        this(functionBase.getRealSchema(), functionBase.getSchema(), functionBase.getRealName(), functionBase.getName(), functionBase.getRealContent(), functionBase.getNewContent(), functionBase.getIsFunction(), functionBase.getNewSchema(), functionBase.getNewName(), functionBase.getType());
     }
 
-    public FunctionBase(String realSchema, String schema, String realName, String name, String realContent, String newContent, Boolean isFunction, final String newSchema, final String newName) {
+    public FunctionBase(String realSchema, String schema, String realName, String name, String realContent, String newContent, Boolean isFunction, final String newSchema, final String newName, final String returnType) {
+        super(realName, name, newName, returnType);
         this.realSchema = realSchema;
         this.schema = schema;
-        this.realName = realName;
-        this.name = name;
         this.realContent = realContent;
         this.newContent = newContent;
         this.isFunction = isFunction;
         this.newSchema = newSchema;
-        this.newName = newName;
 
         this.fullName = org.apache.commons.lang3.StringUtils.isEmpty(realSchema) ? realName : realSchema + "." + realName;
         this.newFullName = StringUtils.isEmpty(newSchema) ? newName : newSchema + "." + newName;
@@ -49,20 +44,12 @@ public final class FunctionBase {
         return realSchema;
     }
 
-    public String getRealName() {
-        return realName;
-    }
-
     public String getRealContent() {
         return realContent;
     }
 
     public String getSchema() {
         return schema;
-    }
-
-    public String getName() {
-        return name;
     }
 
     public String getNewContent() {
@@ -77,10 +64,6 @@ public final class FunctionBase {
         return newSchema;
     }
 
-    public String getNewName() {
-        return newName;
-    }
-
     public String getFullName() {
         return fullName;
     }
@@ -88,5 +71,4 @@ public final class FunctionBase {
     public String getNewFullName() {
         return newFullName;
     }
-
 }

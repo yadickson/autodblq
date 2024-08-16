@@ -67,13 +67,15 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
         final Boolean isFunction = stringToBooleanUtil.apply(functionBean.getIsfunction());
         final String newSchema = stringToSnakeCaseUtil.apply(functionBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(functionBean.getName());
+        final String returnType = stringToSnakeCaseUtil.apply(functionBean.getReturntype());
 
         LOGGER.debug("[DataBaseFunctionBaseMapper] Schema: " + realSchema);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Name: " + realName);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Content: " + realContent);
         LOGGER.debug("[DataBaseFunctionBaseMapper] Is Function: " + isFunction);
+        LOGGER.debug("[DataBaseFunctionBaseMapper] Return Type: " + returnType);
 
-        return new FunctionBase(realSchema, schema, realName, name, realContent, newContent, isFunction, newSchema, newName);
+        return new FunctionBase(realSchema, schema, realName, name, realContent, newContent, isFunction, newSchema, newName, returnType);
     }
 
 }

@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.indexes;
 
-import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndex;
+import com.github.yadickson.autodblq.db.table.constraint.indexes.model.Index;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
@@ -20,7 +20,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableIndexConstraintMapper implements Function<TableIndexBean, DataBaseTableProperty> {
+public class DataBaseTableIndexConstraintMapper implements Function<TableIndexBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableIndexConstraintMapper.class);
 
@@ -40,7 +40,7 @@ public class DataBaseTableIndexConstraintMapper implements Function<TableIndexBe
     }
 
     @Override
-    public DataBaseTableProperty apply(final TableIndexBean tableBean) {
+    public DataBaseProperty apply(final TableIndexBean tableBean) {
         final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
         final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
         final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
@@ -52,6 +52,6 @@ public class DataBaseTableIndexConstraintMapper implements Function<TableIndexBe
         LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint Columns: " + constraintRealColumns);
         LOGGER.debug("[DataBaseTableDefaultMapper] Index Constraint IsUnique: " + constraintIsUnique);
 
-        return new TableIndex(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintIsUnique);
+        return new Index(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintIsUnique);
     }
 }

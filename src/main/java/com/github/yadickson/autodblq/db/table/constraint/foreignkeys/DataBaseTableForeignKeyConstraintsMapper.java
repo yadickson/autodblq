@@ -6,7 +6,7 @@
 package com.github.yadickson.autodblq.db.table.constraint.foreignkeys;
 
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -19,7 +19,7 @@ import java.util.stream.Collectors;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTableForeignKeyConstraintsMapper implements Function<List<TableForeignKeyBean>, List<DataBaseTableProperty>> {
+public class DataBaseTableForeignKeyConstraintsMapper implements Function<List<TableForeignKeyBean>, List<DataBaseProperty>> {
 
     private final DataBaseTableForeignKeyConstraintMapper mapper;
 
@@ -29,7 +29,7 @@ public class DataBaseTableForeignKeyConstraintsMapper implements Function<List<T
     }
 
     @Override
-    public List<DataBaseTableProperty> apply(final List<TableForeignKeyBean> tables) {
+    public List<DataBaseProperty> apply(final List<TableForeignKeyBean> tables) {
         return tables.stream().map(mapper).collect(Collectors.toList());
     }
 

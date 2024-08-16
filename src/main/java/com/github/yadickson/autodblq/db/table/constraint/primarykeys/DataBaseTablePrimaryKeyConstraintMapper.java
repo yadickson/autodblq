@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.primarykeys;
 
-import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKey;
+import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.PrimaryKey;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
-import com.github.yadickson.autodblq.db.table.property.DataBaseTableProperty;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -23,7 +23,7 @@ import java.util.function.Function;
  * @author Yadickson Soto
  */
 @Named
-public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePrimaryKeyBean, DataBaseTableProperty> {
+public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePrimaryKeyBean, DataBaseProperty> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTablePrimaryKeyConstraintMapper.class);
 
@@ -41,7 +41,7 @@ public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePr
     }
 
     @Override
-    public DataBaseTableProperty apply(final TablePrimaryKeyBean tableBean) {
+    public DataBaseProperty apply(final TablePrimaryKeyBean tableBean) {
         final String constraintRealName = stringTrimUtil.apply(tableBean.getName());
         final String constraintName = stringToLowerCaseUtil.apply(tableBean.getName());
         final String constraintNewName = stringToSnakeCaseUtil.apply(tableBean.getName());
@@ -51,6 +51,6 @@ public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePr
         LOGGER.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Name: " + constraintRealName);
         LOGGER.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Columns: " + constraintRealColumns);
 
-        return new TablePrimaryKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
+        return new PrimaryKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
     }
 }

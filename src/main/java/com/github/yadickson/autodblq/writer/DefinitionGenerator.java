@@ -8,14 +8,14 @@ package com.github.yadickson.autodblq.writer;
 import java.io.File;
 import java.io.IOException;
 import java.util.*;
+import java.util.stream.Collectors;
 
 import javax.inject.Inject;
 import javax.inject.Named;
 
 import com.github.yadickson.autodblq.ParametersPlugin;
-import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.table.property.DataTablePropertyManager;
-import com.github.yadickson.autodblq.db.table.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import org.apache.commons.io.FileUtils;
 
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
@@ -39,7 +39,7 @@ public final class DefinitionGenerator {
     private final TemplateGenerator templateGenerator;
     private final DataTableGenerator dataTableGenerator;
     private final DirectoryBuilder directoryBuilder;
-    private final DataTablePropertyManager dataTablePropertyManager;
+    private final DataBasePropertyManager dataBasePropertyManager;
 
     private String version;
     private List<TableBase> tables;
@@ -52,6 +52,7 @@ public final class DefinitionGenerator {
     private List<TableBase> dataTables;
     private List<ViewBase> views;
     private List<FunctionBase> functions;
+    private List<FunctionBase> procedures;
 
     private final Map<String, Object> values = new HashMap<>();
     private final List<String> filesGenerated = new ArrayList<>();
@@ -81,6 +82,7 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_DATA_TABLE = "dataTables";
     private static final String DATA_BASE_VIEWS = "views";
     private static final String DATA_BASE_FUNCTIONS = "functions";
+    private static final String DATA_BASE_PROCEDURES = "procedures";
 
     private static final String DRIVER_NAME = "driverName";
     private static final String CHANGELOG_PATH = "changelogpath";
@@ -107,13 +109,13 @@ public final class DefinitionGenerator {
             final ParametersPlugin parametersPlugin,
             final TemplateGenerator templateGenerator,
             final DataTableGenerator dataTableGenerator,
-            final DirectoryBuilder directoryBuilder, DataTablePropertyManager dataTablePropertyManager
+            final DirectoryBuilder directoryBuilder, DataBasePropertyManager dataBasePropertyManager
     ) {
         this.parametersPlugin = parametersPlugin;
         this.templateGenerator = templateGenerator;
         this.dataTableGenerator = dataTableGenerator;
         this.directoryBuilder = directoryBuilder;
-        this.dataTablePropertyManager = dataTablePropertyManager;
+        this.dataBasePropertyManager = dataBasePropertyManager;
     }
 
     public void execute(final DriverConnection driverConnection, final Map<DataBaseGeneratorType, Object> dataBaseGenerator) {
@@ -144,7 +146,8 @@ public final class DefinitionGenerator {
         primaryKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PRIMARY_KEYS);
         foreignKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_FOREIGN_KEYS);
         views = (List) dataBaseGenerator.get(DataBaseGeneratorType.VIEW_DEFINITION);
-        functions = (List) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION);
+        functions = ((List<FunctionBase>) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION)).stream().filter(function -> function.getIsFunction()).collect(Collectors.toList());
+        procedures = ((List<FunctionBase>) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION)).stream().filter(function -> !function.getIsFunction()).collect(Collectors.toList());
     }
 
     private void makeInputValues(final DriverConnection driverConnection) {
@@ -164,6 +167,7 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_FOREIGN_KEYS, foreignKeys);
         values.put(DATA_BASE_VIEWS, views);
         values.put(DATA_BASE_FUNCTIONS, functions);
+        values.put(DATA_BASE_PROCEDURES, procedures);
 
         values.put(DRIVER_NAME, driverConnection.getDriver().getMessage());
 
@@ -201,11 +205,12 @@ public final class DefinitionGenerator {
         makeForeignKeys();
         makeViews();
         makeFunctions();
+        makeProcedures();
         makeDataTables();
     }
 
     private void makeProperties() {
-        Map<String, List<TablePropertyType>> properties = dataTablePropertyManager.getProperties();
+        Map<String, List<TablePropertyType>> properties = dataBasePropertyManager.getProperties();
 
         if (!properties.isEmpty()) {
             values.put(DATA_BASE_PROPERTIES, properties);
@@ -287,14 +292,22 @@ public final class DefinitionGenerator {
         addAndMakeFileBase(DefinitionGeneratorType.FUNCTIONS);
 
         for (FunctionBase function : functions) {
+            values.put(FUNCTION, function);
+            makeFunctionFile(function);
+        }
+    }
 
-            if (function.getIsFunction()) {
-                values.put(FUNCTION, function);
-                makeFunctionFile(function);
-            } else {
-                values.put(PROCEDURE, function);
-                makeProcedureFile(function);
-            }
+    private void makeProcedures() {
+
+        if (procedures.isEmpty()) {
+            return;
+        }
+
+        addAndMakeFileBase(DefinitionGeneratorType.PROCEDURES);
+
+        for (FunctionBase procedure : procedures) {
+            values.put(PROCEDURE, procedure);
+            makeProcedureFile(procedure);
         }
     }
 
