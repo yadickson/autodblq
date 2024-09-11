@@ -101,9 +101,6 @@ public final class DefinitionGenerator {
     private static final String FUNCTIONS_DIRECTORY = "functionsDirectory";
     private static final String PROCEDURES_DIRECTORY = "proceduresDirectory";
 
-
-    private Boolean keepNames = true;
-
     @Inject
     public DefinitionGenerator(
             final ParametersPlugin parametersPlugin,
@@ -185,8 +182,6 @@ public final class DefinitionGenerator {
         values.put(VIEWS_DIRECTORY, parametersPlugin.getOutputViewsDirectory());
         values.put(FUNCTIONS_DIRECTORY, parametersPlugin.getOutputFunctionsDirectory());
         values.put(PROCEDURES_DIRECTORY, parametersPlugin.getOutputProceduresDirectory());
-
-        keepNames = parametersPlugin.getKeepNames();
     }
 
     private void cleanOutputDirectory() throws IOException {
@@ -210,71 +205,48 @@ public final class DefinitionGenerator {
     }
 
     private void makeProperties() {
-        Map<String, List<TablePropertyType>> properties = dataBasePropertyManager.getProperties();
 
-        if (!properties.isEmpty()) {
+        if(!parametersPlugin.getKeepNames()) {
+            Map<String, List<TablePropertyType>> properties = dataBasePropertyManager.getProperties();
             values.put(DATA_BASE_PROPERTIES, properties);
-            addAndMakeFileBase(DefinitionGeneratorType.PROPERTIES);
         }
+
+        addAndMakeFileBase(DefinitionGeneratorType.PROPERTIES);
     }
 
     private void makeTables() {
-        if (!tables.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.TABLES);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.TABLES);
     }
 
     private void makeChecks() {
-        if (!checks.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.CHECKS);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.CHECKS);
     }
 
     private void makeDefaults() {
-        if (!defaults.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.DEFAULTS);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.DEFAULTS);
     }
 
     private void makeIndexes() {
-        if (!indexes.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.INDEXES);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.INDEXES);
     }
 
     private void makeUniques() {
-        if (!uniques.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.UNIQUES);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.UNIQUES);
     }
 
     private void makePrimaryKeys() {
-        if (!primaryKeys.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.PRIMARY_KEYS);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.PRIMARY_KEYS);
     }
 
     private void makeForeignKeys() {
-        if (!foreignKeys.isEmpty()) {
-            addAndMakeFileBase(DefinitionGeneratorType.FOREIGN_KEYS);
-        }
+        addAndMakeFileBase(DefinitionGeneratorType.FOREIGN_KEYS);
     }
 
     private void makeDataTables() {
-
-        if (dataTables.isEmpty()) {
-            return;
-        }
-
         addAndMakeFileBase(DefinitionGeneratorType.DATA_TABLES);
     }
 
     private void makeViews() {
-
-        if (views.isEmpty()) {
-            return;
-        }
-
         addAndMakeFileBase(DefinitionGeneratorType.VIEWS);
 
         for (ViewBase view : views) {
@@ -284,11 +256,6 @@ public final class DefinitionGenerator {
     }
 
     private void makeFunctions() {
-
-        if (functions.isEmpty()) {
-            return;
-        }
-
         addAndMakeFileBase(DefinitionGeneratorType.FUNCTIONS);
 
         for (FunctionBase function : functions) {
@@ -298,11 +265,6 @@ public final class DefinitionGenerator {
     }
 
     private void makeProcedures() {
-
-        if (procedures.isEmpty()) {
-            return;
-        }
-
         addAndMakeFileBase(DefinitionGeneratorType.PROCEDURES);
 
         for (FunctionBase procedure : procedures) {
@@ -327,28 +289,28 @@ public final class DefinitionGenerator {
 
     private void makeDataTableFile(final TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
-        final String filename = String.format(type.getFilename(), keepNames ? table.getName() : table.getNewName());
+        final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? table.getName() : table.getNewName());
         final String path = makeFilenamePath(parametersPlugin.getOutputDatasetsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeViewFile(final ViewBase viewBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.VIEW;
-        final String filename = String.format(type.getFilename(), keepNames ? viewBase.getName() : viewBase.getNewName());
+        final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? viewBase.getName() : viewBase.getNewName());
         final String path = makeFilenamePath(parametersPlugin.getOutputViewsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeFunctionFile(final FunctionBase functionBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.FUNCTION;
-        final String filename = String.format(type.getFilename(), keepNames ? functionBase.getName() : functionBase.getNewName());
+        final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? functionBase.getName() : functionBase.getNewName());
         final String path = makeFilenamePath(parametersPlugin.getOutputFunctionsDirectory(), filename);
         makeTemplate(type, path);
     }
 
     private void makeProcedureFile(final FunctionBase procedureBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.PROCEDURE;
-        final String filename = String.format(type.getFilename(), keepNames ? procedureBase.getName() : procedureBase.getNewName());
+        final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? procedureBase.getName() : procedureBase.getNewName());
         final String path = makeFilenamePath(parametersPlugin.getOutputProceduresDirectory(), filename);
         makeTemplate(type, path);
     }

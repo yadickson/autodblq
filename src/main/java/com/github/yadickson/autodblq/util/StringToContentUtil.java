@@ -30,9 +30,7 @@ public class StringToContentUtil implements Function<String, String> {
     @Override
     public String apply(final String input) {
         String fullContent = stringTrimUtil.apply(input);
-        String clearBlockComments = RegExUtils.replaceAll(fullContent, "/\\*.*?\\*/", " ");
-        String clearInlineComments = RegExUtils.replaceAll(clearBlockComments, Pattern.compile("(.*)--.*"), " ");
-        return SqlFormatter.format(clearInlineComments,
+        return SqlFormatter.format(fullContent,
                 FormatConfig.builder()
                         .indent("    ")
                         .linesBetweenQueries(2)
@@ -40,6 +38,9 @@ public class StringToContentUtil implements Function<String, String> {
                         .skipWhitespaceNearBlockParentheses(true)
                         .build()
         );
+
+//        String clearBlockComments = RegExUtils.replaceAll(formated, "/\\*.*?\\*/", " ");
+//        return RegExUtils.replaceAll(clearBlockComments, Pattern.compile("(.*)--.*"), " ");
     }
 
 }

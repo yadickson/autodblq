@@ -22,16 +22,10 @@ public class TemplateGeneratorManager {
 
     private static final Logger LOGGER = Logger.getLogger(TemplateGeneratorManager.class);
 
-    private final Configuration configuration;
+    private final TemplateConfiguration templateConfiguration;
 
-    public TemplateGeneratorManager() {
-
-        Version version = new Version(2, 3, 23);
-        configuration = new Configuration(version);
-        configuration.setObjectWrapper(new DefaultObjectWrapper(version));
-
-        configuration.setClassForTemplateLoading(this.getClass(), "/templates");
-        configuration.setDefaultEncoding("UTF-8");
+    public TemplateGeneratorManager(final TemplateConfiguration templateConfiguration) {
+        this.templateConfiguration = templateConfiguration;
     }
 
     public void execute(final DefinitionGeneratorType templateGeneratorType, final Map<String, Object> values, final Writer out) {
@@ -53,7 +47,6 @@ public class TemplateGeneratorManager {
     }
 
     private void processTemplate(final String fileName, final Map<String, Object> input, final Writer out) throws TemplateException, IOException {
-        configuration.getTemplate(fileName).process(input, out);
+        templateConfiguration.getTemplate(fileName, input, out);
     }
-
 }

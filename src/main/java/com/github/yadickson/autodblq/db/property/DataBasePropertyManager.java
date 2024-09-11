@@ -1,5 +1,6 @@
 package com.github.yadickson.autodblq.db.property;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.function.parameters.DataBaseFunctionParametersWrapper;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
@@ -17,10 +18,12 @@ public final class DataBasePropertyManager implements Consumer<List<DataBaseProp
     private final Map<String, List<TablePropertyType>> properties = new TreeMap<>();
 
     private final DataBasePropertiesFactory factory;
+    private final ParametersPlugin parametersPlugin;
 
     @Inject
-    public DataBasePropertyManager(DataBasePropertiesFactory factory) {
+    public DataBasePropertyManager(DataBasePropertiesFactory factory, ParametersPlugin parametersPlugin) {
         this.factory = factory;
+        this.parametersPlugin = parametersPlugin;
 
         for (DataBaseProperties support : factory.get()) {
             properties.put(support.getType().getMessage(), new ArrayList<>());
@@ -55,6 +58,11 @@ public final class DataBasePropertyManager implements Consumer<List<DataBaseProp
 
     public TablePropertyType process(DataBaseProperty dataBaseProperty) {
         TablePropertyType property = null;
+
+        if(parametersPlugin.getKeepNames())
+        {
+            return null;
+        }
 
         for (DataBaseProperties support : factory.get()) {
             property = support.get(dataBaseProperty);
