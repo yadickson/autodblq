@@ -20,7 +20,7 @@ import java.util.HashMap;
 import java.util.Map;
 
 @ExtendWith(MockitoExtension.class)
-class TemplateConfigurationTest {
+class TableColumnTemplateConfigurationTest {
 
     private static final String TABLE_FILE = "changelog" + File.separator + "table.ftl";
     private static final String TABLE_COLUMN_FILE = "changelog" + File.separator + "table-column.ftl";

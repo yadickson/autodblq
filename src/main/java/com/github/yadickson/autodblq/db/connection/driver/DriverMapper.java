@@ -31,7 +31,7 @@ public class DriverMapper implements Function<String, Driver> {
             return Driver.POSTGRESQL;
         }
 
-        if (name.contains("jtds")) {
+        if (name.contains("jtds") || name.contains("sqlserver")) {
             return Driver.MSSQL;
         }
 

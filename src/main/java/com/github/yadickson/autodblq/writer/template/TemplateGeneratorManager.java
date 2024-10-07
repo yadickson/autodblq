@@ -9,6 +9,7 @@ import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
 import freemarker.template.*;
 import org.apache.log4j.Logger;
 
+import javax.inject.Inject;
 import javax.inject.Named;
 import java.io.*;
 import java.util.Map;
@@ -24,6 +25,7 @@ public class TemplateGeneratorManager {
 
     private final TemplateConfiguration templateConfiguration;
 
+    @Inject
     public TemplateGeneratorManager(final TemplateConfiguration templateConfiguration) {
         this.templateConfiguration = templateConfiguration;
     }
