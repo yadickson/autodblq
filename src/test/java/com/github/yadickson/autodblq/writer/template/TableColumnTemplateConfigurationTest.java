@@ -1,9 +1,12 @@
 package com.github.yadickson.autodblq.writer.template;
 
-import com.github.javafaker.Faker;
-import com.github.yadickson.autodblq.db.table.columns.model.Column;
-import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
-import freemarker.template.TemplateException;
+import java.io.File;
+import java.io.IOException;
+import java.io.StringWriter;
+import java.io.Writer;
+import java.util.HashMap;
+import java.util.Map;
+
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.BeforeEach;
 import org.junit.jupiter.api.Test;
@@ -12,12 +15,11 @@ import org.mockito.Mock;
 import org.mockito.Mockito;
 import org.mockito.junit.jupiter.MockitoExtension;
 
-import java.io.File;
-import java.io.IOException;
-import java.io.StringWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.Map;
+import com.github.javafaker.Faker;
+import com.github.yadickson.autodblq.db.table.columns.model.Column;
+import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
+
+import freemarker.template.TemplateException;
 
 @ExtendWith(MockitoExtension.class)
 class TableColumnTemplateConfigurationTest {

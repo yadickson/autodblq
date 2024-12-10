@@ -7,8 +7,9 @@ package com.github.yadickson.autodblq.db.view.base.support;
 
 import java.util.List;
 
-import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseQuery;
 import org.apache.commons.lang.StringUtils;
+
+import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseQuery;
 
 /**
  *

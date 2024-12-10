@@ -1,8 +1,9 @@
 package com.github.yadickson.autodblq.db.table.columns.support;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *

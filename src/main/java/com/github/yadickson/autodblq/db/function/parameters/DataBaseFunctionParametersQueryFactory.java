@@ -5,14 +5,15 @@
  */
 package com.github.yadickson.autodblq.db.function.parameters;
 
+import java.util.function.Function;
+
+import javax.inject.Named;
+
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.function.parameters.support.Db2DataBaseFunctionParametersQuery;
 import com.github.yadickson.autodblq.db.function.parameters.support.MsSqlDataBaseFunctionParametersQuery;
 import com.github.yadickson.autodblq.db.function.parameters.support.OracleDataBaseFunctionParametersQuery;
 import com.github.yadickson.autodblq.db.function.parameters.support.PostgreSqlDataBaseFunctionParametersQuery;
-
-import javax.inject.Named;
-import java.util.function.Function;
 
 /**
  *

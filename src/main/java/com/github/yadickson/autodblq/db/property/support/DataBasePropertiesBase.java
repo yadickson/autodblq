@@ -5,15 +5,16 @@
  */
 package com.github.yadickson.autodblq.db.property.support;
 
-import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.property.model.TablePropertyName;
-import com.github.yadickson.autodblq.db.support.SupportType;
-import com.github.yadickson.autodblq.db.property.DataBaseProperties;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
+import java.util.Locale;
+
 import org.apache.commons.lang.StringUtils;
 
-import java.util.Locale;
+import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.property.DataBaseProperties;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyName;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.db.support.SupportType;
 
 /**
  *

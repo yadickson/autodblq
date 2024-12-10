@@ -6,6 +6,7 @@
 package com.github.yadickson.autodblq.util;
 
 import java.util.function.Function;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 

@@ -5,18 +5,20 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.foreignkeys;
 
+import java.util.function.Function;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.apache.log4j.Logger;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.ForeignKey;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
-import org.apache.log4j.Logger;
-
-import javax.inject.Inject;
-import javax.inject.Named;
-import java.util.function.Function;
 
 /**
  *

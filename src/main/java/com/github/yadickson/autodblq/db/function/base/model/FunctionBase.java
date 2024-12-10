@@ -5,8 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.function.base.model;
 
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import org.apache.commons.lang3.StringUtils;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 
 /**
  *

@@ -4,6 +4,7 @@
  * See <http://www.gnu.org/licenses/gpl-3.0.html>.
  */
 package com.github.yadickson.autodblq.db.table.columns;
+
 import java.util.function.Function;
 
 import javax.inject.Named;

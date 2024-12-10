@@ -13,14 +13,14 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.ParametersPlugin;
-import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
-import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import org.apache.commons.io.FileUtils;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
+import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.directory.DirectoryBuilder;

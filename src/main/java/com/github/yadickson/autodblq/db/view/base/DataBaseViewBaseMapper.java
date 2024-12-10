@@ -12,14 +12,14 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.log4j.Logger;
+
+import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
+import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 import com.github.yadickson.autodblq.util.StringToContentUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.util.StringTrimUtil;
-import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
-import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 
 /**
  *

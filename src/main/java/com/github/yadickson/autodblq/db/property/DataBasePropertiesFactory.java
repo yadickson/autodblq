@@ -5,15 +5,16 @@
  */
 package com.github.yadickson.autodblq.db.property;
 
+import java.util.Arrays;
+import java.util.List;
+import java.util.function.Supplier;
+
+import javax.inject.Named;
+
 import com.github.yadickson.autodblq.db.property.support.Db2DataBaseProperties;
 import com.github.yadickson.autodblq.db.property.support.MsSqlDataBaseProperties;
 import com.github.yadickson.autodblq.db.property.support.OracleDataBaseProperties;
 import com.github.yadickson.autodblq.db.property.support.PostgreSqlDataBaseProperties;
-
-import javax.inject.Named;
-import java.util.Arrays;
-import java.util.List;
-import java.util.function.Supplier;
 
 /**
  *

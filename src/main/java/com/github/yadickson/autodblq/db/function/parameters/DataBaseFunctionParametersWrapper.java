@@ -5,10 +5,10 @@
  */
 package com.github.yadickson.autodblq.db.function.parameters;
 
+import java.util.List;
+
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-
-import java.util.List;
 
 /**
  *

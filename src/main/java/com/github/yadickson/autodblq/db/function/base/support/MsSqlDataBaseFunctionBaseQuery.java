@@ -7,8 +7,9 @@ package com.github.yadickson.autodblq.db.function.base.support;
 
 import java.util.List;
 
-import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseQuery;
 import org.apache.commons.lang.StringUtils;
+
+import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseQuery;
 
 /**
  *

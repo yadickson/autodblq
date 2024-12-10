@@ -5,15 +5,17 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
-import com.github.yadickson.autodblq.db.table.constraint.checks.model.Check;
-import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-import com.github.yadickson.autodblq.util.*;
-import org.apache.log4j.Logger;
+import java.util.function.Function;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.function.Function;
+
+import org.apache.log4j.Logger;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.table.constraint.checks.model.Check;
+import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
+import com.github.yadickson.autodblq.util.*;
 
 /**
  *

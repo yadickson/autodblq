@@ -16,9 +16,9 @@ import org.apache.log4j.Logger;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
-import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
 
 /**
  *

@@ -5,14 +5,17 @@
  */
 package com.github.yadickson.autodblq.writer.template;
 
-import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
-import freemarker.template.*;
-import org.apache.log4j.Logger;
+import java.io.*;
+import java.util.Map;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.io.*;
-import java.util.Map;
+
+import org.apache.log4j.Logger;
+
+import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
+
+import freemarker.template.*;
 
 /**
  *

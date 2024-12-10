@@ -11,7 +11,7 @@ import org.apache.commons.lang.StringUtils;
  *
  * @author Yadickson Soto
  */
-public final class TableColumnTypeUtil {
+public class TableColumnTypeUtil {
     
     public Boolean isString(final String string) {
         return StringUtils.containsIgnoreCase(string, "char") || StringUtils.containsIgnoreCase(string, "uuid") || StringUtils.containsIgnoreCase(string, "uniqueidentifier") || StringUtils.containsIgnoreCase(string, "text");

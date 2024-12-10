@@ -5,9 +5,9 @@
  */
 package com.github.yadickson.autodblq.db.table.base;
 
-import com.github.yadickson.autodblq.db.support.Support;
-
 import java.util.List;
+
+import com.github.yadickson.autodblq.db.support.Support;
 
 /**
  *

@@ -13,6 +13,8 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import org.apache.commons.lang3.tuple.Pair;
+
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
@@ -22,7 +24,6 @@ import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.DataBaseTab
 import com.github.yadickson.autodblq.db.table.constraint.indexes.DataBaseTableIndexReader;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.DataBaseTablePrimaryKeyReader;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.DataBaseTableUniqueReader;
-import org.apache.commons.lang3.tuple.Pair;
 
 /**
  *

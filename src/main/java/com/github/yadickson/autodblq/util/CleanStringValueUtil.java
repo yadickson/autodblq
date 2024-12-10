@@ -5,12 +5,13 @@
  */
 package com.github.yadickson.autodblq.util;
 
-import org.apache.commons.lang3.RegExUtils;
+import java.util.function.Function;
+import java.util.regex.Pattern;
 
 import javax.inject.Inject;
 import javax.inject.Named;
-import java.util.function.Function;
-import java.util.regex.Pattern;
+
+import org.apache.commons.lang3.RegExUtils;
 
 /**
  *

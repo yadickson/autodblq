@@ -5,6 +5,8 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
+import javax.inject.Named;
+
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQueryFactory;
@@ -12,8 +14,6 @@ import com.github.yadickson.autodblq.db.table.constraint.checks.support.Db2DataB
 import com.github.yadickson.autodblq.db.table.constraint.checks.support.MsSqlDataBaseTableCheckQuery;
 import com.github.yadickson.autodblq.db.table.constraint.checks.support.OracleDataBaseTableCheckQuery;
 import com.github.yadickson.autodblq.db.table.constraint.checks.support.PostgreSqlDataBaseTableCheckQuery;
-
-import javax.inject.Named;
 
 /**
  *

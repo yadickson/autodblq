@@ -5,9 +5,10 @@
  */
 package com.github.yadickson.autodblq.db.function.parameters.support;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.parameters.DataBaseFunctionParametersQuery;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *

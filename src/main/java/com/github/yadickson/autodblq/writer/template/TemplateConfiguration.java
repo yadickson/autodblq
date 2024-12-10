@@ -5,12 +5,13 @@
  */
 package com.github.yadickson.autodblq.writer.template;
 
-import freemarker.template.*;
-
-import javax.inject.Singleton;
 import java.io.IOException;
 import java.io.Writer;
 import java.util.Map;
+
+import javax.inject.Singleton;
+
+import freemarker.template.*;
 
 /**
  *

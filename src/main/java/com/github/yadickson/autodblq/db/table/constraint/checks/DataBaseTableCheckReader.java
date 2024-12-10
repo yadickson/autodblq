@@ -5,13 +5,13 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
+import javax.inject.Inject;
+import javax.inject.Named;
+
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 
 /**
  *

@@ -7,10 +7,10 @@ package com.github.yadickson.autodblq.db.table.base.support;
 
 import java.util.List;
 
-import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.support.SupportType;
 import org.apache.commons.lang.StringUtils;
 
+import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.support.SupportType;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseQuery;
 
 /**

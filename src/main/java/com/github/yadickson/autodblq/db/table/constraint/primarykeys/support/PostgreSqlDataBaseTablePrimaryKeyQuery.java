@@ -5,9 +5,10 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.primarykeys.support;
 
+import org.apache.commons.lang.StringUtils;
+
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintQuery;
-import org.apache.commons.lang.StringUtils;
 
 /**
  *

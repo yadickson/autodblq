@@ -1,8 +1,9 @@
 package com.github.yadickson.autodblq.util;
 
-import com.github.javafaker.Faker;
 import org.junit.jupiter.api.Assertions;
 import org.junit.jupiter.api.Test;
+
+import com.github.javafaker.Faker;
 
 class CleanStringValueUtilTest {
 

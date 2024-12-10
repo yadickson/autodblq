@@ -12,11 +12,11 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
+import com.github.yadickson.autodblq.util.*;
 
 /**
  *

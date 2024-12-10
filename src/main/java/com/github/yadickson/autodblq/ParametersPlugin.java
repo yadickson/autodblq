@@ -5,11 +5,12 @@
  */
 package com.github.yadickson.autodblq;
 
-import javax.inject.Singleton;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Locale;
 import java.util.stream.Collectors;
+
+import javax.inject.Singleton;
 
 /**
  *

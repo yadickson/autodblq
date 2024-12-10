@@ -14,12 +14,12 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-import com.github.yadickson.autodblq.util.*;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.columns.model.Column;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
+import com.github.yadickson.autodblq.util.*;
 
 /**
  *

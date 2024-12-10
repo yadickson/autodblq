@@ -5,10 +5,10 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint;
 
-import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-
 import java.util.List;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 
 /**
  *

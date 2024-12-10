@@ -5,16 +5,15 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.indexes;
 
+import java.util.List;
+
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
-
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintMapper;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
-
-import java.util.List;
 
 /**
  *

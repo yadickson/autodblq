@@ -5,14 +5,15 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint.checks;
 
-import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-
-import javax.inject.Inject;
-import javax.inject.Named;
 import java.util.List;
 import java.util.function.Function;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
 
 /**
  *

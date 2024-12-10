@@ -24,8 +24,8 @@ import com.github.yadickson.autodblq.db.DataBaseGenerator;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.DriverConnectionDecorator;
-import com.github.yadickson.autodblq.util.StringToBooleanUtil;
 import com.github.yadickson.autodblq.logger.MavenLoggerConfiguration;
+import com.github.yadickson.autodblq.util.StringToBooleanUtil;
 import com.github.yadickson.autodblq.writer.DefinitionGenerator;
 
 /**

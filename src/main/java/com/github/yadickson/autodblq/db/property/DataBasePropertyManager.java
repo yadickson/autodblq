@@ -1,16 +1,17 @@
 package com.github.yadickson.autodblq.db.property;
 
-import com.github.yadickson.autodblq.ParametersPlugin;
-import com.github.yadickson.autodblq.db.function.parameters.DataBaseFunctionParametersWrapper;
-import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
-import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
-import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
-
-import javax.inject.Inject;
-import javax.inject.Singleton;
 import java.util.*;
 import java.util.function.Consumer;
 import java.util.stream.Collectors;
+
+import javax.inject.Inject;
+import javax.inject.Singleton;
+
+import com.github.yadickson.autodblq.ParametersPlugin;
+import com.github.yadickson.autodblq.db.function.parameters.DataBaseFunctionParametersWrapper;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
+import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintsWrapper;
 
 @Singleton
 public final class DataBasePropertyManager implements Consumer<List<DataBaseProperty>> {

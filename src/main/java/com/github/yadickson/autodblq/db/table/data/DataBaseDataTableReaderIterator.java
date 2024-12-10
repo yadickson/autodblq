@@ -14,19 +14,19 @@ import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
-import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
-import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
-import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
 import org.apache.commons.lang.StringUtils;
 import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
+import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
+import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
+import com.github.yadickson.autodblq.util.StringTrimUtil;
 
 /**
  *

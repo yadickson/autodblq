@@ -5,8 +5,6 @@
  */
 package com.github.yadickson.autodblq.db.table.base;
 
-import com.github.yadickson.autodblq.db.table.base.model.TableBase;
-import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.function.Function;
@@ -14,10 +12,12 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
-import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
+import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
+import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
 
 /**

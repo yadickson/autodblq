@@ -5,13 +5,16 @@
  */
 package com.github.yadickson.autodblq.util;
 
-import javax.inject.Inject;
-import javax.inject.Named;
-import com.github.vertical_blank.sqlformatter.SqlFormatter;
-import com.github.vertical_blank.sqlformatter.core.FormatConfig;
-import org.apache.commons.lang3.RegExUtils;
 import java.util.function.Function;
 import java.util.regex.Pattern;
+
+import javax.inject.Inject;
+import javax.inject.Named;
+
+import org.apache.commons.lang3.RegExUtils;
+
+import com.github.vertical_blank.sqlformatter.SqlFormatter;
+import com.github.vertical_blank.sqlformatter.core.FormatConfig;
 
 /**
  *

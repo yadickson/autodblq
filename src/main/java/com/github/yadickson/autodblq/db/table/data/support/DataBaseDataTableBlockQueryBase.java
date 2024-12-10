@@ -5,13 +5,14 @@
  */
 package com.github.yadickson.autodblq.db.table.data.support;
 
-import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
-import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
-import com.github.yadickson.autodblq.db.property.DataBaseProperty;
-import org.apache.commons.lang.StringUtils;
-
 import java.util.ArrayList;
 import java.util.List;
+
+import org.apache.commons.lang.StringUtils;
+
+import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
+import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableBlockQuery;
 
 /**
  *
