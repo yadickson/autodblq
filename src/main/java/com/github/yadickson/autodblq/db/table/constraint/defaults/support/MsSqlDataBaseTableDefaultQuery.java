@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class MsSqlDataBaseTableDefaultQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT "
                 + " c.name as 'column', \n"
                 + " ct.name as 'columntype', \n"

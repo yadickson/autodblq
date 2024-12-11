@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class PostgreSqlDataBaseTableForeignKeyQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT "
                 + " tc.constraint_name as name, \n"
                 + " ccu.table_name AS refname, \n"

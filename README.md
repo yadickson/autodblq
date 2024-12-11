@@ -97,10 +97,15 @@ Maven plugin to generate xml liquibase files from database
         <password>...</password>
         <author>...</author>
         <version>...</version>
-        <lqversion>...</lqversion>
-        <lqpro>...</lqpro>
-        <csvQuotchar>...</csvQuotchar>
-        <csvSeparator>...</csvSeparator>
+        <outputDirectory>.</outputDirectory>
+        <addNullable>true</addNullable>
+        <addIdentity>true</addIdentity>
+        <keepTypes>true</keepTypes>
+        <keepNames>true</keepNames>
+        <types>
+            <param>...</param>
+            <param>...</param>
+        </types>
         <tables>
             <param>...</param>
             <param>...</param>
@@ -113,34 +118,10 @@ Maven plugin to generate xml liquibase files from database
             <param>...</param>
             <param>...</param>
         </functions>
-        <loadData>
+        <dataTables>
             <param>...</param>
             <param>...</param>
-        </loadData>
-        <sortViews>
-            <param>...</param>
-            <param>...</param>
-        </sortViews>
-        <sortFunctions>
-            <param>...</param>
-            <param>...</param>
-        </sortFunctions>
-        <excludeTables>
-            <param>...</param>
-            <param>...</param>
-        </excludeTables>
-        <excludeViews>
-            <param>...</param>
-            <param>...</param>
-        </excludeViews>
-        <excludeFunctions>
-            <param>...</param>
-            <param>...</param>
-        </excludeFunctions>
-        <schemas>
-            <param>...</param>
-            <param>...</param>
-        </schemas>
+        </dataTables>
     </configuration>
 </plugin>
 ```
@@ -193,114 +174,78 @@ Database username
 
 Database password
 
-### lqversion (optional)
-
-Liquibase version, default 3.6
-
-### lqpro (optional)
-
-Liquibase pro license, default false
-
 ### tables (optional)
 
-Tables to include, example XY.*
+Tables to include
 
 ### views (optional)
 
-Views to include, example VXY.*
+Views to include
 
 ### functions (optional)
 
-Functions to include, example FXY.*
+Functions to include
 
-### schemas (optional)
+### dataTables (optional)
 
-Schemas to include, example MN.*
+Load data table content
 
-### loadData (optional)
+## POM Basic Configuration
 
-Load data table content, example TXY.*
-
-### csvQuotchar (optional, default ')
-
-Csv Quotchar to load data table content
-
-### csvSeparator (optional, default ,)
-
-Csv Separator to load data table content
+```xml
+<plugin>
+    <groupId>com.github.yadickson</groupId>
+    <artifactId>autodblq</artifactId>
+    <version>2.0.0-SNAPSHOT</version>
+    <executions>
+        <execution>
+            <goals>
+                <goal>generator</goal>
+            </goals>
+        </execution>
+    </executions>
+    <configuration>
+        <driver>org.postgresql.Driver</driver>
+        <url>jdbc:postgresql://host:port/db</url>
+        <username>...</username>
+        <password>...</password>
+        <author>yadickson.soto</author>
+        <version>1.0.0</version>
+        <outputDirectory>.</outputDirectory>
+        <addNullable>true</addNullable>
+        <addIdentity>true</addIdentity>
+        <keepTypes>true</keepTypes>
+        <keepNames>true</keepNames>
+        <types>
+            <param>...</param>
+        </types>
+        <tables>
+            <param>...</param>
+        </tables>
+        <views>
+            <param>...</param>
+        </views>
+        <functions>
+            <param>...</param>
+        </functions>
+        <dataTables>
+            <param>...</param>
+        </dataTables>
+    </configuration>
+    <dependencies>
+        <dependency>
+            <groupId>org.postgresql</groupId>
+            <artifactId>postgresql</artifactId>
+            <version>42.7.2</version>
+        </dependency>
+    </dependencies>
+</plugin>
+```
 
 # Command line support
 
-```xml
-<plugin>
-    <groupId>com.github.yadickson</groupId>
-    <artifactId>autodblq</artifactId>
-    <version>...</version>
-    <configuration>
-        <tables>
-            <param>...</param>
-            <param>...</param>
-        </tables>
-    </configuration>
-</plugin>
-```
-
 ```
 $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
-```
-
-## POM Basic Configuration (include tables)
-
-```xml
-<plugin>
-    <groupId>com.github.yadickson</groupId>
-    <artifactId>autodblq</artifactId>
-    <version>...</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>generator</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <driver>...</driver>
-        <url>...</url>
-        <username>...</username>
-        <password>...</password>
-        <tables>
-            <param>...</param>
-            <param>...</param>
-        </tables>
-    </configuration>
-</plugin>
-```
-
-## POM Basic Configuration (include schemas)
-
-```xml
-<plugin>
-    <groupId>com.github.yadickson</groupId>
-    <artifactId>autodblq</artifactId>
-    <version>...</version>
-    <executions>
-        <execution>
-            <goals>
-                <goal>generator</goal>
-            </goals>
-        </execution>
-    </executions>
-    <configuration>
-        <driver>...</driver>
-        <url>...</url>
-        <username>...</username>
-        <password>...</password>
-        <schemas>
-            <param>...</param>
-            <param>...</param>
-        </schemas>
-    </configuration>
-</plugin>
 ```
 
 [travis-image]: https://travis-ci.org/yadickson/autodblq.svg?branch=master

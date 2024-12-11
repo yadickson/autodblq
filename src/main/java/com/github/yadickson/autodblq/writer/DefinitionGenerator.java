@@ -22,6 +22,7 @@ import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.directory.DirectoryBuilder;
 import com.github.yadickson.autodblq.writer.table.DataTableGenerator;
@@ -51,6 +52,7 @@ public final class DefinitionGenerator {
     private List<TableBase> foreignKeys;
     private List<TableBase> dataTables;
     private List<ViewBase> views;
+    private List<TypeBase> types;
     private List<FunctionBase> functions;
     private List<FunctionBase> procedures;
 
@@ -81,6 +83,7 @@ public final class DefinitionGenerator {
     private static final String DATA_BASE_FOREIGN_KEYS = "foreignKeys";
     private static final String DATA_BASE_DATA_TABLE = "dataTables";
     private static final String DATA_BASE_VIEWS = "views";
+    private static final String DATA_BASE_TYPES = "types";
     private static final String DATA_BASE_FUNCTIONS = "functions";
     private static final String DATA_BASE_PROCEDURES = "procedures";
 
@@ -94,6 +97,7 @@ public final class DefinitionGenerator {
     private static final String ADD_DBMS = "addDbms";
     private static final String ADD_NULLABLE = "addNullable";
     private static final String ADD_IDENTITY = "addIdentity";
+    private static final String KEEP_TYPES = "keepTypes";
     private static final String KEEP_NAMES = "keepNames";
 
     private static final String DATASETS_DIRECTORY = "datasetsDirectory";
@@ -143,6 +147,7 @@ public final class DefinitionGenerator {
         primaryKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_PRIMARY_KEYS);
         foreignKeys = (List) dataBaseGenerator.get(DataBaseGeneratorType.TABLE_FOREIGN_KEYS);
         views = (List) dataBaseGenerator.get(DataBaseGeneratorType.VIEW_DEFINITION);
+        types = (List) dataBaseGenerator.get(DataBaseGeneratorType.TYPE_DEFINITION);
         functions = ((List<FunctionBase>) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION)).stream().filter(function -> function.getIsFunction()).collect(Collectors.toList());
         procedures = ((List<FunctionBase>) dataBaseGenerator.get(DataBaseGeneratorType.FUNCTION_DEFINITION)).stream().filter(function -> !function.getIsFunction()).collect(Collectors.toList());
     }
@@ -163,6 +168,7 @@ public final class DefinitionGenerator {
         values.put(DATA_BASE_PRIMARY_KEYS, primaryKeys);
         values.put(DATA_BASE_FOREIGN_KEYS, foreignKeys);
         values.put(DATA_BASE_VIEWS, views);
+        values.put(DATA_BASE_TYPES, types);
         values.put(DATA_BASE_FUNCTIONS, functions);
         values.put(DATA_BASE_PROCEDURES, procedures);
 
@@ -176,6 +182,7 @@ public final class DefinitionGenerator {
         values.put(ADD_DBMS, parametersPlugin.getAddDbms());
         values.put(ADD_NULLABLE, parametersPlugin.getAddNullable());
         values.put(ADD_IDENTITY, parametersPlugin.getAddIdentity());
+        values.put(KEEP_TYPES, parametersPlugin.getKeepTypes());
         values.put(KEEP_NAMES, parametersPlugin.getKeepNames());
 
         values.put(DATASETS_DIRECTORY, parametersPlugin.getOutputDatasetsDirectory());
@@ -191,6 +198,7 @@ public final class DefinitionGenerator {
 
     private void makeDefinitions() {
         makeProperties();
+        makeTypes();
         makeTables();
         makeChecks();
         makeDefaults();
@@ -206,12 +214,16 @@ public final class DefinitionGenerator {
 
     private void makeProperties() {
 
-        if(!parametersPlugin.getKeepNames()) {
+        if(!parametersPlugin.getKeepTypes()) {
             Map<String, List<TablePropertyType>> properties = dataBasePropertyManager.getProperties();
             values.put(DATA_BASE_PROPERTIES, properties);
         }
 
         addAndMakeFileBase(DefinitionGeneratorType.PROPERTIES);
+    }
+
+    private void makeTypes() {
+        addAndMakeFileBase(DefinitionGeneratorType.TYPES);
     }
 
     private void makeTables() {

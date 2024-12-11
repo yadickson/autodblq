@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class PostgreSqlDataBaseTableIndexQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "select \n"
                 + " i.indexrelid::regclass as name, \n"
                 + " i.indisunique as isunique, \n"

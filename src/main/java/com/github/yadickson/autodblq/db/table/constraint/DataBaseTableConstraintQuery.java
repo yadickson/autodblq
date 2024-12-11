@@ -13,6 +13,6 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
  */
 public interface DataBaseTableConstraintQuery {
 
-    String get(TableBase table);
+    String get(TableBase table, boolean keepTypes);
 
 }

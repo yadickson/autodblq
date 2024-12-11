@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.defaults;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTableDefaultReader extends DataBaseTableConstraintReader<Ta
 
     @Inject
     public DataBaseTableDefaultReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableDefaultQueryFactory dataBaseTableDefaultQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableDefaultMapper dataBaseTableDefaultMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_DEFAULTS, dataBaseTableDefaultQueryFactory, sqlExecuteToGetList, dataBaseTableDefaultMapper);
+        super(DataBaseGeneratorType.TABLE_DEFAULTS, parametersPlugin, dataBaseTableDefaultQueryFactory, sqlExecuteToGetList, dataBaseTableDefaultMapper);
     }
 
     @Override

@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class Db2DataBaseTableForeignKeyQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "select \n"
                 + " ref.constname name, \n"
                 + " TRIM(REF.FK_COLNAMES) columns, \n"

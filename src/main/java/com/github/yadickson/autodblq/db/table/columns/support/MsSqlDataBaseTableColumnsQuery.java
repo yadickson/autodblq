@@ -12,7 +12,7 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 public class MsSqlDataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, boolean keepTypes) {
         return "SELECT \n"
                 + " c.column_id as 'position', \n"
                 + " c.name, \n"

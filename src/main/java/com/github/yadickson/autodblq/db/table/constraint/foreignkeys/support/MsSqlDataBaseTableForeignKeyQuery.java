@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class MsSqlDataBaseTableForeignKeyQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT "
                 + " obj.name as 'name', \n"
                 + " tab2.name AS 'refname', \n"

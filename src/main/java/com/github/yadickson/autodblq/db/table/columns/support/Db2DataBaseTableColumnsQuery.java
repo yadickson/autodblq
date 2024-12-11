@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 public class Db2DataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, boolean keepTypes) {
         return "SELECT \n"
                 + " t.colno POSITION, \n"
                 + " t.colname name, \n"

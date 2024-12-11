@@ -136,7 +136,7 @@ public abstract class DataBasePropertiesBase extends SupportType implements Data
     }
 
     private Boolean isInteger(String input) {
-        return "int".compareTo(input) == 0 || "int4".compareTo(input) == 0 || "integer".compareTo(input) == 0;
+        return "int".compareTo(input) == 0 || "int4".compareTo(input) == 0 || "int8".compareTo(input) == 0 || "integer".compareTo(input) == 0;
     }
 
     protected abstract String getUuid();

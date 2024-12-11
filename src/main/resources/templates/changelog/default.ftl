@@ -6,7 +6,7 @@
 </#if>
             tableName="<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>"
             columnName="<#if keepNames?? && keepNames == true>${constraint.realName}<#else>${constraint.newName}</#if>"
-<#if constraint.propertyType?? && constraint.propertyType?has_content>
+<#if keepTypes?? && keepTypes == false && constraint.propertyType?? && constraint.propertyType?has_content>
             defaultValueNumeric="${r"${"}${constraint.propertyType?lower_case}${r"}"}"
 <#else>
             defaultValueNumeric="${constraint.value}"

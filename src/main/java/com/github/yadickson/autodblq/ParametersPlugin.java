@@ -37,6 +37,7 @@ public class ParametersPlugin {
     private List<String> tables;
     private List<String> dataTables;
     private List<String> views;
+    private List<String> types;
     private List<String> functions;
 
     private Boolean addDbVersion;
@@ -44,6 +45,7 @@ public class ParametersPlugin {
     private Boolean addDbms;
     private Boolean addNullable;
     private Boolean addIdentity;
+    private Boolean keepTypes;
     private Boolean keepNames;
 
     public String getDriver() {
@@ -142,6 +144,15 @@ public class ParametersPlugin {
 
     public ParametersPlugin setViews(List<String> views) {
         this.views = getNotNullList(views);
+        return this;
+    }
+
+    public List<String> getTypes() {
+        return types;
+    }
+
+    public ParametersPlugin setTypes(List<String> types) {
+        this.types = getNotNullList(types);
         return this;
     }
 
@@ -245,6 +256,15 @@ public class ParametersPlugin {
 
     public ParametersPlugin setOutputProceduresDirectory(String outputProceduresDirectory) {
         this.outputProceduresDirectory = outputProceduresDirectory;
+        return this;
+    }
+
+    public Boolean getKeepTypes() {
+        return keepTypes;
+    }
+
+    public ParametersPlugin setkeepTypes(Boolean keepTypes) {
+        this.keepTypes = keepTypes;
         return this;
     }
 }

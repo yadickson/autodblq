@@ -5,7 +5,6 @@
  */
 package com.github.yadickson.autodblq.db.table.constraint;
 
-import java.lang.reflect.TypeVariable;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -13,6 +12,7 @@ import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
@@ -27,6 +27,7 @@ public abstract class DataBaseTableConstraintReader<T> {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableConstraintReader.class);
 
+    private final ParametersPlugin parametersPlugin;
     private final DataBaseGeneratorType type;
     private final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
@@ -36,11 +37,13 @@ public abstract class DataBaseTableConstraintReader<T> {
 
     public DataBaseTableConstraintReader(
             final DataBaseGeneratorType type,
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQuery,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableConstraintMapper<T> constraintMapper
     ) {
         this.type = type;
+        this.parametersPlugin = parametersPlugin;
         this.dataBaseTableConstraintQueryFactory = dataBaseTableConstraintQuery;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.constraintMapper = constraintMapper;
@@ -85,7 +88,7 @@ public abstract class DataBaseTableConstraintReader<T> {
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableConstraintQuery query = dataBaseTableConstraintQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        sqlQuery = query.get(table, parametersPlugin.getKeepTypes());
         LOGGER.debug("[DataBaseTableConstraintReader] SQL " + type.getMessage() + ": " + sqlQuery);
     }
 

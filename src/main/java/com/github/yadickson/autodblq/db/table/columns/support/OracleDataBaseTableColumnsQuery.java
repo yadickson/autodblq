@@ -15,7 +15,7 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 public class OracleDataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, boolean keepTypes) {
         return null;
     }
 

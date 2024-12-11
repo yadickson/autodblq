@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.foreignkeys;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTableForeignKeyReader extends DataBaseTableConstraintReader
 
     @Inject
     public DataBaseTableForeignKeyReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableForeignKeyQueryFactory dataBaseTableForeignKeyQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableForeignKeyMapper dataBaseTableForeignKeyMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetList, dataBaseTableForeignKeyMapper);
+        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, parametersPlugin, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetList, dataBaseTableForeignKeyMapper);
     }
 
     @Override

@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class Db2DataBaseTableIndexQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "select \n"
                 + " indname as name, \n"
                 + " replace(trim(replace(replace(colnames,'-',' '),'+',' ')), ' ', ',') as columns, \n"

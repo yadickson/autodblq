@@ -23,6 +23,8 @@ import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
+import com.github.yadickson.autodblq.db.type.base.DataBaseTypeBaseReader;
+import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.db.version.base.DataBaseVersionReader;
 import com.github.yadickson.autodblq.db.view.base.DataBaseViewBaseReader;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
@@ -40,6 +42,7 @@ public class DataBaseGenerator {
     private final DataBaseTableConstraintChain dataBaseTableConstraintReader;
     private final DataBaseViewBaseReader dataBaseViewBaseReader;
     private final DataBaseFunctionBaseReader dataBaseFunctionBaseReader;
+    private final DataBaseTypeBaseReader dataBaseTypeBaseReader;
     private final DataBasePropertyManager dataBasePropertyManager;
 
     private final Map<DataBaseGeneratorType, Object> result = new HashMap<>();
@@ -51,6 +54,7 @@ public class DataBaseGenerator {
             final DataBaseTableConstraintChain dataBaseTableConstraintReader,
             final DataBaseViewBaseReader dataBaseViewBaseReader,
             final DataBaseFunctionBaseReader dataBaseFunctionBaseReader,
+            final DataBaseTypeBaseReader dataBaseTypeBaseReader,
             final DataBasePropertyManager dataBasePropertyManager
     ) {
         this.parametersPlugin = parametersPlugin;
@@ -59,6 +63,7 @@ public class DataBaseGenerator {
         this.dataBaseTableConstraintReader = dataBaseTableConstraintReader;
         this.dataBaseViewBaseReader = dataBaseViewBaseReader;
         this.dataBaseFunctionBaseReader = dataBaseFunctionBaseReader;
+        this.dataBaseTypeBaseReader = dataBaseTypeBaseReader;
         this.dataBasePropertyManager = dataBasePropertyManager;
     }
 
@@ -71,6 +76,7 @@ public class DataBaseGenerator {
             findDataTables(driverConnection);
             findViews(driverConnection);
             findFunctions(driverConnection);
+            findTypes(driverConnection);
 
             return result;
 
@@ -127,6 +133,17 @@ public class DataBaseGenerator {
         if (!functions.isEmpty()) {
             dataBasePropertyManager.addFunctionDefinitions();
             dataBasePropertyManager.accept(Collections.unmodifiableList(functions));
+        }
+    }
+
+    private void findTypes(DriverConnection driverConnection) {
+        final DataBaseGeneratorType key = DataBaseGeneratorType.TYPE_DEFINITION;
+        final List<TypeBase> types = dataBaseTypeBaseReader.execute(parametersPlugin.getTypes(), driverConnection);
+        result.put(key, types);
+
+        if (!types.isEmpty()) {
+            dataBasePropertyManager.addFunctionDefinitions();
+            dataBasePropertyManager.accept(Collections.unmodifiableList(types));
         }
     }
 

@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.checks;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTableCheckReader extends DataBaseTableConstraintReader<Tabl
 
     @Inject
     public DataBaseTableCheckReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableCheckQueryFactory dataBaseTableCheckQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableCheckMapper dataBaseTableCheckMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_CHECKS, dataBaseTableCheckQueryFactory, sqlExecuteToGetList, dataBaseTableCheckMapper);
+        super(DataBaseGeneratorType.TABLE_CHECKS, parametersPlugin, dataBaseTableCheckQueryFactory, sqlExecuteToGetList, dataBaseTableCheckMapper);
     }
 
     @Override

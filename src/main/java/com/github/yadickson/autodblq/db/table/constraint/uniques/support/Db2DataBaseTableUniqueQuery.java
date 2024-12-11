@@ -15,7 +15,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class Db2DataBaseTableUniqueQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return null;
     }
 

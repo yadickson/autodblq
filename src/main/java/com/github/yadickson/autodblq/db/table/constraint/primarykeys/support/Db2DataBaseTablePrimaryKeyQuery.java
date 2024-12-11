@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class Db2DataBaseTablePrimaryKeyQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT \n"
                 + " t.name, \n"
                 + " listagg(t.COLNAME, ',') columns \n"

@@ -13,6 +13,7 @@ import javax.inject.Named;
 
 import org.apache.log4j.Logger;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
@@ -29,6 +30,7 @@ public class DataBaseTableColumnsReader {
 
     private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsReader.class);
 
+    private final ParametersPlugin parametersPlugin;
     private final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableColumnsMapper dataBaseTableColumnsMapper;
@@ -38,10 +40,12 @@ public class DataBaseTableColumnsReader {
 
     @Inject
     public DataBaseTableColumnsReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableColumnsMapper dataBaseTableColumnsMapper
     ) {
+        this.parametersPlugin = parametersPlugin;
         this.dataBaseTableColumnsQueryFactory = dataBaseTableColumnsQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseTableColumnsMapper = dataBaseTableColumnsMapper;
@@ -88,7 +92,7 @@ public class DataBaseTableColumnsReader {
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableColumnsQuery query = dataBaseTableColumnsQueryFactory.apply(driver);
-        sqlQuery = query.get(table);
+        sqlQuery = query.get(table, parametersPlugin.getKeepTypes());
         LOGGER.debug("[DataBaseTableDefinitionReader] SQL: " + sqlQuery);
     }
 

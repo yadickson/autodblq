@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.uniques;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTableUniqueReader extends DataBaseTableConstraintReader<Tab
 
     @Inject
     public DataBaseTableUniqueReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableUniqueQueryFactory dataBaseTableUniqueQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableUniqueMapper dataBaseTableUniqueMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_UNIQUES, dataBaseTableUniqueQueryFactory, sqlExecuteToGetList, dataBaseTableUniqueMapper);
+        super(DataBaseGeneratorType.TABLE_UNIQUES, parametersPlugin, dataBaseTableUniqueQueryFactory, sqlExecuteToGetList, dataBaseTableUniqueMapper);
     }
 
     @Override

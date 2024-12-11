@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.indexes;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTableIndexReader extends DataBaseTableConstraintReader<Tabl
 
     @Inject
     public DataBaseTableIndexReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTableIndexQueryFactory dataBaseTableIndexQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableIndexMapper dataBaseTableIndexMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_INDEXES, dataBaseTableIndexQueryFactory, sqlExecuteToGetList, dataBaseTableIndexMapper);
+        super(DataBaseGeneratorType.TABLE_INDEXES, parametersPlugin, dataBaseTableIndexQueryFactory, sqlExecuteToGetList, dataBaseTableIndexMapper);
     }
 
     @Override

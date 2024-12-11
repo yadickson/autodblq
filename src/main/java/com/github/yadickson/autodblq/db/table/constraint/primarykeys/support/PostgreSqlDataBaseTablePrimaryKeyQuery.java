@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class PostgreSqlDataBaseTablePrimaryKeyQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT "
                 + " c.conname as name, \n"
                 + " array_to_string(array_agg(a.attname ORDER BY k.n), ' ') as columns \n"

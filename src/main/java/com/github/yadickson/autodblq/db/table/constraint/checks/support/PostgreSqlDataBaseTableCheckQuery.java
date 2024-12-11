@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class PostgreSqlDataBaseTableCheckQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "(SELECT "
                 + " tc.constraint_name as name, \n"
                 + " col.column_name as column, \n"
@@ -31,7 +31,16 @@ public class PostgreSqlDataBaseTableCheckQuery implements DataBaseTableConstrain
                 + filterByName(table)
                 + filterBySchema(table)
                 + "ORDER BY col.ordinal_position) \n"
-                + "UNION \n"
+                + getConstrains(table, keepTypes);
+    }
+
+    private String getConstrains(final TableBase table, final boolean keepTypes) {
+
+        if (keepTypes) {
+            return  "";
+        }
+
+        return "UNION \n"
                 + "(select \n"
                 + "t.typname as name, \n"
                 + "tc.column_name as column, \n"

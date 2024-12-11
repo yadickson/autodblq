@@ -62,7 +62,7 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
         final String schema = stringToLowerCaseUtil.apply(functionBean.getSchema());
         final String realName = stringTrimUtil.apply(functionBean.getName());
         final String name = stringToLowerCaseUtil.apply(functionBean.getName());
-        final String realContent = stringToContentUtil.apply(stringTrimUtil.apply(functionBean.getContent()));
+        final String realContent = stringTrimUtil.apply(functionBean.getContent());
         final String newContent = stringToContentUtil.apply(stringToSnakeCaseUtil.apply(functionBean.getContent()));
         final Boolean isFunction = stringToBooleanUtil.apply(functionBean.getIsfunction());
         final String newSchema = stringToSnakeCaseUtil.apply(functionBean.getSchema());

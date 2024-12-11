@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class MsSqlDataBaseTableIndexQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "select \n"
                 + " ind.name, \n"
                 + " case when ind.is_unique = 1 then 'true' else 'false' end 'isunique', \n"

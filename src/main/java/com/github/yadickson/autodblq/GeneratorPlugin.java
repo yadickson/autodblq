@@ -144,6 +144,15 @@ public class GeneratorPlugin extends AbstractMojo {
     private List<String> views;
 
     /**
+     * Types to build.
+     */
+    @Parameter(
+            alias = "types",
+            readonly = true,
+            required = false)
+    private List<String> types;
+
+    /**
      * Functions and procedures to build.
      */
     @Parameter(
@@ -211,6 +220,16 @@ public class GeneratorPlugin extends AbstractMojo {
             alias = "keepNames",
             required = true)
     private String keepNames;
+
+    /**
+     * addIdentity.
+     */
+    @Parameter(
+            property = "autodblq.keepTypes",
+            defaultValue = "true",
+            alias = "keepTypes",
+            required = false)
+    private String keepTypes;
 
     /**
      * Output views directory.
@@ -306,12 +325,14 @@ public class GeneratorPlugin extends AbstractMojo {
                 .setTables(tables)
                 .setDataTables(dataTables)
                 .setViews(views)
+                .setTypes(types)
                 .setFunctions(functions)
                 .setAddDbVersion(stringToBooleanUtil.apply(addDbVersion))
                 .setAddSchema(stringToBooleanUtil.apply(addSchema))
                 .setAddDbms(stringToBooleanUtil.apply(addDbms))
                 .setAddNullable(stringToBooleanUtil.apply(addNullable))
                 .setAddIdentity(stringToBooleanUtil.apply(addIdentity))
+                .setkeepTypes(stringToBooleanUtil.apply(keepTypes))
                 .setKeepNames(stringToBooleanUtil.apply(keepNames));
     }
 

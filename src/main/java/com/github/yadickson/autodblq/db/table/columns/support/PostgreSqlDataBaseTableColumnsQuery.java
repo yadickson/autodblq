@@ -17,12 +17,11 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsQuery;
 public class PostgreSqlDataBaseTableColumnsQuery implements DataBaseTableColumnsQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, boolean keepTypes) {
         return "SELECT \n"
                 + " c.ordinal_position as position, \n"
                 + " c.column_name as name, \n"
-                + " case when c.data_type = 'USER-DEFINED' AND (select COUNT(*) from pg_type t inner join pg_enum e ON e.enumtypid = t.oid where c.udt_name = t.typname AND c.udt_schema = n.nspname and t.typtype = 'e') != 0 then 'varchar' else c.udt_name end as type, \n"
-                + " case when c.data_type = 'USER-DEFINED' then (select MAX(LENGTH(e.enumlabel)) from pg_type t inner join pg_enum e ON e.enumtypid = t.oid where c.udt_name = t.typname AND c.udt_schema = n.nspname and t.typtype = 'e') else c.character_maximum_length end as length, \n"
+                + getColumns(keepTypes)
                 + " case when c.is_nullable = 'YES' then 'true' else 'false' end as nullable, \n"
                 + " c.numeric_precision as precision, \n"
                 + " c.numeric_scale as scale, \n"
@@ -38,6 +37,17 @@ public class PostgreSqlDataBaseTableColumnsQuery implements DataBaseTableColumns
                 + filterByName(table)
                 + filterBySchema(table)
                 + "ORDER BY c.ordinal_position";
+    }
+
+    private String getColumns(boolean keepTypes) {
+
+        if (keepTypes) {
+            return  " c.udt_name as type, \n"
+                    + " c.character_maximum_length as length, \n";
+        }
+
+        return " case when c.data_type = 'USER-DEFINED' AND (select COUNT(*) from pg_type t inner join pg_enum e ON e.enumtypid = t.oid where c.udt_name = t.typname AND c.udt_schema = n.nspname and t.typtype = 'e') != 0 then 'varchar' else c.udt_name end as type, \n"
+                + " case when c.data_type = 'USER-DEFINED' then (select MAX(LENGTH(e.enumlabel)) from pg_type t inner join pg_enum e ON e.enumtypid = t.oid where c.udt_name = t.typname AND c.udt_schema = n.nspname and t.typtype = 'e') else c.character_maximum_length end as length, \n";
     }
 
     private String filterByName(final TableBase table) {

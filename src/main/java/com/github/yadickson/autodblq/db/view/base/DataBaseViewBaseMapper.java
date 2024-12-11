@@ -60,7 +60,7 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
         final String schema = stringToLowerCaseUtil.apply(viewBean.getSchema());
         final String realName = stringTrimUtil.apply(viewBean.getName());
         final String name = stringToLowerCaseUtil.apply(viewBean.getName());
-        final String realContent = stringToContentUtil.apply(stringTrimUtil.apply(viewBean.getContent()));
+        final String realContent = stringTrimUtil.apply(viewBean.getContent());
         final String newContent = stringToContentUtil.apply(stringToSnakeCaseUtil.apply(viewBean.getContent()));
         final String newSchema = stringToSnakeCaseUtil.apply(viewBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(viewBean.getName());

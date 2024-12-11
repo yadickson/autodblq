@@ -8,6 +8,7 @@ package com.github.yadickson.autodblq.db.table.constraint.primarykeys;
 import javax.inject.Inject;
 import javax.inject.Named;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
@@ -22,11 +23,12 @@ public class DataBaseTablePrimaryKeyReader extends DataBaseTableConstraintReader
 
     @Inject
     public DataBaseTablePrimaryKeyReader(
+            final ParametersPlugin parametersPlugin,
             final DataBaseTablePrimaryKeyQueryFactory dataBaseTablePrimaryKeyQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTablePrimaryKeyMapper dataBaseTablePrimaryKeyMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_PRIMARY_KEYS, dataBaseTablePrimaryKeyQueryFactory, sqlExecuteToGetList, dataBaseTablePrimaryKeyMapper);
+        super(DataBaseGeneratorType.TABLE_PRIMARY_KEYS, parametersPlugin, dataBaseTablePrimaryKeyQueryFactory, sqlExecuteToGetList, dataBaseTablePrimaryKeyMapper);
     }
 
     @Override

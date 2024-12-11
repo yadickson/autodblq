@@ -17,7 +17,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 public class MsSqlDataBaseTableUniqueQuery implements DataBaseTableConstraintQuery {
 
     @Override
-    public String get(final TableBase table) {
+    public String get(final TableBase table, final boolean keepTypes) {
         return "SELECT "
                 + " tc.constraint_name as 'name', \n"
                 + " (SELECT ' ' + cc.column_name FROM information_schema.constraint_column_usage cc WHERE tc.constraint_name = cc.constraint_name FOR XML PATH('')) as 'columns' \n"
