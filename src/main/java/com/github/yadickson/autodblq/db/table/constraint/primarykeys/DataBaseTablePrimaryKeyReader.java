@@ -13,6 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -23,12 +24,13 @@ public class DataBaseTablePrimaryKeyReader extends DataBaseTableConstraintReader
 
     @Inject
     public DataBaseTablePrimaryKeyReader(
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTablePrimaryKeyQueryFactory dataBaseTablePrimaryKeyQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTablePrimaryKeyMapper dataBaseTablePrimaryKeyMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_PRIMARY_KEYS, parametersPlugin, dataBaseTablePrimaryKeyQueryFactory, sqlExecuteToGetList, dataBaseTablePrimaryKeyMapper);
+        super(DataBaseGeneratorType.TABLE_PRIMARY_KEYS, loggerManager, parametersPlugin, dataBaseTablePrimaryKeyQueryFactory, sqlExecuteToGetList, dataBaseTablePrimaryKeyMapper);
     }
 
     @Override

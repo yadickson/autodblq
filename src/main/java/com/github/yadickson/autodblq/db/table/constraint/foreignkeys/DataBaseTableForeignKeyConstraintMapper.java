@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.ForeignKey;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -27,15 +26,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableForeignKeyConstraintMapper implements Function<TableForeignKeyBean, DataBaseProperty> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableForeignKeyConstraintMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringJoinUtil stringJoinUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableForeignKeyConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+    public DataBaseTableForeignKeyConstraintMapper(LoggerManager loggerManager, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringJoinUtil = stringJoinUtil;
@@ -56,11 +55,11 @@ public class DataBaseTableForeignKeyConstraintMapper implements Function<TableFo
         final String constraintReferenceRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getRefcolumns()));
         final String constraintReferenceColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getRefcolumns()));
 
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Name: " + constraintRealName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Columns: " + constraintRealColumns);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Schema: " + constraintReferenceRealSchema);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceRealName);
-        LOGGER.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceRealColumns);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Name: " + constraintRealName);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Columns: " + constraintRealColumns);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Schema: " + constraintReferenceRealSchema);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceRealName);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceRealColumns);
 
         return new ForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns);
     }

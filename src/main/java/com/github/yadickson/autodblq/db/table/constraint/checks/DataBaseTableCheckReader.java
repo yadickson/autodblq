@@ -13,6 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -23,12 +24,13 @@ public class DataBaseTableCheckReader extends DataBaseTableConstraintReader<Tabl
 
     @Inject
     public DataBaseTableCheckReader(
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTableCheckQueryFactory dataBaseTableCheckQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableCheckMapper dataBaseTableCheckMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_CHECKS, parametersPlugin, dataBaseTableCheckQueryFactory, sqlExecuteToGetList, dataBaseTableCheckMapper);
+        super(DataBaseGeneratorType.TABLE_CHECKS, loggerManager, parametersPlugin, dataBaseTableCheckQueryFactory, sqlExecuteToGetList, dataBaseTableCheckMapper);
     }
 
     @Override

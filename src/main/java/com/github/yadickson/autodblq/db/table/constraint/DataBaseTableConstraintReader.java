@@ -10,7 +10,6 @@ import java.util.List;
 
 import org.apache.commons.lang3.tuple.ImmutablePair;
 import org.apache.commons.lang3.tuple.Pair;
-import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
@@ -18,6 +17,7 @@ import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -25,8 +25,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
  */
 public abstract class DataBaseTableConstraintReader<T> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableConstraintReader.class);
-
+    private final LoggerManager loggerManager;
     private final ParametersPlugin parametersPlugin;
     private final DataBaseGeneratorType type;
     private final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQueryFactory;
@@ -37,12 +36,14 @@ public abstract class DataBaseTableConstraintReader<T> {
 
     public DataBaseTableConstraintReader(
             final DataBaseGeneratorType type,
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTableConstraintQueryFactory dataBaseTableConstraintQuery,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableConstraintMapper<T> constraintMapper
     ) {
         this.type = type;
+        this.loggerManager = loggerManager;
         this.parametersPlugin = parametersPlugin;
         this.dataBaseTableConstraintQueryFactory = dataBaseTableConstraintQuery;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
@@ -89,16 +90,16 @@ public abstract class DataBaseTableConstraintReader<T> {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableConstraintQuery query = dataBaseTableConstraintQueryFactory.apply(driver);
         sqlQuery = query.get(table, parametersPlugin.getKeepTypes());
-        LOGGER.debug("[DataBaseTableConstraintReader] SQL " + type.getMessage() + ": " + sqlQuery);
+        loggerManager.debug("[DataBaseTableConstraintReader] SQL " + type.getMessage() + ": " + sqlQuery);
     }
 
     private TableBase findElements(
             final DriverConnection driverConnection,
             final TableBase table
     ) {
-        LOGGER.debug("[DataBaseTableConstraintReader] Starting " + type.getMessage());
+        loggerManager.debug("[DataBaseTableConstraintReader] Starting " + type.getMessage());
         List<T> elements = sqlExecuteToGetList.execute(driverConnection, sqlQuery, getTypeClass());
-        LOGGER.debug("[DataBaseTableConstraintReader] Total " + type.getMessage() + ": " + elements.size());
+        loggerManager.debug("[DataBaseTableConstraintReader] Total " + type.getMessage() + ": " + elements.size());
         return constraintMapper.apply(table, elements);
     }
 

@@ -12,7 +12,6 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
@@ -20,6 +19,7 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsReader;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -28,8 +28,7 @@ import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsReader
 @Named
 public class DataBaseTableBaseReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableBaseReader.class);
-
+    private final LoggerManager loggerManager;
     private final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableBaseMapper dataBaseTableMapper;
@@ -40,11 +39,12 @@ public class DataBaseTableBaseReader {
 
     @Inject
     public DataBaseTableBaseReader(
-            final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory,
+            LoggerManager loggerManager, final DataBaseTableBaseQueryFactory dataBaseTableQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableBaseMapper dataBaseTableMapper,
             final DataBaseTableColumnsReader dataBaseTableColumnsReader
     ) {
+        this.loggerManager = loggerManager;
         this.dataBaseTableQueryFactory = dataBaseTableQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseTableMapper = dataBaseTableMapper;
@@ -67,7 +67,7 @@ public class DataBaseTableBaseReader {
             return processTables(driverConnection, filter);
 
         } catch (RuntimeException ex) {
-            LOGGER.error(ex);
+            loggerManager.error(ex.getMessage(), ex);
             throw new DataBaseTableBaseReaderException(ex);
         }
     }
@@ -79,13 +79,13 @@ public class DataBaseTableBaseReader {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableBaseQuery query = dataBaseTableQueryFactory.apply(driver);
         sqlQuery = query.get(filter);
-        LOGGER.debug("[DataBaseTableBaseReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseTableBaseReader] SQL: " + sqlQuery);
     }
 
     private void findTables(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseTableBaseReader] Starting");
+        loggerManager.info("[DataBaseTableBaseReader] Starting");
         allTables = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableBaseBean.class);
-        LOGGER.info("[DataBaseTableBaseReader] Total: " + allTables.size());
+        loggerManager.info("[DataBaseTableBaseReader] Total: " + allTables.size());
     }
 
     private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {

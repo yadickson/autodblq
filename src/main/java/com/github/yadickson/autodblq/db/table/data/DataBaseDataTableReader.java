@@ -12,6 +12,7 @@ import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -23,6 +24,7 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseDataTableReader {
 
+    private final LoggerManager loggerManager;
     private final DataBasePropertyManager dataBasePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
@@ -30,7 +32,8 @@ public class DataBaseDataTableReader {
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseDataTableReader(DataBasePropertyManager dataBasePropertyManager, DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory, ParametersPlugin parametersPlugin, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringTrimUtil stringTrimUtil) {
+    public DataBaseDataTableReader(LoggerManager loggerManager, DataBasePropertyManager dataBasePropertyManager, DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory, ParametersPlugin parametersPlugin, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.dataBasePropertyManager = dataBasePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -39,7 +42,7 @@ public class DataBaseDataTableReader {
     }
 
     public DataBaseDataTableReaderIterator execute(final DriverConnection driverConnection, final TableBase table) {
-        return new DataBaseDataTableReaderIterator(dataBasePropertyManager, dataBaseDataTableBlockQueryFactory, stringToSnakeCaseUtil, stringToLowerCaseUtil, stringTrimUtil, driverConnection, table);
+        return new DataBaseDataTableReaderIterator(loggerManager, dataBasePropertyManager, dataBaseDataTableBlockQueryFactory, stringToSnakeCaseUtil, stringToLowerCaseUtil, stringTrimUtil, driverConnection, table);
     }
 
 }

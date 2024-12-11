@@ -8,12 +8,11 @@ package com.github.yadickson.autodblq.db.table.data;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetObject;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.data.model.CountBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -22,14 +21,14 @@ import com.github.yadickson.autodblq.db.table.data.model.CountBean;
 @Named
 public class DataBaseDataTableCountReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableCountReader.class);
-
+    private final LoggerManager loggerManager;
     private final SqlExecuteToGetObject sqlExecuteToGetObject;
 
     private String sqlQuery;
 
     @Inject
-    public DataBaseDataTableCountReader(SqlExecuteToGetObject sqlExecuteToGetObject) {
+    public DataBaseDataTableCountReader(LoggerManager loggerManager, SqlExecuteToGetObject sqlExecuteToGetObject) {
+        this.loggerManager = loggerManager;
         this.sqlExecuteToGetObject = sqlExecuteToGetObject;
     }
 
@@ -47,13 +46,13 @@ public class DataBaseDataTableCountReader {
 
     private void makeSqlQuery(final TableBase table) {
         sqlQuery = "SELECT COUNT(1) AS COUNT FROM " + table.getFullName();
-        LOGGER.debug("[DataBaseDataTableCountReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseDataTableCountReader] SQL: " + sqlQuery);
     }
 
     private Long processCount(final DriverConnection driverConnection) {
         final CountBean countBean = sqlExecuteToGetObject.execute(driverConnection, sqlQuery, CountBean.class);
         final String count = countBean.getCount();
-        LOGGER.debug("[DataBaseDataTableCountReader] Count: " + count);
+        loggerManager.debug("[DataBaseDataTableCountReader] Count: " + count);
         return Long.valueOf(count);
     }
 

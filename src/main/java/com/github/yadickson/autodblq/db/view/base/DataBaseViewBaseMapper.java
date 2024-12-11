@@ -12,10 +12,9 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToContentUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -28,15 +27,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List<ViewBase>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseViewBaseMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToContentUtil stringToContentUtil;
 
     @Inject
-    public DataBaseViewBaseMapper(StringTrimUtil stringTrimUtil, final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+    public DataBaseViewBaseMapper(LoggerManager loggerManager, StringTrimUtil stringTrimUtil, final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+        this.loggerManager = loggerManager;
         this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -65,9 +64,9 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
         final String newSchema = stringToSnakeCaseUtil.apply(viewBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(viewBean.getName());
 
-        LOGGER.debug("[DataBaseViewBaseMapper] Schema: " + realSchema);
-        LOGGER.debug("[DataBaseViewBaseMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseViewBaseMapper] Content: " + realContent);
+        loggerManager.debug("[DataBaseViewBaseMapper] Schema: " + realSchema);
+        loggerManager.debug("[DataBaseViewBaseMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseViewBaseMapper] Content: " + realContent);
 
         return new ViewBase(realSchema, schema, realName, name, realContent, newContent, newSchema, newName);
     }

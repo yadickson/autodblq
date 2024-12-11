@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.Default;
 import com.github.yadickson.autodblq.db.table.constraint.defaults.model.TableDefaultBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.CleanStringValueUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -27,15 +26,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableDefaultConstraintMapper implements Function<TableDefaultBean, DataBaseProperty> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableDefaultConstraintMapper.class);
-
+    private final LoggerManager loggerManager;
     private final CleanStringValueUtil cleanStringValueUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableDefaultConstraintMapper(CleanStringValueUtil cleanStringValueUtil, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableDefaultConstraintMapper(LoggerManager loggerManager, CleanStringValueUtil cleanStringValueUtil, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.cleanStringValueUtil = cleanStringValueUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -50,9 +49,9 @@ public class DataBaseTableDefaultConstraintMapper implements Function<TableDefau
         final String constraintColumnType = stringToSnakeCaseUtil.apply(tableBean.getColumntype());
         final String constraintValue = cleanStringValueUtil.apply(tableBean.getValue());
 
-        LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Column: " + constraintRealColumn);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint ColumnType: " + constraintColumnType);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Default Constraint Value: " + constraintValue);
+        loggerManager.debug("[DataBaseTableDefaultMapper] Default Constraint Column: " + constraintRealColumn);
+        loggerManager.debug("[DataBaseTableDefaultMapper] Default Constraint ColumnType: " + constraintColumnType);
+        loggerManager.debug("[DataBaseTableDefaultMapper] Default Constraint Value: " + constraintValue);
 
         return new Default(constraintRealColumn, constraintColumn, constraintNewColumn, constraintColumnType, constraintValue);
     }

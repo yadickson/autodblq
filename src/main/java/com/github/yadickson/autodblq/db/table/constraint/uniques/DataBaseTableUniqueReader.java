@@ -13,6 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -23,12 +24,13 @@ public class DataBaseTableUniqueReader extends DataBaseTableConstraintReader<Tab
 
     @Inject
     public DataBaseTableUniqueReader(
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTableUniqueQueryFactory dataBaseTableUniqueQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableUniqueMapper dataBaseTableUniqueMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_UNIQUES, parametersPlugin, dataBaseTableUniqueQueryFactory, sqlExecuteToGetList, dataBaseTableUniqueMapper);
+        super(DataBaseGeneratorType.TABLE_UNIQUES, loggerManager, parametersPlugin, dataBaseTableUniqueQueryFactory, sqlExecuteToGetList, dataBaseTableUniqueMapper);
     }
 
     @Override

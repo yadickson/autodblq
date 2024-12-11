@@ -13,6 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.indexes.model.TableIndexBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -23,12 +24,13 @@ public class DataBaseTableIndexReader extends DataBaseTableConstraintReader<Tabl
 
     @Inject
     public DataBaseTableIndexReader(
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTableIndexQueryFactory dataBaseTableIndexQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableIndexMapper dataBaseTableIndexMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_INDEXES, parametersPlugin, dataBaseTableIndexQueryFactory, sqlExecuteToGetList, dataBaseTableIndexMapper);
+        super(DataBaseGeneratorType.TABLE_INDEXES, loggerManager, parametersPlugin, dataBaseTableIndexQueryFactory, sqlExecuteToGetList, dataBaseTableIndexMapper);
     }
 
     @Override

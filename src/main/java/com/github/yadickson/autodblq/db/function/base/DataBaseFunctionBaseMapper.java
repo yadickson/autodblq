@@ -12,10 +12,9 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.*;
 
 /**
@@ -25,8 +24,7 @@ import com.github.yadickson.autodblq.util.*;
 @Named
 public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBean>, List<FunctionBase>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseFunctionBaseMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
@@ -35,9 +33,10 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
 
     @Inject
     public DataBaseFunctionBaseMapper(
-            StringTrimUtil stringTrimUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringToContentUtil stringToContentUtil,
+            LoggerManager loggerManager, StringTrimUtil stringTrimUtil, StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringToContentUtil stringToContentUtil,
             final StringToBooleanUtil stringToBooleanUtil
     ) {
+        this.loggerManager = loggerManager;
         this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -69,11 +68,11 @@ public class DataBaseFunctionBaseMapper implements Function<List<FunctionBaseBea
         final String newName = stringToSnakeCaseUtil.apply(functionBean.getName());
         final String returnType = stringToSnakeCaseUtil.apply(functionBean.getReturntype());
 
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Schema: " + realSchema);
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Content: " + realContent);
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Is Function: " + isFunction);
-        LOGGER.debug("[DataBaseFunctionBaseMapper] Return Type: " + returnType);
+        loggerManager.debug("[DataBaseFunctionBaseMapper] Schema: " + realSchema);
+        loggerManager.debug("[DataBaseFunctionBaseMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseFunctionBaseMapper] Content: " + realContent);
+        loggerManager.debug("[DataBaseFunctionBaseMapper] Is Function: " + isFunction);
+        loggerManager.debug("[DataBaseFunctionBaseMapper] Return Type: " + returnType);
 
         return new FunctionBase(realSchema, schema, realName, name, realContent, newContent, isFunction, newSchema, newName, returnType);
     }

@@ -8,12 +8,11 @@ package com.github.yadickson.autodblq.db.version.base;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetObject;
 import com.github.yadickson.autodblq.db.version.base.model.VersionBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -22,8 +21,7 @@ import com.github.yadickson.autodblq.db.version.base.model.VersionBean;
 @Named
 public class DataBaseVersionReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseVersionReader.class);
-
+    private final LoggerManager loggerManager;
     private final DataBaseVersionQueryFactory dataBaseVersionQueryFactory;
     private final SqlExecuteToGetObject sqlExecuteToGetObject;
 
@@ -31,9 +29,10 @@ public class DataBaseVersionReader {
 
     @Inject
     public DataBaseVersionReader(
-            final DataBaseVersionQueryFactory dataBaseVersionQueryFactory,
+            LoggerManager loggerManager, final DataBaseVersionQueryFactory dataBaseVersionQueryFactory,
             final SqlExecuteToGetObject sqlExecuteToGetObject
     ) {
+        this.loggerManager = loggerManager;
         this.dataBaseVersionQueryFactory = dataBaseVersionQueryFactory;
         this.sqlExecuteToGetObject = sqlExecuteToGetObject;
     }
@@ -54,13 +53,13 @@ public class DataBaseVersionReader {
         final Driver driver = driverConnection.getDriver();
         final DataBaseVersionQuery query = dataBaseVersionQueryFactory.apply(driver);
         sqlQuery = query.get();
-        LOGGER.debug("[DataBaseVersionReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseVersionReader] SQL: " + sqlQuery);
     }
 
     private String findVersion(final DriverConnection driverConnection) {
-        LOGGER.info(String.format("[DataBaseVersionReader] Starting [%s]", driverConnection.getDriver().getMessage()));
+        loggerManager.info(String.format("[DataBaseVersionReader] Starting [%s]", driverConnection.getDriver().getMessage()));
         final String version = sqlExecuteToGetObject.execute(driverConnection, sqlQuery, VersionBean.class).getVersion();
-        LOGGER.info("[DataBaseVersionReader] Version: " + version);
+        loggerManager.info("[DataBaseVersionReader] Version: " + version);
         return version;
     }
 

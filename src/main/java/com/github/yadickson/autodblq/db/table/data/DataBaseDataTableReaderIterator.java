@@ -15,7 +15,6 @@ import java.util.Collections;
 import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
-import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
@@ -24,6 +23,7 @@ import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -34,8 +34,7 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
  */
 public class DataBaseDataTableReaderIterator {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseDataTableReaderIterator.class);
-
+    private final LoggerManager loggerManager;
     private final DataBasePropertyManager dataBasePropertyManager;
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
@@ -51,7 +50,7 @@ public class DataBaseDataTableReaderIterator {
     private static final Long BLOCK = 20L;
 
     public DataBaseDataTableReaderIterator(
-            final DataBasePropertyManager dataBasePropertyManager,
+            LoggerManager loggerManager, final DataBasePropertyManager dataBasePropertyManager,
             final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
@@ -59,6 +58,7 @@ public class DataBaseDataTableReaderIterator {
             final DriverConnection driverConnection,
             final TableBase table
     ) {
+        this.loggerManager = loggerManager;
         this.dataBasePropertyManager = dataBasePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -92,7 +92,7 @@ public class DataBaseDataTableReaderIterator {
         final Driver driver = driverConnection.getDriver();
         final DataBaseDataTableBlockQuery query = dataBaseDataTableBlockQueryFactory.apply(driver);
         sqlQuery = query.get((DataBaseTableColumnsWrapper) table, pageCount, BLOCK);
-        LOGGER.debug("[DataBaseDataTableReaderIterator] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseDataTableReaderIterator] SQL: " + sqlQuery);
     }
 
     public void processSqlQuery(final DriverConnection driverConnection) {
@@ -134,8 +134,8 @@ public class DataBaseDataTableReaderIterator {
         for (int j = 0; j < columnCount; j++) {
             String columnName = metadata.getColumnName(j + 1);
             String columnType = metadata.getColumnTypeName(j + 1);
-            LOGGER.debug("[DataBaseDataTableReaderIterator] Column Name: " + columnName);
-            LOGGER.debug("[DataBaseDataTableReaderIterator] Column Type: " + columnType);
+            loggerManager.debug("[DataBaseDataTableReaderIterator] Column Name: " + columnName);
+            loggerManager.debug("[DataBaseDataTableReaderIterator] Column Type: " + columnType);
         }
 
         while (resultSet.next()) {

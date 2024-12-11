@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.Check;
 import com.github.yadickson.autodblq.db.table.constraint.checks.model.TableCheckBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.*;
 
 /**
@@ -24,8 +23,7 @@ import com.github.yadickson.autodblq.util.*;
 @Named
 public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBean, DataBaseProperty> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableCheckConstraintMapper.class);
-
+    private final LoggerManager loggerManager;
     private final CleanStringValueUtil cleanStringValueUtil;
     private final StringToContentUtil stringToContentUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
@@ -33,7 +31,8 @@ public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBe
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableCheckConstraintMapper(CleanStringValueUtil cleanStringValueUtil, StringToContentUtil stringToContentUtil, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableCheckConstraintMapper(LoggerManager loggerManager, CleanStringValueUtil cleanStringValueUtil, StringToContentUtil stringToContentUtil, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.cleanStringValueUtil = cleanStringValueUtil;
         this.stringToContentUtil = stringToContentUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
@@ -50,9 +49,9 @@ public class DataBaseTableCheckConstraintMapper implements Function<TableCheckBe
         final String constraintNewColumns = stringToSnakeCaseUtil.apply(tableBean.getColumns());
         final String constraintValue = cleanStringValueUtil.apply(stringToContentUtil.apply(cleanStringValueUtil.apply(tableBean.getValue())));
 
-        LOGGER.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Name: " + constraintRealName);
-        LOGGER.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Column: " + constraintRealColumns);
-        LOGGER.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Value: " + constraintValue);
+        loggerManager.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Name: " + constraintRealName);
+        loggerManager.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Column: " + constraintRealColumns);
+        loggerManager.debug("[DataBaseTableCheckConstraintMapper] Default Constraint Value: " + constraintValue);
 
         return new Check(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintNewColumns, constraintValue);
     }

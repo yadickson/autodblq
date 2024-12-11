@@ -13,6 +13,7 @@ import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReader;
 import com.github.yadickson.autodblq.db.table.constraint.foreignkeys.model.TableForeignKeyBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -23,12 +24,13 @@ public class DataBaseTableForeignKeyReader extends DataBaseTableConstraintReader
 
     @Inject
     public DataBaseTableForeignKeyReader(
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseTableForeignKeyQueryFactory dataBaseTableForeignKeyQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableForeignKeyMapper dataBaseTableForeignKeyMapper
     ) {
-        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, parametersPlugin, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetList, dataBaseTableForeignKeyMapper);
+        super(DataBaseGeneratorType.TABLE_FOREIGN_KEYS, loggerManager, parametersPlugin, dataBaseTableForeignKeyQueryFactory, sqlExecuteToGetList, dataBaseTableForeignKeyMapper);
     }
 
     @Override

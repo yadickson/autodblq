@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.TableUniqueBean;
 import com.github.yadickson.autodblq.db.table.constraint.uniques.model.Unique;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -27,15 +26,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableUniqueConstraintMapper implements Function<TableUniqueBean, DataBaseProperty> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableUniqueConstraintMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringJoinUtil stringJoinUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableUniqueConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+    public DataBaseTableUniqueConstraintMapper(LoggerManager loggerManager, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringJoinUtil = stringJoinUtil;
@@ -50,8 +49,8 @@ public class DataBaseTableUniqueConstraintMapper implements Function<TableUnique
         final String constraintRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getColumns()));
         final String constraintColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getColumns()));
 
-        LOGGER.debug("[DataBaseTableDefaultMapper] Unique Constraint Name: " + constraintRealName);
-        LOGGER.debug("[DataBaseTableDefaultMapper] Unique Constraint Columns: " + constraintRealColumns);
+        loggerManager.debug("[DataBaseTableDefaultMapper] Unique Constraint Name: " + constraintRealName);
+        loggerManager.debug("[DataBaseTableDefaultMapper] Unique Constraint Columns: " + constraintRealColumns);
 
         return new Unique(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
     }

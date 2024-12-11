@@ -10,11 +10,10 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.PrimaryKey;
 import com.github.yadickson.autodblq.db.table.constraint.primarykeys.model.TablePrimaryKeyBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringJoinUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -27,15 +26,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePrimaryKeyBean, DataBaseProperty> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTablePrimaryKeyConstraintMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringJoinUtil stringJoinUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTablePrimaryKeyConstraintMapper(StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+    public DataBaseTablePrimaryKeyConstraintMapper(LoggerManager loggerManager, StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringJoinUtil stringJoinUtil, StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringJoinUtil = stringJoinUtil;
@@ -50,8 +49,8 @@ public class DataBaseTablePrimaryKeyConstraintMapper implements Function<TablePr
         final String constraintRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getColumns()));
         final String constraintColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getColumns()));
 
-        LOGGER.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Name: " + constraintRealName);
-        LOGGER.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Columns: " + constraintRealColumns);
+        loggerManager.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Name: " + constraintRealName);
+        loggerManager.debug("[DataBaseTableDefaultMapper] PrimaryKey Constraint Columns: " + constraintRealColumns);
 
         return new PrimaryKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns);
     }

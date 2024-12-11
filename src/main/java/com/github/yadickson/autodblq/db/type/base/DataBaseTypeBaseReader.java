@@ -12,13 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.db.type.base.model.TypeBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -27,8 +27,7 @@ import com.github.yadickson.autodblq.db.type.base.model.TypeBaseBean;
 @Named
 public class DataBaseTypeBaseReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTypeBaseReader.class);
-
+    private final LoggerManager loggerManager;
     private final DataBaseTypeBaseQueryFactory dataBaseTypeQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTypeBaseMapper dataBaseTypeMapper;
@@ -38,10 +37,11 @@ public class DataBaseTypeBaseReader {
 
     @Inject
     public DataBaseTypeBaseReader(
-            final DataBaseTypeBaseQueryFactory dataBaseTypeQueryFactory,
+            LoggerManager loggerManager, final DataBaseTypeBaseQueryFactory dataBaseTypeQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTypeBaseMapper dataBaseTypeMapper
     ) {
+        this.loggerManager = loggerManager;
         this.dataBaseTypeQueryFactory = dataBaseTypeQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseTypeMapper = dataBaseTypeMapper;
@@ -63,7 +63,7 @@ public class DataBaseTypeBaseReader {
             return processTypes(driverConnection, filter);
 
         } catch (RuntimeException ex) {
-            LOGGER.error(ex);
+            loggerManager.error(ex.getMessage(), ex);
             throw new DataBaseTypeBaseReaderException(ex);
         }
     }
@@ -75,13 +75,13 @@ public class DataBaseTypeBaseReader {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTypeBaseQuery query = dataBaseTypeQueryFactory.apply(driver);
         sqlQuery = query.get(filter);
-        LOGGER.debug("[DataBaseTypeBaseReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseTypeBaseReader] SQL: " + sqlQuery);
     }
 
     private void findTypes(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseTypeBaseReader] Starting");
+        loggerManager.info("[DataBaseTypeBaseReader] Starting");
         allTypes = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TypeBaseBean.class);
-        LOGGER.info("[DataBaseTypeBaseReader] Total: " + allTypes.size());
+        loggerManager.info("[DataBaseTypeBaseReader] Total: " + allTypes.size());
     }
 
     private List<TypeBase> processTypes(final DriverConnection driverConnection, final List<String> filter) {

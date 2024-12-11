@@ -9,7 +9,6 @@ import java.io.IOException;
 import java.sql.SQLException;
 import java.util.List;
 import java.util.Map;
-import java.util.Optional;
 
 import javax.inject.Inject;
 
@@ -24,7 +23,7 @@ import com.github.yadickson.autodblq.db.DataBaseGenerator;
 import com.github.yadickson.autodblq.db.DataBaseGeneratorType;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.DriverConnectionDecorator;
-import com.github.yadickson.autodblq.logger.MavenLoggerConfiguration;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToBooleanUtil;
 import com.github.yadickson.autodblq.writer.DefinitionGenerator;
 
@@ -271,7 +270,7 @@ public class GeneratorPlugin extends AbstractMojo {
             required = true)
     private String outputProceduresDirectory;
 
-    private final MavenLoggerConfiguration mavenLoggerConfiguration;
+    private final LoggerManager loggerManager;
     private final ParametersPlugin parametersPlugin;
     private final DataBaseGenerator dataBaseGenerator;
     private final DefinitionGenerator definitionGenerator;
@@ -281,13 +280,13 @@ public class GeneratorPlugin extends AbstractMojo {
 
     @Inject
     public GeneratorPlugin(
-            final MavenLoggerConfiguration mavenLoggerConfiguration,
+            final LoggerManager loggerManager,
             final ParametersPlugin parametersPlugin,
             final DataBaseGenerator dataBaseGenerator,
             final DefinitionGenerator definitionGenerator,
             final StringToBooleanUtil stringToBooleanUtil
     ) {
-        this.mavenLoggerConfiguration = mavenLoggerConfiguration;
+        this.loggerManager = loggerManager;
         this.parametersPlugin = parametersPlugin;
         this.dataBaseGenerator = dataBaseGenerator;
         this.definitionGenerator = definitionGenerator;
@@ -305,7 +304,7 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void configLogger() {
-        mavenLoggerConfiguration.execute(getLog());
+        loggerManager.configure(getLog());
     }
 
     private void makeParameters() {
@@ -337,24 +336,24 @@ public class GeneratorPlugin extends AbstractMojo {
     }
 
     private void printParameters() {
-        getLog().info("[Generator] Driver: " + parametersPlugin.getDriver());
-        getLog().info("[Generator] URL: " + parametersPlugin.getUrl());
-        getLog().info("[Generator] User: " + parametersPlugin.getUsername());
-        getLog().info("[Generator] Pass: ****");
-        getLog().info("[Generator] Author: " + parametersPlugin.getAuthor());
-        getLog().info("[Generator] Version: " + parametersPlugin.getVersion());
-        getLog().info("[Generator] Encode: " + parametersPlugin.getEncode());
-        getLog().info("[Generator] OutputDirectory: " + parametersPlugin.getOutputDirectory());
-        getLog().info("[Generator] OutputDatasetsDirectory: " + parametersPlugin.getOutputDatasetsDirectory());
-        getLog().info("[Generator] OutputViewsDirectory: " + parametersPlugin.getOutputViewsDirectory());
-        getLog().info("[Generator] OutputFunctionsDirectory: " + parametersPlugin.getOutputFunctionsDirectory());
-        getLog().info("[Generator] OutputProceduresDirectory: " + parametersPlugin.getOutputProceduresDirectory());
-        getLog().info("[Generator] AddDbVersion: " + parametersPlugin.getAddDbVersion());
-        getLog().info("[Generator] KeepNames: " + parametersPlugin.getKeepNames());
-        getLog().info("[Generator] AddSchema: " + parametersPlugin.getAddSchema());
-        getLog().info("[Generator] AddDbms: " + parametersPlugin.getAddDbms());
-        getLog().info("[Generator] AddNullable: " + parametersPlugin.getAddNullable());
-        getLog().info("[Generator] AddIdentity: " + parametersPlugin.getAddIdentity());
+        loggerManager.info("[Generator] Driver: " + parametersPlugin.getDriver());
+        loggerManager.info("[Generator] URL: " + parametersPlugin.getUrl());
+        loggerManager.info("[Generator] User: " + parametersPlugin.getUsername());
+        loggerManager.info("[Generator] Pass: ****");
+        loggerManager.info("[Generator] Author: " + parametersPlugin.getAuthor());
+        loggerManager.info("[Generator] Version: " + parametersPlugin.getVersion());
+        loggerManager.info("[Generator] Encode: " + parametersPlugin.getEncode());
+        loggerManager.info("[Generator] OutputDirectory: " + parametersPlugin.getOutputDirectory());
+        loggerManager.info("[Generator] OutputDatasetsDirectory: " + parametersPlugin.getOutputDatasetsDirectory());
+        loggerManager.info("[Generator] OutputViewsDirectory: " + parametersPlugin.getOutputViewsDirectory());
+        loggerManager.info("[Generator] OutputFunctionsDirectory: " + parametersPlugin.getOutputFunctionsDirectory());
+        loggerManager.info("[Generator] OutputProceduresDirectory: " + parametersPlugin.getOutputProceduresDirectory());
+        loggerManager.info("[Generator] AddDbVersion: " + parametersPlugin.getAddDbVersion());
+        loggerManager.info("[Generator] KeepNames: " + parametersPlugin.getKeepNames());
+        loggerManager.info("[Generator] AddSchema: " + parametersPlugin.getAddSchema());
+        loggerManager.info("[Generator] AddDbms: " + parametersPlugin.getAddDbms());
+        loggerManager.info("[Generator] AddNullable: " + parametersPlugin.getAddNullable());
+        loggerManager.info("[Generator] AddIdentity: " + parametersPlugin.getAddIdentity());
     }
 
     private void generate() throws MojoExecutionException {
@@ -365,7 +364,7 @@ public class GeneratorPlugin extends AbstractMojo {
             runDefinitionGenerator(driverConnection);
 
         } catch (SQLException | IOException | RuntimeException ex) {
-            getLog().error(ex.getMessage(), ex);
+            loggerManager.error(ex.getMessage(), ex);
             throw new MojoExecutionException("Fail liquibase generator", ex);
         }
     }

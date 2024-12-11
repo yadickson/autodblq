@@ -12,10 +12,9 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.db.type.base.model.TypeBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToContentUtil;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -28,15 +27,15 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTypeBaseMapper implements Function<List<TypeBaseBean>, List<TypeBase>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTypeBaseMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
     private final StringToContentUtil stringToContentUtil;
 
     @Inject
-    public DataBaseTypeBaseMapper(final StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil, final StringToContentUtil stringToContentUtil) {
+    public DataBaseTypeBaseMapper(LoggerManager loggerManager, final StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil, final StringToContentUtil stringToContentUtil) {
+        this.loggerManager = loggerManager;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringTrimUtil = stringTrimUtil;
@@ -66,10 +65,10 @@ public class DataBaseTypeBaseMapper implements Function<List<TypeBaseBean>, List
         final String realContent = stringTrimUtil.apply(typeBean.getContent());
         final String newContent = stringToContentUtil.apply(stringToSnakeCaseUtil.apply(typeBean.getContent()));
 
-        LOGGER.debug("[DataBaseTypeBaseMapper] Schema: " + realSchema);
-        LOGGER.debug("[DataBaseTypeBaseMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseTypeBaseMapper] Type: " + type);
-        LOGGER.debug("[DataBaseTypeBaseMapper] Content: " + realContent);
+        loggerManager.debug("[DataBaseTypeBaseMapper] Schema: " + realSchema);
+        loggerManager.debug("[DataBaseTypeBaseMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseTypeBaseMapper] Type: " + type);
+        loggerManager.debug("[DataBaseTypeBaseMapper] Content: " + realContent);
 
         return new TypeBase(realSchema, realName, schema, name, newSchema, newName, type, realContent, newContent);
     }

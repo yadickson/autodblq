@@ -14,11 +14,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.function.parameters.model.FunctionParameter;
 import com.github.yadickson.autodblq.db.function.parameters.model.FunctionParameterBean;
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.*;
 
 /**
@@ -28,8 +27,7 @@ import com.github.yadickson.autodblq.util.*;
 @Named
 public class DataBaseFunctionParametersMapper implements Function<List<FunctionParameterBean>, List<DataBaseProperty>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseFunctionParametersMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
@@ -37,11 +35,12 @@ public class DataBaseFunctionParametersMapper implements Function<List<FunctionP
 
     @Inject
     public DataBaseFunctionParametersMapper(
-            final StringTrimUtil stringTrimUtil,
+            LoggerManager loggerManager, final StringTrimUtil stringTrimUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
             final StringToIntegerUtil stringToIntegerUtil
     ) {
+        this.loggerManager = loggerManager;
         this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -76,13 +75,13 @@ public class DataBaseFunctionParametersMapper implements Function<List<FunctionP
         final String defaultValue = stringTrimUtil.apply(functionParameterBean.getDefaultvalue());
         final String mode = stringToLowerCaseUtil.apply(functionParameterBean.getMode());
 
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Type: " + type);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Position: " + position);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Length: " + length);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Precision: " + precision);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] Scale: " + scale);
-        LOGGER.debug("[DataBaseFunctionParametersMapper] DefaultValue: " + defaultValue);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Type: " + type);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Position: " + position);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Length: " + length);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Precision: " + precision);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] Scale: " + scale);
+        loggerManager.debug("[DataBaseFunctionParametersMapper] DefaultValue: " + defaultValue);
 
         return new FunctionParameter(realName, name, newName, type, position, length, precision, scale, defaultValue, mode);
     }

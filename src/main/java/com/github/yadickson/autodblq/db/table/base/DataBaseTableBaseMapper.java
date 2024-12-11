@@ -12,10 +12,9 @@ import java.util.function.Function;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.base.model.TableBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
 import com.github.yadickson.autodblq.util.StringTrimUtil;
@@ -27,14 +26,14 @@ import com.github.yadickson.autodblq.util.StringTrimUtil;
 @Named
 public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, List<TableBase>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableBaseMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringTrimUtil stringTrimUtil;
 
     @Inject
-    public DataBaseTableBaseMapper(final StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+    public DataBaseTableBaseMapper(LoggerManager loggerManager, final StringToLowerCaseUtil stringToLowerCaseUtil, final StringToSnakeCaseUtil stringToSnakeCaseUtil, final StringTrimUtil stringTrimUtil) {
+        this.loggerManager = loggerManager;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringTrimUtil = stringTrimUtil;
@@ -61,9 +60,9 @@ public class DataBaseTableBaseMapper implements Function<List<TableBaseBean>, Li
         final String newSchema = stringToSnakeCaseUtil.apply(tableBean.getSchema());
         final String newName = stringToSnakeCaseUtil.apply(tableBean.getName());
 
-        LOGGER.debug("[DataBaseTableBaseMapper] Schema: " + realSchema);
-        LOGGER.debug("[DataBaseTableBaseMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseTableBaseMapper] Remarks: " + remarks);
+        loggerManager.debug("[DataBaseTableBaseMapper] Schema: " + realSchema);
+        loggerManager.debug("[DataBaseTableBaseMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseTableBaseMapper] Remarks: " + remarks);
         
         return new TableBase(realSchema, realName, schema, name, remarks, newSchema, newName);
     }

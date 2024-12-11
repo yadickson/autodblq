@@ -12,14 +12,13 @@ import javax.inject.Inject;
 import javax.inject.Named;
 
 import org.apache.commons.collections.CollectionUtils;
-import org.apache.log4j.Logger;
 
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
-import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseSort;
 import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -28,8 +27,7 @@ import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 @Named
 public class DataBaseViewBaseReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseViewBaseReader.class);
-
+    private final LoggerManager loggerManager;
     private final DataBaseViewBaseQueryFactory dataBaseViewQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseViewBaseMapper dataBaseViewMapper;
@@ -39,10 +37,11 @@ public class DataBaseViewBaseReader {
 
     @Inject
     public DataBaseViewBaseReader(
-            final DataBaseViewBaseQueryFactory dataBaseViewQueryFactory,
+            LoggerManager loggerManager, final DataBaseViewBaseQueryFactory dataBaseViewQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseViewBaseMapper dataBaseViewMapper
     ) {
+        this.loggerManager = loggerManager;
         this.dataBaseViewQueryFactory = dataBaseViewQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
         this.dataBaseViewMapper = dataBaseViewMapper;
@@ -75,13 +74,13 @@ public class DataBaseViewBaseReader {
         final Driver driver = driverConnection.getDriver();
         final DataBaseViewBaseQuery query = dataBaseViewQueryFactory.apply(driver);
         sqlQuery = query.get(filter);
-        LOGGER.debug("[DataBaseViewReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseViewReader] SQL: " + sqlQuery);
     }
 
     private void findViews(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseViewReader] Starting");
+        loggerManager.info("[DataBaseViewReader] Starting");
         allViews = sqlExecuteToGetList.execute(driverConnection, sqlQuery, ViewBaseBean.class);
-        LOGGER.info("[DataBaseViewReader] Total: " + allViews.size());
+        loggerManager.info("[DataBaseViewReader] Total: " + allViews.size());
     }
 
     private List<ViewBase> processViews(final List<String> filter) {

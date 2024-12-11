@@ -11,8 +11,7 @@ import java.util.Map;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
 
 import freemarker.template.*;
@@ -24,12 +23,12 @@ import freemarker.template.*;
 @Named
 public class TemplateGeneratorManager {
 
-    private static final Logger LOGGER = Logger.getLogger(TemplateGeneratorManager.class);
-
+    private final LoggerManager loggerManager;
     private final TemplateConfiguration templateConfiguration;
 
     @Inject
-    public TemplateGeneratorManager(final TemplateConfiguration templateConfiguration) {
+    public TemplateGeneratorManager(LoggerManager loggerManager, final TemplateConfiguration templateConfiguration) {
+        this.loggerManager = loggerManager;
         this.templateConfiguration = templateConfiguration;
     }
 
@@ -47,7 +46,7 @@ public class TemplateGeneratorManager {
 
     private String makeFileName(final DefinitionGeneratorType templateGeneratorType) {
         String fileName = templateGeneratorType.getTemplate().replace(File.separatorChar, '/');
-        LOGGER.debug("[TemplateGenerator] File Template: " + fileName);
+        loggerManager.debug("[TemplateGenerator] File Template: " + fileName);
         return fileName;
     }
 

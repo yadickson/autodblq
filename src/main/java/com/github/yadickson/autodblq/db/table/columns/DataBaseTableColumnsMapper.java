@@ -14,11 +14,10 @@ import java.util.stream.Collectors;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.table.columns.model.Column;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.*;
 
 /**
@@ -28,8 +27,7 @@ import com.github.yadickson.autodblq.util.*;
 @Named
 public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean>, List<DataBaseProperty>> {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsMapper.class);
-
+    private final LoggerManager loggerManager;
     private final StringTrimUtil stringTrimUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
@@ -38,12 +36,13 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
 
     @Inject
     public DataBaseTableColumnsMapper(
-            final StringTrimUtil stringTrimUtil,
+            LoggerManager loggerManager, final StringTrimUtil stringTrimUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
             final StringToBooleanUtil stringToBooleanUtil,
             final StringToIntegerUtil stringToIntegerUtil
     ) {
+        this.loggerManager = loggerManager;
         this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
@@ -82,14 +81,14 @@ public class DataBaseTableColumnsMapper implements Function<List<TableColumnBean
         final Integer startWith = stringToIntegerUtil.apply(tableColumnBean.getStartwith());
         final Integer incrementBy = stringToIntegerUtil.apply(tableColumnBean.getIncrementby());
 
-        LOGGER.debug("[DataBaseTableColumnMapper] Name: " + realName);
-        LOGGER.debug("[DataBaseTableColumnMapper] Type: " + type);
-        LOGGER.debug("[DataBaseTableColumnMapper] Position: " + position);
-        LOGGER.debug("[DataBaseTableColumnMapper] Length: " + length);
-        LOGGER.debug("[DataBaseTableColumnMapper] Precision: " + precision);
-        LOGGER.debug("[DataBaseTableColumnMapper] Scale: " + scale);
-        LOGGER.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
-        LOGGER.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
+        loggerManager.debug("[DataBaseTableColumnMapper] Name: " + realName);
+        loggerManager.debug("[DataBaseTableColumnMapper] Type: " + type);
+        loggerManager.debug("[DataBaseTableColumnMapper] Position: " + position);
+        loggerManager.debug("[DataBaseTableColumnMapper] Length: " + length);
+        loggerManager.debug("[DataBaseTableColumnMapper] Precision: " + precision);
+        loggerManager.debug("[DataBaseTableColumnMapper] Scale: " + scale);
+        loggerManager.debug("[DataBaseTableColumnMapper] Remarks: " + remarks);
+        loggerManager.debug("[DataBaseTableColumnMapper] Nullable: " + nullable);
 
         return new Column(realName, name, newName, type, position, length, precision, scale, remarks, nullable, identity, startWith, incrementBy);
     }

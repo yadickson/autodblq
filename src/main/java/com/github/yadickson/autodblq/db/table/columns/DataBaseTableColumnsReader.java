@@ -11,8 +11,6 @@ import java.util.List;
 import javax.inject.Inject;
 import javax.inject.Named;
 
-import org.apache.log4j.Logger;
-
 import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
@@ -20,6 +18,7 @@ import com.github.yadickson.autodblq.db.sqlquery.SqlExecuteToGetList;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.model.TableColumnBean;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintReaderException;
+import com.github.yadickson.autodblq.logger.LoggerManager;
 
 /**
  *
@@ -28,8 +27,7 @@ import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraint
 @Named
 public class DataBaseTableColumnsReader {
 
-    private static final Logger LOGGER = Logger.getLogger(DataBaseTableColumnsReader.class);
-
+    private final LoggerManager loggerManager;
     private final ParametersPlugin parametersPlugin;
     private final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory;
     private final SqlExecuteToGetList sqlExecuteToGetList;
@@ -40,11 +38,12 @@ public class DataBaseTableColumnsReader {
 
     @Inject
     public DataBaseTableColumnsReader(
-            final ParametersPlugin parametersPlugin,
+            LoggerManager loggerManager, final ParametersPlugin parametersPlugin,
             final DataBaseTableColumnsQueryFactory dataBaseTableColumnsQueryFactory,
             final SqlExecuteToGetList sqlExecuteToGetList,
             final DataBaseTableColumnsMapper dataBaseTableColumnsMapper
     ) {
+        this.loggerManager = loggerManager;
         this.parametersPlugin = parametersPlugin;
         this.dataBaseTableColumnsQueryFactory = dataBaseTableColumnsQueryFactory;
         this.sqlExecuteToGetList = sqlExecuteToGetList;
@@ -93,13 +92,13 @@ public class DataBaseTableColumnsReader {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableColumnsQuery query = dataBaseTableColumnsQueryFactory.apply(driver);
         sqlQuery = query.get(table, parametersPlugin.getKeepTypes());
-        LOGGER.debug("[DataBaseTableDefinitionReader] SQL: " + sqlQuery);
+        loggerManager.debug("[DataBaseTableDefinitionReader] SQL: " + sqlQuery);
     }
 
     private void findDefinitions(final DriverConnection driverConnection) {
-        LOGGER.info("[DataBaseTableDefinitionReader] Starting");
+        loggerManager.info("[DataBaseTableDefinitionReader] Starting");
         columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableColumnBean.class);
-        LOGGER.info("[DataBaseTableDefinitionReader] Total: " + columns.size());
+        loggerManager.info("[DataBaseTableDefinitionReader] Total: " + columns.size());
     }
 
     private TableBase fillDefinitions(final TableBase table) {
