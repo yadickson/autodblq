@@ -4,7 +4,7 @@
 ![license](https://img.shields.io/github/license/yadickson/autodblq?style=flat-square)
 [![build](https://img.shields.io/github/actions/workflow/status/yadickson/autodblq/maven.yml?branch=main&style=flat-square)](https://github.com/yadickson/autodblq/actions/workflows/maven.yml)
 ![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Fyadickson%2F2edc636fc2ff6aff4b056d455f3290be%2Fraw%2Fautodblq-junit-tests.json)
-![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Fyadickson%2F2edc636fc2ff6aff4b056d455f3290be%2Fraw%2Fautodblq-cobertura-coverage.json)
+![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Fyadickson%2F2edc636fc2ff6aff4b056d455f3290be%2Fraw%2Fautodblq-jacoco-coverage.json)
 [![Central OSSRH][oss-nexus-image]][oss-nexus-url]
 [![Central Maven][central-image]][central-url]
 
