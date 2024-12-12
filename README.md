@@ -1,12 +1,17 @@
 # Maven Auto Database to Liquibase Generator Plugin
 
-[![TravisCI Status][travis-image]][travis-url]
-[![Codecov Status][codecov-image]][codecov-url]
+![version](https://img.shields.io/github/v/release/yadickson/autodblq?style=flat-square)
+![license](https://img.shields.io/github/license/yadickson/autodblq?style=flat-square)
+[![build](https://img.shields.io/github/actions/workflow/status/yadickson/autodblq/maven.yml?branch=main&style=flat-square)](https://github.com/yadickson/autodblq/actions/workflows/maven.yml)
+![tests](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Fyadickson%2F2edc636fc2ff6aff4b056d455f3290be%2Fraw%2Fautodblq-junit-tests.json)
+![coverage](https://img.shields.io/endpoint?style=flat-square&url=https%3A%2F%2Fgist.githubusercontent.com%2Fyadickson%2F2edc636fc2ff6aff4b056d455f3290be%2Fraw%2Fautodblq-cobertura-coverage.json)
 [![Central OSSRH][oss-nexus-image]][oss-nexus-url]
 [![Central Maven][central-image]][central-url]
 
 
 Maven plugin to generate xml liquibase files from database
+
+[Examples](https://github.com/yadickson/autodblq-examples)
 
 ## Support
 
@@ -247,12 +252,6 @@ Load data table content
 ```
 $ mvn autodblq:generator -Dautodblq.driver=... -Dautodblq.url=... -Dautodblq.username=... -Dautodblq.password=...
 ```
-
-[travis-image]: https://travis-ci.org/yadickson/autodblq.svg?branch=master
-[travis-url]: https://travis-ci.org/yadickson/autodblq
-
-[codecov-image]: https://codecov.io/gh/yadickson/autodblq/branch/master/graph/badge.svg?branch=master
-[codecov-url]: https://codecov.io/gh/yadickson/autodblq
 
 [oss-nexus-image]: https://img.shields.io/nexus/r/https/oss.sonatype.org/com.github.yadickson/autodblq.svg
 [oss-nexus-url]: https://oss.sonatype.org/#nexus-search;quick~autodblq
