@@ -16,6 +16,8 @@ public final class TableForeignKeyBean {
     private String refschema;
     private String refname;
     private String refcolumns;
+    private String deleterule;
+    private String updaterule;
 
     public String getName() {
         return name;
@@ -57,4 +59,19 @@ public final class TableForeignKeyBean {
         this.refcolumns = refcolumns;
     }
 
+    public String getDeleterule() {
+        return deleterule;
+    }
+
+    public void setDeleterule(String deleterule) {
+        this.deleterule = deleterule;
+    }
+
+    public String getUpdaterule() {
+        return updaterule;
+    }
+
+    public void setUpdaterule(String updaterule) {
+        this.updaterule = updaterule;
+    }
 }

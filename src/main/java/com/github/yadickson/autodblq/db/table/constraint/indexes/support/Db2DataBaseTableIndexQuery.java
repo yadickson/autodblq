@@ -21,7 +21,7 @@ public class Db2DataBaseTableIndexQuery implements DataBaseTableConstraintQuery 
         return "select \n"
                 + " indname as name, \n"
                 + " replace(trim(replace(replace(colnames,'-',' '),'+',' ')), ' ', ',') as columns, \n"
-                + " DECODE(uniquerule, 'U', 'Y', 'N') isunique \n"
+                + " DECODE(uniquerule, 'U', 'true', 'false') isunique \n"
                 + "from syscat.indexes \n"
                 + "where \n"
                 + " uniquerule != 'P' \n"

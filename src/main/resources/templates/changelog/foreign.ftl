@@ -12,8 +12,8 @@
 </#if>
             referencedTableName="${constraint.referenceName}"
             referencedColumnNames="${constraint.referenceColumns}"
-            onDelete="NO ACTION" 
-            onUpdate="NO ACTION"
+            onDelete="<#if constraint.deleteAction?? >${constraint.deleteAction}<#else>NO ACTION</#if>"
+            onUpdate="<#if constraint.updateAction?? >${constraint.updateAction}<#else>NO ACTION</#if>"
         />
 
         <rollback>

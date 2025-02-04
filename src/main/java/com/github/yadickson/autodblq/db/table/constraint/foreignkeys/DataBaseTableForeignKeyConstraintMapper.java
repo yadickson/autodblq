@@ -54,13 +54,17 @@ public class DataBaseTableForeignKeyConstraintMapper implements Function<TableFo
         final String constraintReferenceName = stringToSnakeCaseUtil.apply(tableBean.getRefname());
         final String constraintReferenceRealColumns = stringJoinUtil.apply(stringTrimUtil.apply(tableBean.getRefcolumns()));
         final String constraintReferenceColumns = stringJoinUtil.apply(stringToSnakeCaseUtil.apply(tableBean.getRefcolumns()));
+        final String constrainDeleteAction = stringTrimUtil.apply(tableBean.getDeleterule());
+        final String constraintUpdateAction = stringTrimUtil.apply(tableBean.getUpdaterule());
 
         loggerManager.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Name: " + constraintRealName);
         loggerManager.debug("[DataBaseTableForeignKeyMapper] ForeignKey Constraint Columns: " + constraintRealColumns);
         loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Schema: " + constraintReferenceRealSchema);
         loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Name: " + constraintReferenceRealName);
         loggerManager.debug("[DataBaseTableForeignKeyMapper] Reference Table Columns: " + constraintReferenceRealColumns);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] Delete Action: " + constrainDeleteAction);
+        loggerManager.debug("[DataBaseTableForeignKeyMapper] Update Action: " + constraintUpdateAction);
 
-        return new ForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns);
+        return new ForeignKey(constraintRealName, constraintName, constraintNewName, constraintRealColumns, constraintColumns, constraintReferenceRealSchema, constraintReferenceSchema, constraintReferenceRealName, constraintReferenceName, constraintReferenceRealColumns, constraintReferenceColumns, constrainDeleteAction, constraintUpdateAction);
     }
 }

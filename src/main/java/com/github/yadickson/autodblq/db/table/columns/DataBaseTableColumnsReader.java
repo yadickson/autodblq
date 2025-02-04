@@ -33,6 +33,7 @@ public class DataBaseTableColumnsReader {
     private final SqlExecuteToGetList sqlExecuteToGetList;
     private final DataBaseTableColumnsMapper dataBaseTableColumnsMapper;
 
+    private String tableName;
     private String sqlQuery;
     private List<TableColumnBean> columns;
 
@@ -91,14 +92,15 @@ public class DataBaseTableColumnsReader {
     ) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseTableColumnsQuery query = dataBaseTableColumnsQueryFactory.apply(driver);
+        tableName = table.getFullName();
         sqlQuery = query.get(table, parametersPlugin.getKeepTypes());
         loggerManager.debug("[DataBaseTableDefinitionReader] SQL: " + sqlQuery);
     }
 
     private void findDefinitions(final DriverConnection driverConnection) {
-        loggerManager.info("[DataBaseTableDefinitionReader] Starting");
+        loggerManager.info("[DataBaseTableDefinitionReader] Table : " + tableName);
         columns = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableColumnBean.class);
-        loggerManager.info("[DataBaseTableDefinitionReader] Total: " + columns.size());
+        loggerManager.info("[DataBaseTableDefinitionReader] Total Columns: " + columns.size());
     }
 
     private TableBase fillDefinitions(final TableBase table) {

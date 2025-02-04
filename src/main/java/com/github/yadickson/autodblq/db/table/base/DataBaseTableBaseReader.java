@@ -85,7 +85,7 @@ public class DataBaseTableBaseReader {
     private void findTables(final DriverConnection driverConnection) {
         loggerManager.info("[DataBaseTableBaseReader] Starting");
         allTables = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TableBaseBean.class);
-        loggerManager.info("[DataBaseTableBaseReader] Total: " + allTables.size());
+        loggerManager.info("[DataBaseTableBaseReader] Total Tables: " + allTables.size());
     }
 
     private List<TableBase> processTables(final DriverConnection driverConnection, final List<String> filter) {

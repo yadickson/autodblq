@@ -21,8 +21,10 @@ public final class ForeignKey extends DataBaseProperty {
     private final String referenceName;
     private final String referenceRealColumns;
     private final String referenceColumns;
+    private final String deleteAction;
+    private final String updateAction;
 
-    public ForeignKey(String realName, String name, String newName, String realColumns, String columns, String referenceRealSchema, String referenceSchema, String referenceRealName, String referenceName, String referenceRealColumns, String referenceColumns) {
+    public ForeignKey(String realName, String name, String newName, String realColumns, String columns, String referenceRealSchema, String referenceSchema, String referenceRealName, String referenceName, String referenceRealColumns, String referenceColumns, String deleteAction, String updateAction) {
         super(realName, name, newName);
         this.realColumns = realColumns;
         this.columns = columns;
@@ -32,6 +34,8 @@ public final class ForeignKey extends DataBaseProperty {
         this.referenceName = referenceName;
         this.referenceRealColumns = referenceRealColumns;
         this.referenceColumns = referenceColumns;
+        this.deleteAction = deleteAction;
+        this.updateAction = updateAction;
     }
 
     public String getColumns() {
@@ -64,5 +68,13 @@ public final class ForeignKey extends DataBaseProperty {
 
     public String getReferenceRealColumns() {
         return referenceRealColumns;
+    }
+
+    public String getDeleteAction() {
+        return deleteAction;
+    }
+
+    public String getUpdateAction() {
+        return updateAction;
     }
 }

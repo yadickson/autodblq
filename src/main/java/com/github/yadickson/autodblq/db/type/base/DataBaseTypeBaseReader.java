@@ -81,7 +81,7 @@ public class DataBaseTypeBaseReader {
     private void findTypes(final DriverConnection driverConnection) {
         loggerManager.info("[DataBaseTypeBaseReader] Starting");
         allTypes = sqlExecuteToGetList.execute(driverConnection, sqlQuery, TypeBaseBean.class);
-        loggerManager.info("[DataBaseTypeBaseReader] Total: " + allTypes.size());
+        loggerManager.info("[DataBaseTypeBaseReader] Total Types: " + allTypes.size());
     }
 
     private List<TypeBase> processTypes(final DriverConnection driverConnection, final List<String> filter) {

@@ -41,9 +41,6 @@ class TableColumnTemplateConfigurationTest {
     @Mock
     private Column columnMock;
 
-    @Mock
-    private TableColumnTypeUtil tableColumnTypeUtilMock;
-
     @BeforeEach
     void setUp() {
         configuration = new TemplateConfiguration();
@@ -164,11 +161,9 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.when(columnMock.getType()).thenReturn(type);
         Mockito.when(columnMock.getLength()).thenReturn(length);
-        Mockito.when(tableColumnTypeUtilMock.isString(Mockito.anyString())).thenReturn(true);
 
         input.put(KEEP_NAMES, false);
         input.put(TABLE_COLUMN_NAME, columnMock);
-        input.put(TABLE_COLUMN_UTIL, tableColumnTypeUtilMock);
 
         String response = getTemplateProcessed(TABLE_COLUMN_FILE, input);
 
@@ -177,7 +172,6 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.verify(columnMock, Mockito.atLeast(1)).getType();
         Mockito.verify(columnMock, Mockito.atLeast(2)).getLength();
-        Mockito.verify(tableColumnTypeUtilMock, Mockito.times(1)).isString(type);
     }
 
     @Test
@@ -187,11 +181,9 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.when(columnMock.getType()).thenReturn(type);
         Mockito.when(columnMock.getLength()).thenReturn(null);
-        Mockito.when(tableColumnTypeUtilMock.isString(Mockito.anyString())).thenReturn(true);
 
         input.put(KEEP_NAMES, false);
         input.put(TABLE_COLUMN_NAME, columnMock);
-        input.put(TABLE_COLUMN_UTIL, tableColumnTypeUtilMock);
 
         String response = getTemplateProcessed(TABLE_COLUMN_FILE, input);
 
@@ -200,7 +192,6 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.verify(columnMock, Mockito.atLeast(1)).getType();
         Mockito.verify(columnMock, Mockito.times(1)).getLength();
-        Mockito.verify(tableColumnTypeUtilMock, Mockito.times(1)).isString(type);
     }
 
     @Test
@@ -210,11 +201,9 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.when(columnMock.getType()).thenReturn(type);
         Mockito.when(columnMock.getLength()).thenReturn(0);
-        Mockito.when(tableColumnTypeUtilMock.isString(Mockito.anyString())).thenReturn(true);
 
         input.put(KEEP_NAMES, false);
         input.put(TABLE_COLUMN_NAME, columnMock);
-        input.put(TABLE_COLUMN_UTIL, tableColumnTypeUtilMock);
 
         String response = getTemplateProcessed(TABLE_COLUMN_FILE, input);
 
@@ -223,7 +212,6 @@ class TableColumnTemplateConfigurationTest {
 
         Mockito.verify(columnMock, Mockito.atLeast(1)).getType();
         Mockito.verify(columnMock, Mockito.atLeast(2)).getLength();
-        Mockito.verify(tableColumnTypeUtilMock, Mockito.times(1)).isString(type);
     }
 
     @Test

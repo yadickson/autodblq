@@ -15,7 +15,7 @@ public class OracleDataBaseVersionQuery implements DataBaseVersionQuery {
 
     @Override
     public String get() {
-        return null;
+        return "SELECT banner version FROM sys.V_$VERSION WHERE banner LIKE 'Oracle Database%'";
     }
 
 }

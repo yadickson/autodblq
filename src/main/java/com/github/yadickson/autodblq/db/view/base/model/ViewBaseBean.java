@@ -38,5 +38,4 @@ public final class ViewBaseBean {
     public void setContent(String content) {
         this.content = content;
     }
-
 }

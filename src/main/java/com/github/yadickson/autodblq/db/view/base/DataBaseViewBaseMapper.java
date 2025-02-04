@@ -15,10 +15,7 @@ import javax.inject.Named;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBase;
 import com.github.yadickson.autodblq.db.view.base.model.ViewBaseBean;
 import com.github.yadickson.autodblq.logger.LoggerManager;
-import com.github.yadickson.autodblq.util.StringToContentUtil;
-import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
-import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+import com.github.yadickson.autodblq.util.*;
 
 /**
  *
@@ -32,14 +29,16 @@ public class DataBaseViewBaseMapper implements Function<List<ViewBaseBean>, List
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToContentUtil stringToContentUtil;
+    private final StringJoinUtil stringJoinUtil;
 
     @Inject
-    public DataBaseViewBaseMapper(LoggerManager loggerManager, StringTrimUtil stringTrimUtil, final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil) {
+    public DataBaseViewBaseMapper(LoggerManager loggerManager, StringTrimUtil stringTrimUtil, final StringToLowerCaseUtil stringToLowerCaseUtil, StringToSnakeCaseUtil stringToSnakeCaseUtil, StringToContentUtil stringToContentUtil, StringJoinUtil stringJoinUtil) {
         this.loggerManager = loggerManager;
         this.stringTrimUtil = stringTrimUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringToContentUtil = stringToContentUtil;
+        this.stringJoinUtil = stringJoinUtil;
     }
 
     @Override

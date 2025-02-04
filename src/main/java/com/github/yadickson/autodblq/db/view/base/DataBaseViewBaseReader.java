@@ -80,7 +80,7 @@ public class DataBaseViewBaseReader {
     private void findViews(final DriverConnection driverConnection) {
         loggerManager.info("[DataBaseViewReader] Starting");
         allViews = sqlExecuteToGetList.execute(driverConnection, sqlQuery, ViewBaseBean.class);
-        loggerManager.info("[DataBaseViewReader] Total: " + allViews.size());
+        loggerManager.info("[DataBaseViewReader] Total Views: " + allViews.size());
     }
 
     private List<ViewBase> processViews(final List<String> filter) {
