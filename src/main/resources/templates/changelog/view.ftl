@@ -1,19 +1,15 @@
 <#if view?? >
 <#include "/common/xml-changeset-top.ftl">
-        <createView
-            viewName="<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>"
-<#if view.schema?? && addSchema?? && addSchema == true >
-            schemaName="<#if keepNames?? && keepNames == true>${view.realSchema}<#else>${view.newSchema}</#if>"
-</#if>
+        <sqlFile
             encoding="${encode}"
-            replaceIfExists="true"
-            fullDefinition="true"
             path="../${viewsDirectory}/<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>.sql"
             relativeToChangelogFile="true"
+            splitStatements="false"
+            stripComments="true"
         />
 
         <rollback>
-            <dropView viewName="<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>"<#if view.schema?? && addSchema?? && addSchema == true > schemaName="<#if keepNames?? && keepNames == true>${view.realSchema}<#else>${view.newSchema}</#if>"</#if>/>
+            <sql><![CDATA[ DROP VIEW <#if view.schema?? && addSchema?? && addSchema == true>"<#if keepNames?? && keepNames == true>${view.realSchema}<#else>${view.newSchema}</#if>".</#if>"<#if keepNames?? && keepNames == true>${view.realName}<#else>${view.newName}</#if>" ]]></sql>
         </rollback>
 <#include "/common/xml-changeset-bottom.ftl">
 </#if>
