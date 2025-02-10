@@ -357,7 +357,7 @@ public final class DefinitionGenerator {
             makeDataTableFile(table);
         }
 
-        dataTableGenerator.execute(driverConnection, dataTables);
+        dataTableGenerator.execute(driverConnection, types, dataTables);
     }
 
 }

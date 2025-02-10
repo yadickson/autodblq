@@ -18,12 +18,20 @@ public class PostgreSqlDataBaseTableForeignKeyQuery implements DataBaseTableCons
 
     @Override
     public String get(final TableBase table, final boolean keepTypes) {
-        return "SELECT "
-                + " tc.constraint_name as name, \n"
-                + " ccu.table_name AS refname, \n"
-                + " ccu.table_schema AS refschema, \n"
-                + " array_to_string(array_agg(kcu.column_name), ' ') as columns, \n"
-                + " array_to_string(array_agg(ccu.column_name), ' ') as refcolumns \n"
+        return "SELECT \n"
+                + "t.name, \n"
+                + "t.refname, \n"
+                + "t.refschema, \n"
+                + "array_to_string(array_agg(t.column), ' ') as columns, \n"
+                + "array_to_string(array_agg(t.refcolumn), ' ') as refcolumns \n"
+                + "from \n"
+                + "(\n"
+                + "SELECT distinct \n"
+                + "tc.constraint_name as name, \n"
+                + "ccu.table_name AS refname, \n"
+                + "ccu.table_schema AS refschema, \n"
+                + "kcu.column_name column, \n"
+                + "ccu.column_name refcolumn \n"
                 + "FROM information_schema.table_constraints AS tc \n"
                 + "INNER JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema \n"
                 + "INNER JOIN information_schema.constraint_column_usage AS ccu ON ccu.constraint_name = tc.constraint_name \n"
@@ -31,7 +39,8 @@ public class PostgreSqlDataBaseTableForeignKeyQuery implements DataBaseTableCons
                 + "WHERE tc.constraint_type = 'FOREIGN KEY' \n"
                 + filterByName(table)
                 + filterBySchema(table)
-                + "GROUP BY tc.constraint_name, ccu.table_name, ccu.table_schema \n"
+                + ") t \n"
+                + "GROUP BY t.name, t.refname, t.refschema \n"
                 + "ORDER BY 1 ";
     }
 

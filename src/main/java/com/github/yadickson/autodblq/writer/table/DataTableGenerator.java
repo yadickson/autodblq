@@ -23,6 +23,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableCountReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReaderIterator;
+import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
 import com.github.yadickson.autodblq.writer.template.TemplateGenerator;
 import com.github.yadickson.autodblq.writer.template.TemplateGeneratorManager;
@@ -57,7 +58,7 @@ public class DataTableGenerator {
         this.templateGenerator = templateGenerator;
     }
 
-    public void execute(final DriverConnection driverConnection, final List<TableBase> tables) {
+    public void execute(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
 
         try {
 
@@ -66,7 +67,7 @@ public class DataTableGenerator {
             }
 
             makeOutputDirectory();
-            makeDataTables(driverConnection, tables);
+            makeDataTables(driverConnection, types, tables);
 
         } catch (RuntimeException ex) {
             throw new DataTableGeneratorException(ex);
@@ -77,10 +78,10 @@ public class DataTableGenerator {
         outputDirectory = parametersPlugin.getOutputDirectory() + File.separatorChar + parametersPlugin.getVersion() + File.separatorChar;
     }
 
-    private void makeDataTables(final DriverConnection driverConnection, final List<TableBase> tables) {
+    private void makeDataTables(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
         for (TableBase table : tables) {
             readTotalCount(driverConnection, table);
-            makeDataTable(driverConnection, table);
+            makeDataTable(driverConnection, types, table);
         }
     }
 
@@ -88,17 +89,17 @@ public class DataTableGenerator {
         dataBaseDataTableCountReader.execute(driverConnection, table);
     }
 
-    private void makeDataTable(final DriverConnection driverConnection, TableBase table) {
+    private void makeDataTable(final DriverConnection driverConnection, final List<TypeBase> types, final TableBase table) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_INSERT_TABLE;
         final String filename = String.format(type.getFilename(), table.getName());
         final String path = outputDirectory + File.separatorChar + parametersPlugin.getOutputDatasetsDirectory() + File.separatorChar + filename;
-        readerTable(driverConnection, table, path);
+        readerTable(driverConnection, types, table, path);
     }
 
-    private void readerTable(final DriverConnection driverConnection, final TableBase table, final String path) {
+    private void readerTable(final DriverConnection driverConnection, final List<TypeBase> types, final TableBase table, final String path) {
         DataBaseDataTableReaderIterator iterator = dataBaseDataTableReader.execute(driverConnection, table);
 
-        while (iterator.nextBlock()) {
+        while (iterator.nextBlock(types)) {
             List<TableBase> tables = iterator.getBlock();
             writeFile(path, tables);
         }

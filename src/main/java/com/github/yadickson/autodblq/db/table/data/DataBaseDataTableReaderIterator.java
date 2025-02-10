@@ -23,6 +23,7 @@ import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
 import com.github.yadickson.autodblq.db.property.model.TablePropertyType;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
+import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.logger.LoggerManager;
 import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
 import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
@@ -69,13 +70,13 @@ public class DataBaseDataTableReaderIterator {
         this.pageCount = 0L;
     }
 
-    public boolean nextBlock() {
+    public boolean nextBlock(final List<TypeBase> types) {
 
         try {
 
             current = Collections.EMPTY_LIST;
             findSqlQuery(driverConnection, table, pageCount++);
-            processSqlQuery(driverConnection);
+            processSqlQuery(driverConnection, types);
 
         } catch (RuntimeException ex) {
             throw new DataBaseDataTableReaderIteratorException(ex);
@@ -92,39 +93,40 @@ public class DataBaseDataTableReaderIterator {
         final Driver driver = driverConnection.getDriver();
         final DataBaseDataTableBlockQuery query = dataBaseDataTableBlockQueryFactory.apply(driver);
         sqlQuery = query.get((DataBaseTableColumnsWrapper) table, pageCount, BLOCK);
+        loggerManager.info("[DataBaseDataTableReaderIterator] Table: " + table.getFullName());
         loggerManager.debug("[DataBaseDataTableReaderIterator] SQL: " + sqlQuery);
     }
 
-    public void processSqlQuery(final DriverConnection driverConnection) {
+    public void processSqlQuery(final DriverConnection driverConnection, final List<TypeBase> types) {
 
         if (StringUtils.isEmpty(sqlQuery)) {
             return;
         }
 
-        preparedStatement(driverConnection);
+        preparedStatement(driverConnection, types);
     }
 
-    private void preparedStatement(final DriverConnection driverConnection) {
+    private void preparedStatement(final DriverConnection driverConnection, final List<TypeBase> types) {
         Connection connection = driverConnection.getConnection();
 
         try (PreparedStatement statement = connection.prepareStatement(sqlQuery)) {
-            executeSqlQuery(statement);
+            executeSqlQuery(types, statement);
         } catch (SQLException | RuntimeException ex) {
             throw new DataBaseDataTableReaderIteratorException(ex);
         }
     }
 
-    private void executeSqlQuery(final PreparedStatement statement) {
+    private void executeSqlQuery(final List<TypeBase> types, final PreparedStatement statement) {
 
         try (ResultSet resultSet = statement.executeQuery()) {
-            processResultSet(resultSet);
+            processResultSet(types, resultSet);
         } catch (SQLException | RuntimeException ex) {
             throw new DataBaseDataTableReaderIteratorException(ex);
         }
 
     }
 
-    private void processResultSet(final ResultSet resultSet) throws SQLException {
+    private void processResultSet(final List<TypeBase> types, final ResultSet resultSet) throws SQLException {
 
         List<TableBase> tables = new ArrayList<>();
 
@@ -134,8 +136,7 @@ public class DataBaseDataTableReaderIterator {
         for (int j = 0; j < columnCount; j++) {
             String columnName = metadata.getColumnName(j + 1);
             String columnType = metadata.getColumnTypeName(j + 1);
-            loggerManager.debug("[DataBaseDataTableReaderIterator] Column Name: " + columnName);
-            loggerManager.debug("[DataBaseDataTableReaderIterator] Column Type: " + columnType);
+            loggerManager.info("[DataBaseDataTableReaderIterator] Column Name [" + columnName + "] Type [" + columnType + "]");
         }
 
         while (resultSet.next()) {
@@ -146,7 +147,7 @@ public class DataBaseDataTableReaderIterator {
                 String realColumnName = stringTrimUtil.apply(metadata.getColumnName(j + 1));
                 String newColumnName = stringToSnakeCaseUtil.apply(realColumnName);
                 String columnType = stringToLowerCaseUtil.apply(metadata.getColumnTypeName(j + 1));
-                String columnValue = StringUtils.containsIgnoreCase(columnType, "bool") ? Boolean.toString(resultSet.getBoolean(j + 1)) : resultSet.getString(j + 1);
+                String columnValue = ( types.stream().anyMatch( (type) -> type.getName().equalsIgnoreCase(columnType)) ? String.format("'%s'::%s", resultSet.getString(j + 1), columnType) : StringUtils.containsIgnoreCase(columnType, "bool") ? Boolean.toString(resultSet.getBoolean(j + 1)) : (StringUtils.containsIgnoreCase(columnType, "time") || StringUtils.containsIgnoreCase(columnType, "date") ? String.format("'%s'", resultSet.getString(j + 1)) : (!StringUtils.containsIgnoreCase(columnType, "string") && !StringUtils.containsIgnoreCase(columnType, "json") && !StringUtils.containsIgnoreCase(columnType, "text") && !StringUtils.containsIgnoreCase(columnType, "char") ? resultSet.getString(j + 1) : (resultSet.getString(j + 1) != null ? String.format("'%s'", resultSet.getString(j + 1).replaceAll("'", "''")) : null ))));
 
                 DataBaseProperty column = new DataBaseProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
                 TablePropertyType response = dataBasePropertyManager.process(column);
