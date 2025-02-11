@@ -22,6 +22,7 @@ public enum DataBaseGeneratorType {
     VIEW_DEFINITION("views"),
     FUNCTION_DEFINITION("functions"),
     TYPE_DEFINITION("types"),
+    SEQUENCE_DEFINITION("sequences"),
     DATA_DEFINITION("dataTables");
     
     private final String message;

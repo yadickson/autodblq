@@ -38,6 +38,7 @@ public class ParametersPlugin {
     private List<String> dataTables;
     private List<String> views;
     private List<String> types;
+    private List<String> sequences;
     private List<String> functions;
 
     private Boolean addDbVersion;
@@ -162,6 +163,15 @@ public class ParametersPlugin {
 
     public ParametersPlugin setFunctions(List<String> functions) {
         this.functions = getNotNullList(functions);
+        return this;
+    }
+
+    public List<String> getSequences() {
+        return sequences;
+    }
+
+    public ParametersPlugin setSequences(List<String> sequences) {
+        this.sequences = getNotNullList(sequences);
         return this;
     }
 

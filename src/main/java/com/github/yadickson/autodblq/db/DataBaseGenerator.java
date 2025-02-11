@@ -20,6 +20,8 @@ import com.github.yadickson.autodblq.db.function.base.DataBaseFunctionBaseReader
 import com.github.yadickson.autodblq.db.function.base.model.FunctionBase;
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
 import com.github.yadickson.autodblq.db.property.DataBasePropertyManager;
+import com.github.yadickson.autodblq.db.sequence.base.DataBaseSequenceBaseReader;
+import com.github.yadickson.autodblq.db.sequence.base.model.SequenceBase;
 import com.github.yadickson.autodblq.db.table.base.DataBaseTableBaseReader;
 import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.constraint.DataBaseTableConstraintChain;
@@ -43,6 +45,7 @@ public class DataBaseGenerator {
     private final DataBaseViewBaseReader dataBaseViewBaseReader;
     private final DataBaseFunctionBaseReader dataBaseFunctionBaseReader;
     private final DataBaseTypeBaseReader dataBaseTypeBaseReader;
+    private final DataBaseSequenceBaseReader dataBaseSequenceBaseReader;
     private final DataBasePropertyManager dataBasePropertyManager;
 
     private final Map<DataBaseGeneratorType, Object> result = new HashMap<>();
@@ -55,6 +58,7 @@ public class DataBaseGenerator {
             final DataBaseViewBaseReader dataBaseViewBaseReader,
             final DataBaseFunctionBaseReader dataBaseFunctionBaseReader,
             final DataBaseTypeBaseReader dataBaseTypeBaseReader,
+            final DataBaseSequenceBaseReader dataBaseSequenceBaseReader,
             final DataBasePropertyManager dataBasePropertyManager
     ) {
         this.parametersPlugin = parametersPlugin;
@@ -64,6 +68,7 @@ public class DataBaseGenerator {
         this.dataBaseViewBaseReader = dataBaseViewBaseReader;
         this.dataBaseFunctionBaseReader = dataBaseFunctionBaseReader;
         this.dataBaseTypeBaseReader = dataBaseTypeBaseReader;
+        this.dataBaseSequenceBaseReader = dataBaseSequenceBaseReader;
         this.dataBasePropertyManager = dataBasePropertyManager;
     }
 
@@ -77,6 +82,7 @@ public class DataBaseGenerator {
             findViews(driverConnection);
             findFunctions(driverConnection);
             findTypes(driverConnection);
+            findSequences(driverConnection);
 
             return result;
 
@@ -144,6 +150,17 @@ public class DataBaseGenerator {
         if (!types.isEmpty()) {
             dataBasePropertyManager.addFunctionDefinitions();
             dataBasePropertyManager.accept(Collections.unmodifiableList(types));
+        }
+    }
+
+    private void findSequences(DriverConnection driverConnection) {
+        final DataBaseGeneratorType key = DataBaseGeneratorType.SEQUENCE_DEFINITION;
+        final List<SequenceBase> sequences = dataBaseSequenceBaseReader.execute(parametersPlugin.getSequences(), driverConnection);
+        result.put(key, sequences);
+
+        if (!sequences.isEmpty()) {
+            dataBasePropertyManager.addFunctionDefinitions();
+            dataBasePropertyManager.accept(Collections.unmodifiableList(sequences));
         }
     }
 

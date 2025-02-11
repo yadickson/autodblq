@@ -30,7 +30,7 @@ public class PostgreSqlDataBaseTableForeignKeyQuery implements DataBaseTableCons
                 + "tc.constraint_name as name, \n"
                 + "ccu.table_name AS refname, \n"
                 + "ccu.table_schema AS refschema, \n"
-                + "kcu.column_name column, \n"
+                + "kcu.column_name as \"column\", \n"
                 + "ccu.column_name refcolumn \n"
                 + "FROM information_schema.table_constraints AS tc \n"
                 + "INNER JOIN information_schema.key_column_usage AS kcu ON tc.constraint_name = kcu.constraint_name AND tc.table_schema = kcu.table_schema \n"

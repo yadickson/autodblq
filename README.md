@@ -16,28 +16,10 @@ Maven plugin to generate xml liquibase files from database
 ## Support
 
 - DB2
-- Oracle DataBase 11g and 12c (not yet)
-- Basic PostgresSQL (not yet)
-- Basic SQL Server (Tested 2017, Driver jTDS) (not yet)
+- Oracle
+- PostgresSQL
+- SQL Server
 - Command line for driver, user, pass and connectionString parametersPlugin
-
-## DB2
-
-- TABLES
-- AUTO INCREMENT (always increment and start by 1)
-- DEFAULT VALUES (only string and numeric)
-- INDEX CONSTRAINS
-- UNIQUE CONSTRAINS
-- PRIMARY KEY CONSTRAINS
-- FOREIGN KEY CONSTRAINS (missing onDelete and onUpdate actions yet)
-- VIEWS
-- FUNCTIONS
-- PROCEDURES
-- SEQUENCES (not yet)
-- RESET SEQUENCES (not yet)
-- INSERT DATA TABLES (not yet)
-- TRIGGERS (not yet)
-- Data tables
 
 ## Dependencies
 
@@ -55,9 +37,9 @@ Maven plugin to generate xml liquibase files from database
 
 ```xml
 <dependency>
-    <groupId>com.jslsolucoes</groupId>
-    <artifactId>ojdbc6</artifactId>
-    <version>11.2.0.1.0</version>
+    <groupId>com.oracle.database.jdbc</groupId>
+    <artifactId>ojdbc11</artifactId>
+    <version>23.2.0.0</version>
 </dependency>
 ```
 
@@ -107,6 +89,10 @@ Maven plugin to generate xml liquibase files from database
         <addIdentity>true</addIdentity>
         <keepTypes>true</keepTypes>
         <keepNames>true</keepNames>
+        <sequences>
+            <param>...</param>
+            <param>...</param>
+        </sequences>
         <types>
             <param>...</param>
             <param>...</param>
@@ -179,6 +165,14 @@ Database username
 
 Database password
 
+### sequences (optional)
+
+Sequences to include
+
+### types (optional)
+
+Types to include
+
 ### tables (optional)
 
 Tables to include
@@ -221,6 +215,9 @@ Load data table content
         <addIdentity>true</addIdentity>
         <keepTypes>true</keepTypes>
         <keepNames>true</keepNames>
+        <sequences>
+            <param>...</param>
+        </sequences>
         <types>
             <param>...</param>
         </types>

@@ -152,6 +152,15 @@ public class GeneratorPlugin extends AbstractMojo {
     private List<String> types;
 
     /**
+     * Sequences to build.
+     */
+    @Parameter(
+            alias = "sequences",
+            readonly = true,
+            required = false)
+    private List<String> sequences;
+
+    /**
      * Functions and procedures to build.
      */
     @Parameter(
@@ -325,6 +334,7 @@ public class GeneratorPlugin extends AbstractMojo {
                 .setDataTables(dataTables)
                 .setViews(views)
                 .setTypes(types)
+                .setSequences(sequences)
                 .setFunctions(functions)
                 .setAddDbVersion(stringToBooleanUtil.apply(addDbVersion))
                 .setAddSchema(stringToBooleanUtil.apply(addSchema))

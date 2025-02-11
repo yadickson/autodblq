@@ -13,6 +13,7 @@ public enum DefinitionGeneratorType {
 
     PROPERTIES("/changelog/properties.ftl", "%02d-properties.xml"),
     TABLES("/changelog/tables.ftl", "%02d-tables.xml"),
+    SEQUENCES("/changelog/sequences.ftl", "%02d-sequences.xml"),
     TYPES("/changelog/types.ftl", "%02d-types.xml"),
     PRIMARY_KEYS("/changelog/primaries.ftl", "%02d-primary-key-constraints.xml"),
     FOREIGN_KEYS("/changelog/foreigns.ftl", "%02d-foreign-key-constraints.xml"),
