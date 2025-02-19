@@ -31,6 +31,7 @@ public class ParametersPlugin {
     private String outputDirectory;
     private String outputDatasetsDirectory;
     private String outputViewsDirectory;
+    private String outputDatasetBlockSize;
     private String outputFunctionsDirectory;
     private String outputProceduresDirectory;
 
@@ -239,6 +240,15 @@ public class ParametersPlugin {
 
     public ParametersPlugin setOutputDatasetsDirectory(String outputDatasetsDirectory) {
         this.outputDatasetsDirectory = outputDatasetsDirectory;
+        return this;
+    }
+
+    public String getOutputDatasetBlockSize() {
+        return outputDatasetBlockSize;
+    }
+
+    public ParametersPlugin setOutputDatasetBlockSize(String outputDatasetBlockSize) {
+        this.outputDatasetBlockSize = outputDatasetBlockSize;
         return this;
     }
 

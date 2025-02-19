@@ -1,8 +1,8 @@
-<#if table?? >
+<#if table?? && sqlfile?? >
 <#include "/common/xml-changeset-top.ftl">
         <sqlFile
             encoding="${encode}"
-            path="../${datasetsDirectory}/<#if keepNames?? && keepNames == true>${table.realName}<#else>${table.newName}</#if>.sql"
+            path="../${datasetsDirectory}/${sqlfile}"
             relativeToChangelogFile="true"
             splitStatements="false"
             stripComments="true"

@@ -85,6 +85,7 @@ Maven plugin to generate xml liquibase files from database
         <author>...</author>
         <version>...</version>
         <outputDirectory>.</outputDirectory>
+        <outputDatasetBlockSize>1000</outputDatasetBlockSize>
         <addNullable>true</addNullable>
         <addIdentity>true</addIdentity>
         <keepTypes>true</keepTypes>

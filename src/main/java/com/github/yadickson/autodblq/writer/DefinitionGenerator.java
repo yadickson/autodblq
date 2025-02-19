@@ -66,7 +66,6 @@ public final class DefinitionGenerator {
 
     private final String CHANGELOG = "changelog";
     private final String VIEW = "view";
-    private final String SEQUENCE = "sequence";
     private final String TABLE = "table";
     private final String FUNCTION = "function";
     private final String PROCEDURE = "procedure";
@@ -128,10 +127,11 @@ public final class DefinitionGenerator {
         try {
 
             processInputs(dataBaseGenerator);
-            makeInputValues(driverConnection);
             cleanOutputDirectory();
 
             makeDataTables(driverConnection);
+            makeInputValues(driverConnection);
+
             makeDefinitions();
             makeMasterChangelog();
 
@@ -310,13 +310,6 @@ public final class DefinitionGenerator {
         filesGenerated.add(filename);
     }
 
-    private void makeDataTableFile(final TableBase table) {
-        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
-        final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? table.getName() : table.getNewName());
-        final String path = makeFilenamePath(parametersPlugin.getOutputDatasetsDirectory(), filename);
-        makeTemplate(type, path);
-    }
-
     private void makeViewFile(final ViewBase viewBase) {
         final DefinitionGeneratorType type = DefinitionGeneratorType.VIEW;
         final String filename = String.format(type.getFilename(), parametersPlugin.getKeepNames() ? viewBase.getName() : viewBase.getNewName());
@@ -362,13 +355,7 @@ public final class DefinitionGenerator {
     }
 
     private void makeDataTables(final DriverConnection driverConnection) {
-
-        for (TableBase table : dataTables) {
-            values.put(TABLE, table);
-            makeDataTableFile(table);
-        }
-
-        dataTableGenerator.execute(driverConnection, types, dataTables);
+        dataTables = dataTableGenerator.execute(driverConnection, types, dataTables);
     }
 
 }

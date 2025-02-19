@@ -260,6 +260,16 @@ public class GeneratorPlugin extends AbstractMojo {
     private String outputDatasetsDirectory;
 
     /**
+     * Output dataset block size.
+     */
+    @Parameter(
+            property = "autodblq.outputDatasetBlockSize",
+            defaultValue = "1000",
+            alias = "outputDatasetBlockSize",
+            required = true)
+    private String outputDatasetBlockSize;
+
+    /**
      * Output functions directory.
      */
     @Parameter(
@@ -327,6 +337,7 @@ public class GeneratorPlugin extends AbstractMojo {
                 .setEncode(encode)
                 .setOutputDirectory(outputDirectory)
                 .setOutputDatasetsDirectory(outputDatasetsDirectory)
+                .setOutputDatasetBlockSize(outputDatasetBlockSize)
                 .setOutputViewsDirectory(outputViewsDirectory)
                 .setOutputFunctionsDirectory(outputFunctionsDirectory)
                 .setOutputProceduresDirectory(outputProceduresDirectory)

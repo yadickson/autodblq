@@ -6,13 +6,7 @@
 package com.github.yadickson.autodblq.writer.table;
 
 import java.io.File;
-import java.io.FileWriter;
-import java.io.IOException;
-import java.io.PrintWriter;
-import java.io.Writer;
-import java.util.HashMap;
-import java.util.List;
-import java.util.Map;
+import java.util.*;
 
 import javax.inject.Inject;
 import javax.inject.Named;
@@ -23,10 +17,13 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableCountReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReader;
 import com.github.yadickson.autodblq.db.table.data.DataBaseDataTableReaderIterator;
+import com.github.yadickson.autodblq.db.table.data.model.DataBaseTableDataWrapper;
 import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
+import com.github.yadickson.autodblq.directory.DirectoryBuilder;
+import com.github.yadickson.autodblq.logger.LoggerManager;
+import com.github.yadickson.autodblq.util.StringToLongUtil;
 import com.github.yadickson.autodblq.writer.DefinitionGeneratorType;
 import com.github.yadickson.autodblq.writer.template.TemplateGenerator;
-import com.github.yadickson.autodblq.writer.template.TemplateGeneratorManager;
 import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
 
 /**
@@ -36,38 +33,46 @@ import com.github.yadickson.autodblq.writer.util.TableColumnTypeUtil;
 @Named
 public class DataTableGenerator {
 
+    private final LoggerManager loggerManager;
     private final ParametersPlugin parametersPlugin;
     private final DataBaseDataTableCountReader dataBaseDataTableCountReader;
     private final DataBaseDataTableReader dataBaseDataTableReader;
     private final TemplateGenerator templateGenerator;
+    private final DirectoryBuilder directoryBuilder;
+    private final StringToLongUtil stringToLongUtil;
 
     private String outputDirectory;
 
+    private final String TABLE = "table";
     private final String TABLES = "tables";
+    private Long total = 0L;
     private static final String TYPE_UTIL = "typeUtil";
 
     @Inject
     public DataTableGenerator(
-            ParametersPlugin parametersPlugin, final DataBaseDataTableCountReader dataBaseDataTableCountReader,
+            LoggerManager loggerManager, ParametersPlugin parametersPlugin, final DataBaseDataTableCountReader dataBaseDataTableCountReader,
             final DataBaseDataTableReader dataBaseDataTableBlockReader,
-            final TemplateGenerator templateGenerator
+            final TemplateGenerator templateGenerator, DirectoryBuilder directoryBuilder, StringToLongUtil stringToLongUtil
     ) {
+        this.loggerManager = loggerManager;
         this.parametersPlugin = parametersPlugin;
         this.dataBaseDataTableCountReader = dataBaseDataTableCountReader;
         this.dataBaseDataTableReader = dataBaseDataTableBlockReader;
         this.templateGenerator = templateGenerator;
+        this.directoryBuilder = directoryBuilder;
+        this.stringToLongUtil = stringToLongUtil;
     }
 
-    public void execute(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
+    public List<TableBase> execute(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
 
         try {
 
             if (tables.isEmpty()) {
-                return;
+                return Collections.emptyList();
             }
 
             makeOutputDirectory();
-            makeDataTables(driverConnection, types, tables);
+            return makeDataTables(driverConnection, types, tables);
 
         } catch (RuntimeException ex) {
             throw new DataTableGeneratorException(ex);
@@ -78,41 +83,90 @@ public class DataTableGenerator {
         outputDirectory = parametersPlugin.getOutputDirectory() + File.separatorChar + parametersPlugin.getVersion() + File.separatorChar;
     }
 
-    private void makeDataTables(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
+    private List<TableBase> makeDataTables(final DriverConnection driverConnection, final List<TypeBase> types, final List<TableBase> tables) {
+
+        List<TableBase> newTables = new ArrayList<>();
+
         for (TableBase table : tables) {
             readTotalCount(driverConnection, table);
-            makeDataTable(driverConnection, types, table);
+            newTables.add(makeDataTable(driverConnection, types, table));
         }
+
+        return newTables;
     }
 
     private void readTotalCount(final DriverConnection driverConnection, final TableBase table) {
-        dataBaseDataTableCountReader.execute(driverConnection, table);
+        total = dataBaseDataTableCountReader.execute(driverConnection, table);
     }
 
-    private void makeDataTable(final DriverConnection driverConnection, final List<TypeBase> types, final TableBase table) {
-        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_INSERT_TABLE;
-        final String filename = String.format(type.getFilename(), table.getName());
-        final String path = outputDirectory + File.separatorChar + parametersPlugin.getOutputDatasetsDirectory() + File.separatorChar + filename;
-        readerTable(driverConnection, types, table, path);
-    }
+    private TableBase makeDataTable(final DriverConnection driverConnection, final List<TypeBase> types, final TableBase table) {
+        List<String> files = new ArrayList<>();
 
-    private void readerTable(final DriverConnection driverConnection, final List<TypeBase> types, final TableBase table, final String path) {
         DataBaseDataTableReaderIterator iterator = dataBaseDataTableReader.execute(driverConnection, table);
+        final Long block = stringToLongUtil.apply(parametersPlugin.getOutputDatasetBlockSize());
+        final long blocks = Math.round(Math.ceil(total / block.floatValue()));
+
+        int count = 0;
 
         while (iterator.nextBlock(types)) {
             List<TableBase> tables = iterator.getBlock();
-            writeFile(path, tables);
+
+            files.add(getSourceFile(DefinitionGeneratorType.DATA_TABLE, table, ++count));
+
+            loggerManager.info("[DataTableGenerator] Table: " + table.getFullName() + " Total [" + total + "] - Block [" + count + "/" + blocks + "]");
+
+            makeDataTableFile(table, count);
+            makeInsertDataTableFile(table, tables, count);
         }
+
+        return new DataBaseTableDataWrapper(table, files);
     }
 
-    private void writeFile(final String path, final List<TableBase> tables) {
+    private String getSourceFile(DefinitionGeneratorType type, final TableBase table, int count) {
+        return getDirectoryPath(type, table, count) + getFilenamePath(type, table, count);
+    }
+
+    private String getDirectoryPath(final DefinitionGeneratorType type, final TableBase table, int count) {
+        final Long block = stringToLongUtil.apply(parametersPlugin.getOutputDatasetBlockSize());
+        final String name = parametersPlugin.getKeepNames() ? table.getName() : table.getNewName();
+        return total >= block ? name + File.separatorChar : "";
+    }
+
+    private String getFilenamePath(final DefinitionGeneratorType type, final TableBase table, int count) {
+        final String name = parametersPlugin.getKeepNames() ? table.getName() : table.getNewName();
+        final Long block = stringToLongUtil.apply(parametersPlugin.getOutputDatasetBlockSize());
+        return total < block ? name + ".sql" : String.format(type.getFilename(), count, name);
+    }
+
+    private String makeFilenamePath(final DefinitionGeneratorType type, final TableBase table, int count) {
+        final String directory = getDirectoryPath(type, table, count);
+        final String filename = getFilenamePath(type, table, count);
+        final String fullPath = outputDirectory + File.separatorChar + parametersPlugin.getOutputDatasetsDirectory() + File.separatorChar + directory;
+        directoryBuilder.execute(fullPath);
+        return fullPath + filename;
+    }
+
+    private void makeDataTableFile(final TableBase table, int count) {
+        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_TABLE;
+        final String path = makeFilenamePath(type, table, count);
+
+        Map<String, Object> values = new HashMap<>();
+
+        values.put(TABLE, table);
+        values.put(TYPE_UTIL, new TableColumnTypeUtil());
+
+        templateGenerator.execute(type, values, path, false);
+    }
+
+    private void makeInsertDataTableFile(final TableBase table, final List<TableBase> tables, int count) {
+        final DefinitionGeneratorType type = DefinitionGeneratorType.DATA_INSERT_TABLE;
+        final String path = makeFilenamePath(type, table, count);
 
         Map<String, Object> values = new HashMap<>();
 
         values.put(TABLES, tables);
         values.put(TYPE_UTIL, new TableColumnTypeUtil());
 
-        templateGenerator.execute(DefinitionGeneratorType.DATA_INSERT_TABLE, values, path, true);
+        templateGenerator.execute(type, values, path, true);
     }
-
 }

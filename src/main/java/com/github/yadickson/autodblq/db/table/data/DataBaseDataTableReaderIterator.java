@@ -16,6 +16,7 @@ import java.util.List;
 
 import org.apache.commons.lang.StringUtils;
 
+import com.github.yadickson.autodblq.ParametersPlugin;
 import com.github.yadickson.autodblq.db.connection.DriverConnection;
 import com.github.yadickson.autodblq.db.connection.driver.Driver;
 import com.github.yadickson.autodblq.db.property.DataBaseProperty;
@@ -25,9 +26,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
 import com.github.yadickson.autodblq.db.table.columns.DataBaseTableColumnsWrapper;
 import com.github.yadickson.autodblq.db.type.base.model.TypeBase;
 import com.github.yadickson.autodblq.logger.LoggerManager;
-import com.github.yadickson.autodblq.util.StringToLowerCaseUtil;
-import com.github.yadickson.autodblq.util.StringToSnakeCaseUtil;
-import com.github.yadickson.autodblq.util.StringTrimUtil;
+import com.github.yadickson.autodblq.util.*;
 
 /**
  *
@@ -40,33 +39,40 @@ public class DataBaseDataTableReaderIterator {
     private final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory;
     private final StringToSnakeCaseUtil stringToSnakeCaseUtil;
     private final StringToLowerCaseUtil stringToLowerCaseUtil;
+    private final StringToLongUtil stringToLongUtil;
     private final StringTrimUtil stringTrimUtil;
     private final DriverConnection driverConnection;
     private final TableBase table;
+    private final DataBaseDataTableColumnValue columnValue;
+    private final ParametersPlugin parametersPlugin;
 
     private Long pageCount;
     private String sqlQuery;
     private List<TableBase> current;
-
-    private static final Long BLOCK = 20L;
 
     public DataBaseDataTableReaderIterator(
             LoggerManager loggerManager, final DataBasePropertyManager dataBasePropertyManager,
             final DataBaseDataTableBlockQueryFactory dataBaseDataTableBlockQueryFactory,
             final StringToSnakeCaseUtil stringToSnakeCaseUtil,
             final StringToLowerCaseUtil stringToLowerCaseUtil,
+            final StringToLongUtil stringToLongUtil,
             final StringTrimUtil stringTrimUtil,
             final DriverConnection driverConnection,
-            final TableBase table
+            final TableBase table,
+            final DataBaseDataTableColumnValue columnValue,
+            final ParametersPlugin parametersPlugin
     ) {
         this.loggerManager = loggerManager;
         this.dataBasePropertyManager = dataBasePropertyManager;
         this.dataBaseDataTableBlockQueryFactory = dataBaseDataTableBlockQueryFactory;
         this.stringToSnakeCaseUtil = stringToSnakeCaseUtil;
         this.stringToLowerCaseUtil = stringToLowerCaseUtil;
+        this.stringToLongUtil = stringToLongUtil;
         this.stringTrimUtil = stringTrimUtil;
         this.driverConnection = driverConnection;
         this.table = table;
+        this.columnValue = columnValue;
+        this.parametersPlugin = parametersPlugin;
         this.pageCount = 0L;
     }
 
@@ -92,8 +98,8 @@ public class DataBaseDataTableReaderIterator {
     private void findSqlQuery(final DriverConnection driverConnection, final TableBase table, final Long pageCount) {
         final Driver driver = driverConnection.getDriver();
         final DataBaseDataTableBlockQuery query = dataBaseDataTableBlockQueryFactory.apply(driver);
-        sqlQuery = query.get((DataBaseTableColumnsWrapper) table, pageCount, BLOCK);
-        loggerManager.info("[DataBaseDataTableReaderIterator] Table: " + table.getFullName());
+        final Long block = stringToLongUtil.apply(parametersPlugin.getOutputDatasetBlockSize());
+        sqlQuery = query.get((DataBaseTableColumnsWrapper) table, pageCount, block);
         loggerManager.debug("[DataBaseDataTableReaderIterator] SQL: " + sqlQuery);
     }
 
@@ -136,7 +142,7 @@ public class DataBaseDataTableReaderIterator {
         for (int j = 0; j < columnCount; j++) {
             String columnName = metadata.getColumnName(j + 1);
             String columnType = metadata.getColumnTypeName(j + 1);
-            loggerManager.info("[DataBaseDataTableReaderIterator] Column Name [" + columnName + "] Type [" + columnType + "]");
+            loggerManager.debug("[DataBaseDataTableReaderIterator] Column Name [" + columnName + "] Type [" + columnType + "]");
         }
 
         while (resultSet.next()) {
@@ -147,7 +153,7 @@ public class DataBaseDataTableReaderIterator {
                 String realColumnName = stringTrimUtil.apply(metadata.getColumnName(j + 1));
                 String newColumnName = stringToSnakeCaseUtil.apply(realColumnName);
                 String columnType = stringToLowerCaseUtil.apply(metadata.getColumnTypeName(j + 1));
-                String columnValue = ( types.stream().anyMatch( (type) -> type.getName().equalsIgnoreCase(columnType)) ? String.format("'%s'::%s", resultSet.getString(j + 1), columnType) : StringUtils.containsIgnoreCase(columnType, "bool") ? Boolean.toString(resultSet.getBoolean(j + 1)) : (StringUtils.containsIgnoreCase(columnType, "time") || StringUtils.containsIgnoreCase(columnType, "date") ? String.format("'%s'", resultSet.getString(j + 1)) : (!StringUtils.containsIgnoreCase(columnType, "string") && !StringUtils.containsIgnoreCase(columnType, "json") && !StringUtils.containsIgnoreCase(columnType, "text") && !StringUtils.containsIgnoreCase(columnType, "char") ? resultSet.getString(j + 1) : (resultSet.getString(j + 1) != null ? String.format("'%s'", resultSet.getString(j + 1).replaceAll("'", "''")) : null ))));
+                String columnValue = this.columnValue.execute(types, columnType, resultSet, j + 1);
 
                 DataBaseProperty column = new DataBaseProperty(realColumnName, realColumnName, newColumnName).setDefaultType(columnType).setDefaultValue(columnValue);
                 TablePropertyType response = dataBasePropertyManager.process(column);

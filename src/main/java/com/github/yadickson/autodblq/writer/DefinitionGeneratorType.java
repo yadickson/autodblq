@@ -29,8 +29,8 @@ public enum DefinitionGeneratorType {
     VIEW("/sql/view.ftl", "%s.sql"),
     FUNCTION("/sql/function.ftl", "%s.sql"),
     PROCEDURE("/sql/procedure.ftl", "%s.sql"),
-    DATA_TABLE("/sql/data.ftl", "%s.sql"),
-    DATA_INSERT_TABLE("/sql/data-insert.ftl", "%s.sql");
+    DATA_TABLE("/sql/data.ftl", "%04d-%s.sql"),
+    DATA_INSERT_TABLE("/sql/data-insert.ftl", "%04d-%s.sql");
 
     private final String template;
     private final String filename;
