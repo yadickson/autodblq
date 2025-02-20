@@ -164,6 +164,7 @@ public class DataTableGenerator {
 
         Map<String, Object> values = new HashMap<>();
 
+        values.put(TABLE, table);
         values.put(TABLES, tables);
         values.put(TYPE_UTIL, new TableColumnTypeUtil());
 
