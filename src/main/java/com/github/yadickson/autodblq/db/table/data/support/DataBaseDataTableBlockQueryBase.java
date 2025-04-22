@@ -43,16 +43,16 @@ public abstract class DataBaseDataTableBlockQueryBase implements DataBaseDataTab
 
         Long init = page * blocks;
 
-        sql.append(StringUtils.join(mlist, ","));
+        sql.append(StringUtils.join(mlist, ", "));
         sql.append(" FROM ( SELECT ROW_NUMBER() OVER (ORDER BY ");
         sql.append(ilist.get(0));
         sql.append(" ) AS ");
         sql.append(rowName);
         sql.append(", ");
-        sql.append(StringUtils.join(ilist, ","));
+        sql.append(StringUtils.join(ilist, ", "));
         sql.append(" FROM ");
         sql.append(table.getFullName());
-        sql.append(" ) m ");
+        sql.append(" ) m");
         sql.append(" WHERE m.");
         sql.append(rowName);
         sql.append(" >= ");

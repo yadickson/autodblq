@@ -14,7 +14,7 @@ import com.github.yadickson.autodblq.db.table.base.model.TableBase;
  *
  * @author Yadickson Soto
  */
-public final class DataBaseTableColumnsWrapper extends TableBase {
+public class DataBaseTableColumnsWrapper extends TableBase {
 
     private final List<DataBaseProperty> columns;
 

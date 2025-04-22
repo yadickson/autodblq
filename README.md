@@ -196,7 +196,7 @@ Load data table content
 <plugin>
     <groupId>com.github.yadickson</groupId>
     <artifactId>autodblq</artifactId>
-    <version>2.0.0-SNAPSHOT</version>
+    <version>2.1.4</version>
     <executions>
         <execution>
             <goals>
